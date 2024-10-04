@@ -19,13 +19,7 @@ cd pi-ww
 bundle install
 ```
 
-3. Create the database
-```bash
-rails db:create
-rails db:migrate
-```
-
-4. Create a .env file in the root directory and add the following environment variables (change as your needs):
+3. Create a .env file in the root directory and add the following environment variables (change as your needs):
 ```bash
 SUPER_ADMIN_EMAIL=admin@example.com
 
@@ -33,6 +27,12 @@ DATABASE_USERNAME=your_database_username
 DATABASE_PASSWORD=your_database_password
 DATABASE_HOSTNAME=localhost
 DATABASE_PORT=5432
+```
+
+4. Create the database
+```bash
+rails db:create
+rails db:migrate
 ```
 
 # Usage
