@@ -1,0 +1,16 @@
+<div id="<%= dom_id user %>">
+  <p>
+    <strong>Email:</strong>
+    <%= user.email %>
+  </p>
+
+  <p>
+    <strong>Organization:</strong>
+    <%= user.organization_id.present? ? user.organization.name : 'None' %>
+  </p>
+
+  <p>
+    <strong>Admin:</strong>
+    <%= user.admin? ? 'Yes' : 'No' %>
+  </p>
+</div>

@@ -48,6 +48,7 @@ end
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
+  gem 'letter_opener'
 end
 
 group :test do
@@ -58,4 +59,5 @@ end
 
 gem 'devise'
 gem 'jwt'
-gem 'dotenv-rails', groups: [:development, :test] # To manage environment variables
+gem 'dotenv-rails', groups: [:development, :test]
+gem 'cancancan', '~> 3.0'

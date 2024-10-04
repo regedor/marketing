@@ -1,0 +1,7 @@
+<h1>Welcome, <%= current_user.email %>!</h1>
+
+<p>You are logged in as <%= current_user.admin? ? "Admin" : "User" %>.</p>
+
+<% if current_user.admin? %>
+  <%= link_to "Go to Dashboard", admin_dashboard_path %>
+<% end %>

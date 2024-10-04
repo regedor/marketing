@@ -1,0 +1,19 @@
+<h1>Create New User</h1>
+
+<%= form_with model: @user, url: admin_users_path, local: true do |form| %>
+  <div>
+    <%= form.label :email %>
+    <%= form.email_field :email %>
+  </div>
+
+  <div>
+    <%= form.label :organization_id, 'Organization' %>
+    <%= form.collection_select :organization_id, @organizations, :id, :name, prompt: 'Select Organization' %>
+  </div>
+
+  <div>
+    <%= form.submit 'Create User' %>
+  </div>
+<% end %>
+
+<%= link_to 'Back to Dashboard', admin_dashboard_path %>

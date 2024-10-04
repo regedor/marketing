@@ -1,0 +1,19 @@
+<h1>Edit User</h1>
+
+<%= form_for @user, url: admin_user_path(@user), method: :patch do |f| %>
+  <div class="field">
+    <%= f.label :email %>
+    <%= f.email_field :email, autofocus: true %>
+  </div>
+
+  <div class="field">
+    <%= f.label :organization_id %>
+    <%= f.collection_select :organization_id, Organization.all, :id, :name, include_blank: true %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit "Update User" %>
+  </div>
+<% end %>
+
+<%= link_to 'Back', admin_users_path %>
