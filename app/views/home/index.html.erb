@@ -1,7 +1,20 @@
 <h1>Welcome, <%= current_user.email %>!</h1>
 
-<p>You are logged in as <%= current_user.admin? ? "Admin" : "User" %>.</p>
+<p>You are logged in as <%= current_user.role %>.</p>
+<% if current_user.organization.present? %>
+  <p>You are part of the <%= current_user.organization.name%> organization</p>
+<% end %>
+<% if current_user.teams.any? %>
+  <div>
+    You are part of the following Teams: 
+    <ul>
+      <% current_user.teams.each do |team| %>
+        <li><%= team.name %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
 
-<% if current_user.admin? %>
-  <%= link_to "Go to Dashboard", admin_dashboard_path %>
+<% if current_user.Admin? || current_user.Leader? %>
+  <%= link_to "Go to Dashboard", dashboard_path %>
 <% end %>

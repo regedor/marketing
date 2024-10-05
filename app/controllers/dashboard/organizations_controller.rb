@@ -1,15 +1,10 @@
-class OrganizationsController < ApplicationController
+class Dashboard::OrganizationsController < ApplicationController
   before_action :set_organization, only: %i[ show edit update destroy ]
   before_action :authenticate_user!
-  before_action :authorize_admin!
+  before_action :authorize_leader!
 
-  def authorize_admin!
-    redirect_to root_path, alert: 'Access Denied' unless current_user.admin?
-  end
-
-  # GET /organizations or /organizations.json
-  def index
-    @organizations = Organization.all
+  def authorize_leader!
+    redirect_to root_path, alert: "Access Denied" unless current_user.Admin? || current_user.Leader?
   end
 
   # GET /organizations/1 or /organizations/1.json
@@ -31,7 +26,7 @@ class OrganizationsController < ApplicationController
 
     respond_to do |format|
       if @organization.save
-        format.html { redirect_to @organization, notice: "Organization was successfully created." }
+        format.html { redirect_to dashboard_organization_path(@organization), notice: "Organization was successfully created." }
         format.json { render :show, status: :created, location: @organization }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -44,7 +39,7 @@ class OrganizationsController < ApplicationController
   def update
     respond_to do |format|
       if @organization.update(organization_params)
-        format.html { redirect_to @organization, notice: "Organization was successfully updated." }
+        format.html { redirect_to dashboard_organization_path(@organization), notice: "Organization was successfully updated." }
         format.json { render :show, status: :ok, location: @organization }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -58,7 +53,7 @@ class OrganizationsController < ApplicationController
     @organization.destroy!
 
     respond_to do |format|
-      format.html { redirect_to organizations_path, status: :see_other, notice: "Organization was successfully destroyed." }
+      format.html { redirect_to dashboard_path, status: :see_other, notice: "Organization was successfully destroyed." }
       format.json { head :no_content }
     end
   end

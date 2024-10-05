@@ -1,0 +1,29 @@
+<div id="<%= dom_id user %>">
+  <p>
+    <strong>Email:</strong>
+    <%= user.email %>
+  </p>
+
+  <p>
+    <strong>Organization:</strong>
+    <%= user.organization_id.present? ? user.organization.name : 'None' %>
+  </p>
+
+  <p>
+    <strong>Role:</strong>
+    <%= user.role.humanize %>
+  </p>
+
+  <div>
+    <strong>Teams:</strong>
+    <% if user.teams.any? %>
+      <ul>
+        <% user.teams.each do |team| %>
+          <li><%= team.name %></li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p>No teams assigned</p>
+    <% end %>
+  </div>
+</div>

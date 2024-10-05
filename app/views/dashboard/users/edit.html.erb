@@ -1,6 +1,6 @@
 <h1>Edit User</h1>
 
-<%= form_for @user, url: admin_user_path(@user), method: :patch do |f| %>
+<%= form_for @user, url: dashboard_user_path(@user), method: :patch do |f| %>
   <div class="field">
     <%= f.label :email %>
     <%= f.email_field :email, autofocus: true %>
@@ -11,9 +11,14 @@
     <%= f.collection_select :organization_id, Organization.all, :id, :name, include_blank: true %>
   </div>
 
+  <div class="field">
+    <%= f.label :role %>
+    <%= f.select :role, @roles, { include_blank: "Select Role" } %>
+  </div>
+
   <div class="actions">
     <%= f.submit "Update User" %>
   </div>
 <% end %>
 
-<%= link_to 'Back', admin_users_path %>
+<%= link_to 'Back to Dashboard', dashboard_path %>

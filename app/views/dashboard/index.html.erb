@@ -1,0 +1,55 @@
+<h1>Dashboard</h1>
+
+<% if current_user.Admin? %>
+  <h2>Organizations</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @organizations.each do |organization| %>
+        <tr>
+          <td><%= organization.name %></td>
+          <td>
+            <%= link_to 'Edit', edit_dashboard_organization_path(organization) %> | 
+            <%= link_to 'Info', dashboard_organization_path(organization) %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <%= link_to 'Create New Organization', new_dashboard_organization_path %>
+<% elsif current_user.organization.present? %>
+    <div>
+        <p><%= current_user.organization.name %></p>
+        <%= link_to 'Edit', edit_dashboard_organization_path(current_user.organization) %>
+        <%= link_to 'Info', dashboard_organization_path(current_user.organization) %>
+    </div>
+<% end %>
+
+<h2>Users</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Email</th>
+      <th>Organization</th>
+      <th>Role</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @users.each do |user| %>
+      <tr>
+        <td><%= user.email %></td>
+        <td><%= user.organization&.name || 'No Organization' %></td>
+        <td><%= user.role.humanize %></td>
+        <td><%= link_to 'Edit', edit_dashboard_user_path(user) %> | <%= link_to 'Info', dashboard_user_path(user) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to 'Create New User', new_dashboard_user_path %>

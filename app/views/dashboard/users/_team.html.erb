@@ -1,0 +1,10 @@
+<% if teams.present? %>
+  <h3>Add Team</h3>
+  <%= form_with model: [user, TeamsUser.new], url: dashboard_user_teams_users_path(user), local: true do |form| %>
+    <div>
+      <%= form.label :team_id, "Select Team:" %>
+      <%= form.collection_select :team_id, teams, :id, :name, include_blank: true %>
+    </div>
+    <%= form.submit "Add Team" %>
+  <% end %>
+<% end %>

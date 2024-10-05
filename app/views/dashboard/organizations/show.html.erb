@@ -1,0 +1,13 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @organization %>
+<%= render "dashboard/organizations/teams", organization: @organization %>
+
+<div>
+  <%= link_to "Edit this organization", edit_dashboard_organization_path(@organization) %> |
+  <%= link_to 'Back to Dashboard', dashboard_path %>
+
+  <%= button_to "Destroy this organization", dashboard_organization_path(@organization), method: :delete, data: { confirm: "Are you sure?" } %>
+</div>
+
+
