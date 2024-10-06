@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get "social/index"
+  get "crm/index"
   devise_for :users, controllers: {
     sessions: 'users/sessions'
   }
