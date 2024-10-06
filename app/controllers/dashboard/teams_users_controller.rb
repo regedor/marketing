@@ -1,4 +1,3 @@
-# app/controllers/dashboard/teams_users_controller.rb
 class Dashboard::TeamsUsersController < ApplicationController
   before_action :set_user
   before_action :authenticate_user!
@@ -16,16 +15,15 @@ class Dashboard::TeamsUsersController < ApplicationController
   end
 
   private
+    def set_user
+      @user = User.find(params[:user_id])
+    end
 
-  def set_user
-    @user = User.find(params[:user_id])
-  end
+    def teams_user_params
+      params.require(:teams_user).permit(:team_id)
+    end
 
-  def teams_user_params
-    params.require(:teams_user).permit(:team_id)
-  end
-
-  def authorize_leader!
-    redirect_to root_path, alert: "Access Denied" unless current_user.Admin? || current_user.Leader?
-  end
+    def authorize_leader!
+      redirect_to root_path, alert: "Access Denied" unless current_user.Admin? || current_user.Leader?
+    end
 end

@@ -2,13 +2,13 @@ class Dashboard::OrganizationsController < ApplicationController
   before_action :set_organization, only: %i[ show edit update destroy ]
   before_action :authenticate_user!
   before_action :authorize_leader!
+  before_action :authorize_admin, only: %i[ new create destroy ]
+  before_action :authorized_organization!
 
-  def authorize_leader!
-    redirect_to root_path, alert: "Access Denied" unless current_user.Admin? || current_user.Leader?
-  end
-
-  # GET /organizations/1 or /organizations/1.json
+  # GET /dashboard/organizations/1 or /dashboard/organizations/1.json
   def show
+    @organization = Organization.find(params[:id])
+    @team = Team.new
   end
 
   # GET /organizations/new
@@ -16,11 +16,11 @@ class Dashboard::OrganizationsController < ApplicationController
     @organization = Organization.new
   end
 
-  # GET /organizations/1/edit
+  # GET /dashboard/organizations/1/edit
   def edit
   end
 
-  # POST /organizations or /organizations.json
+  # POST /dashboard/organizations or /dashboard/organizations.json
   def create
     @organization = Organization.new(organization_params)
 
@@ -35,7 +35,7 @@ class Dashboard::OrganizationsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /organizations/1 or /organizations/1.json
+  # PATCH/PUT /dashboard/organizations/1 or /dashboard/organizations/1.json
   def update
     respond_to do |format|
       if @organization.update(organization_params)
@@ -48,7 +48,7 @@ class Dashboard::OrganizationsController < ApplicationController
     end
   end
 
-  # DELETE /organizations/1 or /organizations/1.json
+  # DELETE /dashboard/organizations/1 or /dashboard/organizations/1.json
   def destroy
     @organization.destroy!
 
@@ -59,13 +59,23 @@ class Dashboard::OrganizationsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
     def set_organization
       @organization = Organization.find(params[:id])
     end
 
-    # Only allow a list of trusted parameters through.
     def organization_params
       params.require(:organization).permit(:name)
+    end
+
+    def authorize_admin
+      redirect_to root_path, alert: "Access Denied" unless current_user.Admin?
+    end
+
+    def authorize_leader!
+      redirect_to root_path, alert: "Access Denied" unless current_user.Admin? || current_user.Leader?
+    end
+
+    def authorized_organization!
+      redirect_to root_path, alert: "Access Denied" unless current_user.Admin? || current_user.organization == Organization.find(params[:id])
     end
 end
