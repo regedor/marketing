@@ -10,7 +10,11 @@
   </p>
 
   <p>
-    <strong>Admin:</strong>
-    <%= user.admin? ? 'Yes' : 'No' %>
+    <strong>isLeader:</strong>
+    <% if user.isLeader %>
+      True
+    <% else %>
+      False
+    <% end %>
   </p>
 </div>
