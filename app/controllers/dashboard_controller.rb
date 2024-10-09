@@ -3,7 +3,7 @@ class DashboardController < ApplicationController
   before_action :authorize_leader!
 
   def index
-    if current_user.Admin?
+    if current_user.isLeader
       @organizations = Organization.all
       @users = User.all
     else
@@ -14,6 +14,6 @@ class DashboardController < ApplicationController
   private
 
   def authorize_leader!
-    redirect_to root_path, alert: "Access Denied" unless current_user.Admin? or current_user.Leader?
+    redirect_to root_path, alert: "Access Denied" unless current_user.isLeader
   end
 end

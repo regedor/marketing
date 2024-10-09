@@ -10,20 +10,11 @@
   </p>
 
   <p>
-    <strong>Role:</strong>
-    <%= user.role.humanize %>
-  </p>
-
-  <div>
-    <strong>Teams:</strong>
-    <% if user.teams.any? %>
-      <ul>
-        <% user.teams.each do |team| %>
-          <li><%= team.name %></li>
-        <% end %>
-      </ul>
+    <strong>isLeader:</strong>
+    <% if user.isLeader %>
+      True
     <% else %>
-      <p>No teams assigned</p>
+      False
     <% end %>
-  </div>
+  </p>
 </div>

@@ -61,3 +61,5 @@ gem 'devise'
 gem 'jwt'
 gem 'dotenv-rails', groups: [:development, :test]
 gem 'cancancan', '~> 3.0'
+gem 'activeadmin'
+gem 'sassc-rails'

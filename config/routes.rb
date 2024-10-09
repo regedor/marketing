@@ -1,23 +1,17 @@
 Rails.application.routes.draw do
-  resources :teams_users
+  devise_for :admin_users, ActiveAdmin::Devise.config
+  ActiveAdmin.routes(self)
+
   devise_for :users, controllers: {
     sessions: "users/sessions"
   }
 
   root "home#index"
-  get "first_setup", to: "home#first_setup"
   get "dashboard", to: "dashboard#index"
 
   namespace :dashboard do
-    resources :users, only: [ :new, :create, :edit, :update, :destroy, :show ] do
-      resources :teams_users, only: [ :create ]
-    end
-    resources :organizations, except: [ :index ] do
-      resources :teams
-    end
+    resources :users, only: [ :new, :create, :edit, :update, :destroy, :show ]
   end
-
-
 
   get "up" => "rails/health#show", as: :rails_health_check
 

@@ -16,17 +16,11 @@
     <%= form.email_field :email %>
   </div>
 
-  <% if @organizations.present? %>
-    <div>
-      <%= form.label :organization_id, 'Organization' %>
-      <%= form.collection_select :organization_id, @organizations, :id, :name, prompt: 'Select Organization' %>
-    </div>
-  <% end %>
-
   <div>
-    <%= form.label :role %>
-    <%= form.select :role, @roles , { include_blank: "Select Role" } %>
+    <%= form.label :isLeader, "Leader" %>
+    <%= form.check_box :isLeader %>
   </div>
+  
 
   <div>
     <%= form.submit %>
