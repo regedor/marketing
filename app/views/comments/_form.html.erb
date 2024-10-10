@@ -1,0 +1,9 @@
+<%= form_with(model: [calendar, post, comment]) do |form| %>
+  <div>
+    <%= form.label :content, "Edit a comment" %><br/>
+    <%= form.text_area :content, rows: 3 %>
+  </div>
+  <div>
+    <%= form.submit "Post Comment" %>
+  </div>
+<% end %>

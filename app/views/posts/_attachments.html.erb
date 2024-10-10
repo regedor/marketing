@@ -1,0 +1,21 @@
+<h2>Attachments</h2>
+
+<div id="attachments">
+  <% @perspective.attachments.each do |attachment| %>
+    <div id="<%= dom_id attachment %>" class="attachment">
+      <p>
+        <strong>File Name:</strong>
+        <%= attachment.filename %>
+      </p>
+      <p>
+        <strong>Status:</strong>
+        <%= attachment.status %>
+      </p>
+      <div>
+        <%= link_to "View", attachment.content, target: "_blank" if attachment.content.present? %> |
+        <%= link_to "Edit", edit_perspective_attachment_path(@perspective, attachment) %> |
+        <%= link_to "Delete", perspective_attachment_path(@perspective, attachment), method: :delete, data: { confirm: "Are you sure?" } %>
+      </div>
+    </div>
+  <% end %>
+</div>

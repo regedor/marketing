@@ -1,0 +1,2 @@
+class Socialplatform < ApplicationRecord
+end

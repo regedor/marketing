@@ -1,0 +1,32 @@
+<%= form_with(model: [@post, @perspective], local: true) do |form| %>
+    <% if @perspective.errors.any? %>
+      <div>
+        <h2><%= pluralize(@perspective.errors.count, "error") %> prohibited this perspective from being saved:</h2>
+        <ul>
+          <% @perspective.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+  
+    <div>
+      <%= form.label :copy, "Perspective Content" %>
+      <%= form.text_area :copy, rows: 5 %>
+    </div>
+  
+    <div>
+      <%= form.label :socialplatform_id, "Social Platform" %>
+      <%= form.collection_select :socialplatform_id, Socialplatform.all, :id, :name, include_blank: true %>
+    </div>
+  
+    <div>
+      <%= form.label :status, "Status" %>
+      <%= form.select :status, ['in_analysis', 'active', 'archived'] %>
+    </div>
+  
+    <div>
+      <%= form.submit @perspective.new_record? ? "Create Perspective" : "Update Perspective" %>
+    </div>
+  <% end %>
+  

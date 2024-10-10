@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  copy: MyText
+  post: one
+  socialplatform: one
+  status: MyString
+
+two:
+  copy: MyText
+  post: two
+  socialplatform: two
+  status: MyString

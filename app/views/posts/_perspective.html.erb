@@ -1,0 +1,34 @@
+<div id="<%= dom_id(perspective) %>" class="perspective">
+  <!-- Display the content (copy) of the perspective -->
+  <h3>Perspective:</h3>
+  <p><%= perspective.copy %></p>
+
+  <!-- Display the social platform if associated -->
+  <% if perspective.socialplatform.present? %>
+    <p><strong>Social Platform:</strong> <%= perspective.socialplatform.name %></p>
+  <% end %>
+
+  <!-- Display the status of the perspective -->
+  <p><strong>Status:</strong> <%= perspective.status %></p>
+
+  <!-- Display the timestamps -->
+  <p><strong>Created at:</strong> <%= perspective.created_at.strftime("%B %d, %Y %I:%M %p") %></p>
+  <p><strong>Last updated:</strong> <%= perspective.updated_at.strftime("%B %d, %Y %I:%M %p") %></p>
+
+  <!-- Attachments Section -->
+  <h4>Attachments:</h4>
+  <% if perspective.attachments.any? %>
+    <ul>
+      <% perspective.attachments.each do |attachment| %>
+        <li>
+          <p><strong>Filename:</strong> <%= attachment.filename %></p>
+          <p><strong>Status:</strong> <%= attachment.status %></p>
+          <p><%= link_to "Download Attachment", download_attachment_path(attachment), class: "button" %></p>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p>No attachments available.</p>
+  <% end %>
+</div>
+

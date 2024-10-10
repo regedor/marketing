@@ -1,0 +1,47 @@
+<p style="color: green"><%= notice %></p>  
+
+<%= render @post %>
+
+<h2>Perspectives</h2>
+
+<!-- Current Perspective -->
+<%= render @perspective if @perspective %>
+
+<!-- Navigation Buttons -->
+<% if @previous_perspective %>
+  <%= link_to "Previous Perspective", calendar_post_perspective_path(@post, @calendar.id, @previous_perspective) %> |
+<% end %>
+
+<% if @next_perspective %>
+  <%= link_to "Next Perspective", calendar_post_perspective_path(@post,@calendar.id, @next_perspective) %>
+<% end %>
+
+<h2>Comments</h2>
+
+<!-- Comment Form -->
+<%= form_with(model: [@calendar, @post, Comment.new], local: true) do |form| %>
+  <div>
+    <%= form.label :content, "Add a comment" %><br/>
+    <%= form.text_area :content, rows: 3 %>
+  </div>
+  <div>
+    <%= form.submit "Post Comment" %>
+  </div>
+<% end %>
+
+<!-- Comments List -->
+<div id="comments">
+  <% @post.comments.each do |comment| %>
+    <%= render comment %>
+    <div>
+      <%= link_to "Edit", edit_calendar_post_comment_path(@post, @calendar, comment) %> |
+      <%= link_to "Delete", calendar_post_comment_path(@calendar, @post, comment), data: {turbo_method: :delete,  turbo_confirm: "Are you sure you?" } %>
+    </div>
+  <% end %>
+</div>
+
+<div>
+  <%= link_to "Edit this post", edit_calendar_path(@calendar.id,@post) %> |
+  <%= link_to "Back to calendars", calendars_path %> |
+  <%= button_to "Destroy this post", calendar_post_path(@calendar.id,@post),  data: {turbo_method: :delete,  turbo_confirm: "Are you sure you?" }  %>
+</div>

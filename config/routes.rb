@@ -1,4 +1,15 @@
 Rails.application.routes.draw do
+  resources :calendars do
+    resources :posts do
+      resources :perspectives do
+        resources :attachments do
+          resources :attachementcounters
+        end
+      end
+      resources :comments
+    end
+  end
+
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
 

@@ -1,0 +1,11 @@
+<% content_for :title, "New post" %>
+
+<h1>New post</h1>
+
+<%= render "form", post: @post, calendar: @calendar %>
+
+<br>
+
+<div>
+  <%= link_to "Back to calendar", calendars_path %>
+</div>

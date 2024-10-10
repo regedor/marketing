@@ -1,0 +1,37 @@
+<%= form_with(model: [calendar, post]) do |form| %> 
+  <% if post.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(post.errors.count, "error") %> prohibited this post from being saved:</h2>
+      <ul>
+        <% post.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :title, style: "display: block" %>
+    <%= form.text_field :title %>
+  </div>
+  
+  <div>
+    <%= form.label :design_idea, style: "display: block" %>
+    <%= form.text_area :design_idea %>
+  </div>
+
+  <div>
+    <%= form.label :status, style: "display: block" %>
+    <%= form.select :status, options_for_select([['Approved', 'approved'], ['In Analysis', 'in_analysis'], ['Rejected', 'rejected']]) %>
+  </div>
+
+  <div>
+    <%= form.label :publish_date, style: "display: block" %>
+    <%= form.datetime_field :publish_date %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>
+

@@ -29,7 +29,6 @@ class Dashboard::UsersController < ApplicationController
   end
 
   def edit
-    @organizations = get_organizations
   end
 
   def update
@@ -62,14 +61,6 @@ class Dashboard::UsersController < ApplicationController
 
     def set_user
       @user = User.find(params[:id])
-    end
-
-    def get_organizations
-      if current_user.organization.nil?
-        []
-      else
-        [ Organization.find(current_user.organization.id) ]
-      end
     end
 
     def have_access(user)
