@@ -1,5 +1,5 @@
 class Attachment < ApplicationRecord
-  belongs_to :perpective
+  belongs_to :perspective
 
   has_many :attachmentcounters, dependent: :destroy
 

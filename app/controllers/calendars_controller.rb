@@ -2,6 +2,7 @@ class CalendarsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_calendars
   before_action :set_calendar, only: [ :show, :edit, :update, :destroy ]
+  before_action :check_organization!, only: [ :show, :edit, :update, :destroy ]
 
   # GET /calendars
   def index
@@ -61,5 +62,9 @@ class CalendarsController < ApplicationController
     # Strong parameters: Only allow the trusted parameters for calendar
     def calendar_params
       params.require(:calendar).permit(:name)
+    end
+
+    def check_organization!
+      redirect_to root_path, alert: "Access Denied" unless current_user.organization_id == @calendar.organization_id
     end
 end

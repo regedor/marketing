@@ -1,10 +1,8 @@
 class AttachmentcountersController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_calendar
-  before_action :set_post
-  before_action :set_perspective
-  before_action :set_attachment
-  before_action :set_attachmentcounter, only: [:edit, :update, :destroy]
+  before_action :set_data
+  before_action :check_organization!
+  before_action :set_attachmentcounter, only: [ :edit, :update, :destroy ]
 
   # GET /calendars/:calendar_id/posts/:post_id/perspectives/:perspective_id/attachments/:attachment_id/attachmentcounters
   def index
@@ -22,7 +20,7 @@ class AttachmentcountersController < ApplicationController
     @attachmentcounter.user = current_user
 
     if @attachmentcounter.save
-      redirect_to [@calendar, @post, @perspective, @attachment], notice: "Attachment counter was successfully created."
+      redirect_to [ @calendar, @post, @perspective, @attachment ], notice: "Attachment counter was successfully created."
     else
       render :new, status: :unprocessable_entity
     end
@@ -35,7 +33,7 @@ class AttachmentcountersController < ApplicationController
   # PATCH/PUT /calendars/:calendar_id/posts/:post_id/perspectives/:perspective_id/attachments/:attachment_id/attachmentcounters/:id
   def update
     if @attachmentcounter.update(attachmentcounter_params)
-      redirect_to [@calendar, @post, @perspective, @attachment], notice: "Attachment counter was successfully updated."
+      redirect_to [ @calendar, @post, @perspective, @attachment ], notice: "Attachment counter was successfully updated."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -44,32 +42,27 @@ class AttachmentcountersController < ApplicationController
   # DELETE /calendars/:calendar_id/posts/:post_id/perspectives/:perspective_id/attachments/:attachment_id/attachmentcounters/:id
   def destroy
     @attachmentcounter.destroy
-    redirect_to [@calendar, @post, @perspective, @attachment], notice: "Attachment counter was successfully destroyed."
+    redirect_to [ @calendar, @post, @perspective, @attachment ], notice: "Attachment counter was successfully destroyed."
   end
 
   private
 
-  def set_calendar
-    @calendar = Calendar.find(params[:calendar_id])
-  end
+    def set_data
+      @calendar = Calendar.find(params[:calendar_id])
+      @post = Post.find(params[:post_id])
+      @perspective = @post.perspectives.find(params[:perspective_id])
+      @attachment = @perspective.attachments.find(params[:attachment_id])
+    end
 
-  def set_post
-    @post = Post.find(params[:post_id])
-  end
+    def set_attachmentcounter
+      @attachmentcounter = @attachment.attachmentcounters.find(params[:id])
+    end
 
-  def set_perspective
-    @perspective = @post.perspectives.find(params[:perspective_id])
-  end
+    def attachmentcounter_params
+      params.require(:attachmentcounter).permit(:approved, :rejected)
+    end
 
-  def set_attachment
-    @attachment = @perspective.attachments.find(params[:attachment_id])
-  end
-
-  def set_attachmentcounter
-    @attachmentcounter = @attachment.attachmentcounters.find(params[:id])
-  end
-
-  def attachmentcounter_params
-    params.require(:attachmentcounter).permit(:approved, :rejected)
-  end
+    def check_organization!
+      redirect_to root_path, alert: "Access Denied" unless current_user.organization_id == @calendar.organization.id
+    end
 end

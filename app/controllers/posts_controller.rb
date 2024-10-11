@@ -1,7 +1,9 @@
 class PostsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_calendar
+  before_action :check_organization!
   before_action :set_post, only: [ :show, :edit, :update, :destroy ]
+  before_action :check_author!, only: [ :edit, :update, :destroy ]
 
   # GET /posts
   def index
@@ -75,5 +77,13 @@ class PostsController < ApplicationController
           :copy
         ]
       )
+    end
+
+    def check_organization!
+      redirect_to root_path, alert: "Access Denied" unless current_user.organization_id == @calendar.organization.id
+    end
+
+    def check_author!
+      redirect_to root_path, alert: "Access Denied" unless current_user == @post.user
     end
 end

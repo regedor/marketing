@@ -1,7 +1,7 @@
 class PerspectivesController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_calendar
-  before_action :set_post
+  before_action :set_data
+  before_action :check_organization!
   before_action :set_perspective, only: [ :show, :edit, :update, :destroy ]
 
   # GET /calendars/:calendar_id/posts/:post_id/perspectives
@@ -50,11 +50,8 @@ class PerspectivesController < ApplicationController
   end
 
   private
-    def set_calendar
+    def set_data
       @calendar = Calendar.find(params[:calendar_id])
-    end
-
-    def set_post
       @post = Post.find(params[:post_id])
     end
 
@@ -64,5 +61,9 @@ class PerspectivesController < ApplicationController
 
     def perspective_params
       params.require(:perspective).permit(:copy, :socialplatform_id)
+    end
+
+    def check_organization!
+      redirect_to root_path, alert: "Access Denied" unless current_user.organization_id == @calendar.organization.id
     end
 end

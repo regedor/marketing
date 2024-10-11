@@ -1,9 +1,8 @@
 class AttachmentsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_calendar
-  before_action :set_post
-  before_action :set_perspective
-  before_action :set_attachment, only: [:show, :edit, :update, :destroy, :download]
+  before_action :set_data
+  before_action :check_organization!
+  before_action :set_attachment, only: [ :show, :edit, :update, :destroy, :download ]
 
   # GET /calendars/:calendar_id/posts/:post_id/perspectives/:perspective_id/attachments
   def index
@@ -24,7 +23,7 @@ class AttachmentsController < ApplicationController
     @attachment = @perspective.attachments.build(attachment_params)
 
     if @attachment.save
-      redirect_to [@calendar, @post, @perspective], notice: "Attachment was successfully created."
+      redirect_to [ @calendar, @post, @perspective ], notice: "Attachment was successfully created."
     else
       render :new, status: :unprocessable_entity
     end
@@ -37,7 +36,7 @@ class AttachmentsController < ApplicationController
   # PATCH/PUT /calendars/:calendar_id/posts/:post_id/perspectives/:perspective_id/attachments/:id
   def update
     if @attachment.update(attachment_params)
-      redirect_to [@calendar, @post, @perspective], notice: "Attachment was successfully updated."
+      redirect_to [ @calendar, @post, @perspective ], notice: "Attachment was successfully updated."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -46,7 +45,7 @@ class AttachmentsController < ApplicationController
   # DELETE /calendars/:calendar_id/posts/:post_id/perspectives/:perspective_id/attachments/:id
   def destroy
     @attachment.destroy
-    redirect_to [@calendar, @post, @perspective], notice: "Attachment was successfully destroyed."
+    redirect_to [ @calendar, @post, @perspective ], notice: "Attachment was successfully destroyed."
   end
 
   # GET /calendars/:calendar_id/posts/:post_id/perspectives/:perspective_id/attachments/:id/download
@@ -56,23 +55,21 @@ class AttachmentsController < ApplicationController
 
   private
 
-  def set_calendar
-    @calendar = Calendar.find(params[:calendar_id])
-  end
+    def set_data
+      @calendar = Calendar.find(params[:calendar_id])
+      @post = Post.find(params[:post_id])
+      @perspective = Perspective.find(params[:perspective_id])
+    end
 
-  def set_post
-    @post = Post.find(params[:post_id])
-  end
+    def set_attachment
+      @attachment = @perspective.attachments.find(params[:id])
+    end
 
-  def set_perspective
-    @perspective = @post.perspectives.find(params[:perspective_id])
-  end
+    def attachment_params
+      params.require(:attachment).permit(:filename, :content, :status)
+    end
 
-  def set_attachment
-    @attachment = @perspective.attachments.find(params[:id])
-  end
-
-  def attachment_params
-    params.require(:attachment).permit(:filename, :content, :status)
-  end
+    def check_organization!
+      redirect_to root_path, alert: "Access Denied" unless current_user.organization_id == @calendar.organization.id
+    end
 end

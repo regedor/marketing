@@ -1,13 +1,13 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+# test/fixtures/attachments.yml
 
 one:
-  perpective: one
-  filename: MyString
-  content: 
-  status: MyString
+  perspective: one # Assuming this is a string column
+  filename: MyString # Assuming this is a string column for filenames
+  content: "Sample content for attachment one" # This field might be text/blob depending on your schema
+  status: active # Assuming this is a string or enum for the status of the attachment
 
 two:
-  perpective: two
+  perspective: two
   filename: MyString
-  content: 
-  status: MyString
+  content: "Sample content for attachment two"
+  status: inactive
