@@ -23,7 +23,11 @@
         <li>
           <p><strong>Filename:</strong> <%= attachment.filename %></p>
           <p><strong>Status:</strong> <%= attachment.status %></p>
-          <p><%= link_to "Download Attachment", download_attachment_path(attachment), class: "button" %></p>
+          <% if attachment.content.present? %>
+            <p><%= link_to "Download Attachment", download_attachment_path(attachment), class: "button" %></p>
+          <% else %>
+            <p>No content available.</p>
+          <% end %>
         </li>
       <% end %>
     </ul>
@@ -31,4 +35,3 @@
     <p>No attachments available.</p>
   <% end %>
 </div>
-

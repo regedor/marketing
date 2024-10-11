@@ -1,19 +1,21 @@
-<p style="color: green"><%= notice %></p>  
+<p style="color: green"><%= notice %></p>   
 
 <%= render @post %>
 
 <h2>Perspectives</h2>
 
-<!-- Current Perspective -->
-<%= render @perspective if @perspective %>
+<!-- Loop through all perspectives of the post -->
+<% @post.perspectives.each do |perspective| %>
+  <%= render perspective %>
+<% end %>
 
-<!-- Navigation Buttons -->
+<!-- Navigation Buttons for Perspectives -->
 <% if @previous_perspective %>
-  <%= link_to "Previous Perspective", calendar_post_perspective_path(@post, @calendar.id, @previous_perspective) %> |
+  <%= link_to "Previous Perspective", calendar_post_perspective_path(@calendar, @post, @previous_perspective) %> |
 <% end %>
 
 <% if @next_perspective %>
-  <%= link_to "Next Perspective", calendar_post_perspective_path(@post,@calendar.id, @next_perspective) %>
+  <%= link_to "Next Perspective", calendar_post_perspective_path(@calendar, @post, @next_perspective) %>
 <% end %>
 
 <h2>Comments</h2>
@@ -34,14 +36,14 @@
   <% @post.comments.each do |comment| %>
     <%= render comment %>
     <div>
-      <%= link_to "Edit", edit_calendar_post_comment_path(@post, @calendar, comment) %> |
-      <%= link_to "Delete", calendar_post_comment_path(@calendar, @post, comment), data: {turbo_method: :delete,  turbo_confirm: "Are you sure you?" } %>
+      <%= link_to "Edit", edit_calendar_post_comment_path(@calendar, @post, comment) %> |
+      <%= link_to "Delete", calendar_post_comment_path(@calendar, @post, comment), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
     </div>
   <% end %>
 </div>
 
 <div>
-  <%= link_to "Edit this post", edit_calendar_path(@calendar.id,@post) %> |
+  <%= link_to "Edit this post", edit_calendar_post_path(@calendar, @post) %> |
   <%= link_to "Back to calendars", calendars_path %> |
-  <%= button_to "Destroy this post", calendar_post_path(@calendar.id,@post),  data: {turbo_method: :delete,  turbo_confirm: "Are you sure you?" }  %>
+  <%= button_to "Destroy this post", calendar_post_path(@calendar, @post), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
 </div>

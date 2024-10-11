@@ -1,68 +1,70 @@
 class PerspectivesController < ApplicationController
-    before_action :authenticate_user!
-    before_action :set_post
-    before_action :set_perspective, only: [ :show, :edit, :update, :destroy ]
+  before_action :authenticate_user!
+  before_action :set_calendar
+  before_action :set_post
+  before_action :set_perspective, only: [:show, :edit, :update, :destroy]
 
-    # GET /posts/:post_id/perspectives
-    def index
-      @perspectives = @post.perspectives
+  # GET /calendars/:calendar_id/posts/:post_id/perspectives
+  def index
+    @perspectives = @post.perspectives
+  end
+
+  # GET /calendars/:calendar_id/posts/:post_id/perspectives/:id
+  def show
+    @next_perspective = @post.perspectives.where("id > ?", @perspective.id).first
+    @previous_perspective = @post.perspectives.where("id < ?", @perspective.id).last
+  end
+
+  # GET /calendars/:calendar_id/posts/:post_id/perspectives/new
+  def new
+    @perspective = @post.perspectives.build
+  end
+
+  # POST /calendars/:calendar_id/posts/:post_id/perspectives
+  def create
+    @perspective = @post.perspectives.build(perspective_params)
+
+    if @perspective.save
+      redirect_to [@calendar, @post, @perspective], notice: "Perspective was successfully created."
+    else
+      render :new
     end
+  end
 
-    # GET /posts/:post_id/perspectives/:id
-    def show
-      @next_perspective = @post.perspectives.where("id > ?", @perspective.id).first
-      @previous_perspective = @post.perspectives.where("id < ?", @perspective.id).last
+  # GET /calendars/:calendar_id/posts/:post_id/perspectives/:id/edit
+  def edit
+  end
+
+  # PATCH/PUT /calendars/:calendar_id/posts/:post_id/perspectives/:id
+  def update
+    if @perspective.update(perspective_params)
+      redirect_to [@calendar, @post, @perspective], notice: "Perspective was successfully updated."
+    else
+      render :edit
     end
+  end
 
-    # GET /posts/:post_id/perspectives/new
-    def new
-      @perspective = @post.perspectives.build
-    end
+  # DELETE /calendars/:calendar_id/posts/:post_id/perspectives/:id
+  def destroy
+    @perspective.destroy
+    redirect_to calendar_post_perspectives_path(@calendar, @post), notice: "Perspective was successfully destroyed."
+  end
 
-    # POST /posts/:post_id/perspectives
-    def create
-      @perspective = @post.perspectives.build(perspective_params)
+  private
 
-      if @perspective.save
-        redirect_to [ @post, @perspective ], notice: "Perspective was successfully created."
-      else
-        render :new
-      end
-    end
+  def set_calendar
+    @calendar = Calendar.find(params[:calendar_id])
+  end
 
-    # GET /posts/:post_id/perspectives/:id/edit
-    def edit
-    end
+  def set_post
+    @post = Post.find(params[:post_id])
+  end
 
-    # PATCH/PUT /posts/:post_id/perspectives/:id
-    def update
-      if @perspective.update(perspective_params)
-        redirect_to [ @post, @perspective ], notice: "Perspective was successfully updated."
-      else
-        render :edit
-      end
-    end
+  def set_perspective
+    @perspective = @post.perspectives.find(params[:id])
+  end
 
-    # DELETE /posts/:post_id/perspectives/:id
-    def destroy
-      @perspective.destroy
-      redirect_to post_perspectives_path(@post), notice: "Perspective was successfully destroyed."
-    end
-
-    private
-
-    # Set the post for nested routes
-    def set_post
-      @post = Post.find(params[:post_id])
-    end
-
-    # Set the perspective for actions like show, edit, update, destroy
-    def set_perspective
-      @perspective = @post.perspectives.find(params[:id])
-    end
-
-    # Strong parameters: Only allow the trusted parameters for perspective
-    def perspective_params
-      params.require(:perspective).permit(:copy, :socialplatform_id, :status)
-    end
+  def perspective_params
+    params.require(:perspective).permit(:copy, :socialplatform_id, :status)
+  end
 end

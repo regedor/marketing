@@ -3,6 +3,8 @@ Rails.application.routes.draw do
     resources :posts do
       resources :perspectives do
         resources :attachments do
+          member do
+            get :download
           resources :attachementcounters
         end
       end
