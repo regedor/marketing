@@ -5,6 +5,7 @@ Rails.application.routes.draw do
         resources :attachments do
           member do
             get :download
+          end
           resources :attachementcounters
         end
       end

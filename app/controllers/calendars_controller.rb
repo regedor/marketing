@@ -1,10 +1,11 @@
 class CalendarsController < ApplicationController
   before_action :authenticate_user!
+  before_action :set_calendars
   before_action :set_calendar, only: [ :show, :edit, :update, :destroy ]
 
   # GET /calendars
   def index
-    @calendars = Calendar.where(organization: current_user.organization)
+    @calendar = Calendar.new
   end
 
   # GET /calendars/:id
@@ -24,7 +25,7 @@ class CalendarsController < ApplicationController
     if @calendar.save
       redirect_to "/calendars", notice: "Calendar was successfully created."
     else
-      render :new
+      render :index, status: :unprocessable_entity
     end
   end
 
@@ -38,7 +39,7 @@ class CalendarsController < ApplicationController
     if @calendar.update(calendar_params)
       redirect_to "/calendars", notice: "Calendar was successfully updated."
     else
-      render :edit
+      render :edit, status: :unprocessable_entity
     end
   end
 
@@ -49,14 +50,16 @@ class CalendarsController < ApplicationController
   end
 
   private
+    def set_calendars
+      @calendars = Calendar.where(organization: current_user.organization)
+    end
+    # Find the calendar for actions like show, edit, update, destroy
+    def set_calendar
+      @calendar = Calendar.find(params[:id])
+    end
 
-  # Find the calendar for actions like show, edit, update, destroy
-  def set_calendar
-    @calendar = Calendar.find(params[:id])
-  end
-
-  # Strong parameters: Only allow the trusted parameters for calendar
-  def calendar_params
-    params.require(:calendar).permit(:name)
-  end
+    # Strong parameters: Only allow the trusted parameters for calendar
+    def calendar_params
+      params.require(:calendar).permit(:name)
+    end
 end

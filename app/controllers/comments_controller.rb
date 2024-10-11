@@ -5,14 +5,14 @@ class CommentsController < ApplicationController
   before_action :set_comment, only: [ :show, :edit, :update, :destroy ]
 
   def create
-    @comment = @post.comments.build(comment_params)
+    @comment = @post.comments.new(comment_params)
     @comment.user_id = current_user.id
 
     if @comment.save
       redirect_to calendar_post_path(@calendar, @post), notice: "Comment was successfully created."
     else
-      @comments = @post.comments # Load the comments in case of error
-      render "posts/show" # Re-render the post show page with errors
+      @perspective = @post.perspectives.new
+      render "posts/show", status: :unprocessable_entity
     end
   end
 
@@ -23,7 +23,7 @@ class CommentsController < ApplicationController
     if @comment.update(comment_params)
       redirect_to calendar_post_path(@calendar, @post), notice: "Comment was successfully updated."
     else
-      render :edit
+      render :edit, status: :unprocessable_entity
     end
   end
 

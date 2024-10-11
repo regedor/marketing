@@ -1,49 +1,14 @@
-<p style="color: green"><%= notice %></p>   
+<div id="post">
+  <p style="color: green"><%= notice %></p>   
 
-<%= render @post %>
+  <%= render @post %>
+  <%= render "posts/perspectives"%>
+  <%= render "posts/comments", calendar: @calendar, post: @post, comment_new: @comment_new%>
 
-<h2>Perspectives</h2>
 
-<!-- Loop through all perspectives of the post -->
-<% @post.perspectives.each do |perspective| %>
-  <%= render perspective %>
-<% end %>
-
-<!-- Navigation Buttons for Perspectives -->
-<% if @previous_perspective %>
-  <%= link_to "Previous Perspective", calendar_post_perspective_path(@calendar, @post, @previous_perspective) %> |
-<% end %>
-
-<% if @next_perspective %>
-  <%= link_to "Next Perspective", calendar_post_perspective_path(@calendar, @post, @next_perspective) %>
-<% end %>
-
-<h2>Comments</h2>
-
-<!-- Comment Form -->
-<%= form_with(model: [@calendar, @post, Comment.new], local: true) do |form| %>
-  <div>
-    <%= form.label :content, "Add a comment" %><br/>
-    <%= form.text_area :content, rows: 3 %>
+  <div id="actions">
+    <%= link_to "Edit this post", edit_calendar_post_path(@calendar, @post) %> |
+    <%= link_to "Back to calendars", calendars_path %> |
+    <%= button_to "Destroy this post", calendar_post_path(@calendar, @post), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
   </div>
-  <div>
-    <%= form.submit "Post Comment" %>
-  </div>
-<% end %>
-
-<!-- Comments List -->
-<div id="comments">
-  <% @post.comments.each do |comment| %>
-    <%= render comment %>
-    <div>
-      <%= link_to "Edit", edit_calendar_post_comment_path(@calendar, @post, comment) %> |
-      <%= link_to "Delete", calendar_post_comment_path(@calendar, @post, comment), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
-    </div>
-  <% end %>
-</div>
-
-<div>
-  <%= link_to "Edit this post", edit_calendar_post_path(@calendar, @post) %> |
-  <%= link_to "Back to calendars", calendars_path %> |
-  <%= button_to "Destroy this post", calendar_post_path(@calendar, @post), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
 </div>

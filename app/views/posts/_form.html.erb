@@ -21,31 +21,14 @@
   </div>
 
   <div>
-    <%= form.label :status, style: "display: block" %>
-    <%= form.select :status, options_for_select([['Approved', 'approved'], ['In Analysis', 'in_analysis'], ['Rejected', 'rejected']]) %>
-  </div>
-
-  <div>
     <%= form.label :publish_date, style: "display: block" %>
     <%= form.datetime_field :publish_date %>
   </div>
 
   <!-- Nested form for perspectives -->
-  <h3>Perspectives</h3>
+  <h3>Default Perspective</h3>
   <%= form.fields_for :perspectives do |perspective_form| %>
     <%= render partial: "formperspective", locals: { form: perspective_form } %>
-
-    <!-- Nested form for attachments -->
-    <h4>Attachments</h4>
-    <%= perspective_form.fields_for :attachments do |attachment_form| %>
-      <%= render partial: "formattachment", locals: { form: attachment_form } %>
-
-      <!-- Nested form for attachment counters -->
-      <h5>Attachment Counters</h5>
-      <%= attachment_form.fields_for :attachmentcounters do |counter_form| %>
-        <%= render partial: "formattachmentcounter", locals: { form: counter_form } %>
-      <% end %>
-    <% end %>
   <% end %>
 
   <div>

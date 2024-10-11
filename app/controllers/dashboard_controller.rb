@@ -7,8 +7,7 @@ class DashboardController < ApplicationController
   end
 
   private
-
-  def authorize_leader!
-    redirect_to root_path, alert: "Access Denied" unless current_user.isLeader
-  end
+    def authorize_leader!
+      redirect_to root_path, alert: "Access Denied" unless current_user.isLeader
+    end
 end

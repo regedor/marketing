@@ -1,7 +1,7 @@
 class PostsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_calendar
-  before_action :set_post, only: [:show, :edit, :update, :destroy]
+  before_action :set_post, only: [ :show, :edit, :update, :destroy ]
 
   # GET /posts
   def index
@@ -11,13 +11,14 @@ class PostsController < ApplicationController
 
   # GET /posts/:id
   def show
-    @comments = @post.comments
+    @comment = @post.comments.new
+    @perspective = @post.perspectives.new
   end
 
   # GET /posts/new
   def new
-    @post = @calendar.posts.build
-    @post.perspectives.build # Initialize at least one perspective
+    @post = @calendar.posts.new
+    @perspective = @post.perspectives.new
   end
 
   # POST /posts
@@ -28,7 +29,7 @@ class PostsController < ApplicationController
     if @post.save
       redirect_to calendar_post_path(@calendar, @post), notice: "Post was successfully created."
     else
-      render :new
+      render :new, status: :unprocessable_entity
     end
   end
 
@@ -53,45 +54,26 @@ class PostsController < ApplicationController
 
   private
 
-  # Set the calendar based on the calendar_id parameter
-  def set_calendar
-    @calendar = Calendar.find(params[:calendar_id])
-  end
+    # Set the calendar based on the calendar_id parameter
+    def set_calendar
+      @calendar = Calendar.find(params[:calendar_id])
+    end
 
-  # Find the post for actions like show, edit, update, and destroy
-  def set_post
-    @post = Post.find(params[:id])
-  end
+    # Find the post for actions like show, edit, update, and destroy
+    def set_post
+      @post = Post.find(params[:id])
+    end
 
-  # Strong parameters: Only allow the trusted parameters for post
-  def post_params
-    params.require(:post).permit(
-      :title, 
-      :design_idea, 
-      :status, 
-      :publish_date, 
-      perspectives_attributes: [
-        :id, 
-        :copy, 
-        :socialplatform_id, 
-        :status, 
-        :_destroy, 
-        attachments_attributes: [
-          :id, 
-          :filename, 
-          :content, 
-          :status, 
-          :_destroy, 
-          attachmentcounters_attributes: [
-            :id, 
-            :user_id, 
-            :approved,   # Corrected spelling from 'aproved' to 'approved'
-            :rejected, 
-            :_destroy
-          ]
+    # Strong parameters: Only allow the trusted parameters for post
+    def post_params
+      params.require(:post).permit(
+        :title,
+        :design_idea,
+        :status,
+        :publish_date,
+        perspectives_attributes: [
+          :copy
         ]
-      ]
-    )
-  end
+      )
+    end
 end
-

@@ -1,15 +1,7 @@
-<div>
-  <%= form.label :copy, "Perspective Copy" %>
-  <%= form.text_area :copy %>
-</div>
-
-<div>
-  <%= form.label :socialplatform_id, "Social Platform" %>
-  <%= form.select :socialplatform_id, Socialplatform.all.collect { |sp| [sp.name, sp.id] }, include_blank: true %>
-</div>
-
-<div>
-  <%= form.label :status, "Status" %>
-  <%= form.select :status, ['draft', 'published'], include_blank: true %>
+<div id="form_perspective">
+  <div>
+    <%= form.label :copy, "Default Perspective Copy", style: "display: block" %>
+    <%= form.text_area :copy %>
+  </div>
 </div>
 
