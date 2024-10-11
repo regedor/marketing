@@ -1,31 +1,15 @@
-<%= form_with(model: [@perspective, @attachment], local: true) do |form| %>
-  <% if @attachment.errors.any? %>
-    <div>
-      <h2><%= pluralize(@attachment.errors.count, "error") %> prohibited this attachment from being saved:</h2>
-      <ul>
-        <% @attachment.errors.full_messages.each do |msg| %>
-          <li><%= msg %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
+<div>
+  <%= form.label :filename, "File Name" %>
+  <%= form.text_field :filename %>
+</div>
 
-  <div>
-    <%= form.label :filename, "File Name" %>
-    <%= form.text_field :filename %>
-  </div>
+<div>
+  <%= form.label :content, "File Content" %>
+  <%= form.file_field :content %>
+</div>
 
-  <div>
-    <%= form.label :content, "File Content" %>
-    <%= form.file_field :content %>
-  </div>
+<div>
+  <%= form.label :status, "Status" %>
+  <%= form.select :status, ['active', 'inactive', 'archived'], include_blank: true %>
+</div>
 
-  <div>
-    <%= form.label :status, "Status" %>
-    <%= form.select :status, ['active', 'inactive', 'archived'], include_blank: true %>
-  </div>
-
-  <div>
-    <%= form.submit @attachment.new_record? ? "Upload Attachment" : "Update Attachment" %>
-  </div>
-<% end %>

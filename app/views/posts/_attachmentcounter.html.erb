@@ -1,12 +1,15 @@
-<h3>Attachment Counter</h3>
+<div>
+  <%= form.label :user_id, "User" %>
+  <%= form.collection_select :user_id, User.all, :id, :email %>
+</div>
 
-<ul>
-  <% attachment.attachmentcounters.each do |counter| %>
-    <li>
-      <strong>User:</strong> <%= counter.user.email %><br>
-      <strong>Aproved:</strong> <%= counter.aproved ? "Yes" : "No" %><br>
-      <strong>Rejected:</strong> <%= counter.rejected ? "Yes" : "No" %><br>
-      <strong>Created At:</strong> <%= counter.created_at.strftime("%B %d, %Y %I:%M %p") %><br>
-    </li>
-  <% end %>
-</ul>
+<div>
+  <%= form.label :aproved, "Approved" %>
+  <%= form.check_box :aproved %>
+</div>
+
+<div>
+  <%= form.label :rejected, "Rejected" %>
+  <%= form.check_box :rejected %>
+</div>
+

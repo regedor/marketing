@@ -1,12 +1,12 @@
 class PostsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_calendar
-  before_action :set_post, only: [ :show, :edit, :update, :destroy ]
+  before_action :set_post, only: [:show, :edit, :update, :destroy]
 
   # GET /posts
   def index
     @calendars = Calendar.where(organization: current_user.organization)
-    @posts = Post.where(calendar_id: @calendars.pluck(:id)) unless @calendars.nil? || @calendars.empty?
+    @posts = Post.where(calendar_id: @calendars.pluck(:id)) unless @calendars.empty?
   end
 
   # GET /posts/:id
@@ -17,6 +17,7 @@ class PostsController < ApplicationController
   # GET /posts/new
   def new
     @post = @calendar.posts.build
+    @post.perspectives.build # Initialize at least one perspective
   end
 
   # POST /posts
@@ -51,16 +52,46 @@ class PostsController < ApplicationController
   end
 
   private
-    def set_calendar
-      @calendar = Calendar.find(params[:calendar_id])
-    end
-    # Find the post for actions like show, edit, update, destroy
-    def set_post
-      @post = Post.find(params[:id])
-    end
 
-    # Strong parameters: Only allow the trusted parameters for post
-    def post_params
-      params.require(:post).permit(:title, :status, :publish_date, :design_idea)
-    end
+  # Set the calendar based on the calendar_id parameter
+  def set_calendar
+    @calendar = Calendar.find(params[:calendar_id])
+  end
+
+  # Find the post for actions like show, edit, update, and destroy
+  def set_post
+    @post = Post.find(params[:id])
+  end
+
+  # Strong parameters: Only allow the trusted parameters for post
+  def post_params
+    params.require(:post).permit(
+      :title, 
+      :design_idea, 
+      :status, 
+      :publish_date, 
+      perspectives_attributes: [
+        :id, 
+        :copy, 
+        :socialplatform_id, 
+        :status, 
+        :_destroy, 
+        attachments_attributes: [
+          :id, 
+          :filename, 
+          :content, 
+          :status, 
+          :_destroy, 
+          attachmentcounters_attributes: [
+            :id, 
+            :user_id, 
+            :approved,   # Corrected spelling from 'aproved' to 'approved'
+            :rejected, 
+            :_destroy
+          ]
+        ]
+      ]
+    )
+  end
 end
+

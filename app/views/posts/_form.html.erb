@@ -1,4 +1,4 @@
-<%= form_with(model: [calendar, post]) do |form| %> 
+<%= form_with(model: [calendar, post], local: true) do |form| %>
   <% if post.errors.any? %>
     <div style="color: red">
       <h2><%= pluralize(post.errors.count, "error") %> prohibited this post from being saved:</h2>
@@ -30,8 +30,28 @@
     <%= form.datetime_field :publish_date %>
   </div>
 
+  <!-- Nested form for perspectives -->
+  <h3>Perspectives</h3>
+  <%= form.fields_for :perspectives do |perspective_form| %>
+    <%= render partial: "formperspective", locals: { form: perspective_form } %>
+
+    <!-- Nested form for attachments -->
+    <h4>Attachments</h4>
+    <%= perspective_form.fields_for :attachments do |attachment_form| %>
+      <%= render partial: "formattachment", locals: { form: attachment_form } %>
+
+      <!-- Nested form for attachment counters -->
+      <h5>Attachment Counters</h5>
+      <%= attachment_form.fields_for :attachmentcounters do |counter_form| %>
+        <%= render partial: "formattachmentcounter", locals: { form: counter_form } %>
+      <% end %>
+    <% end %>
+  <% end %>
+
   <div>
     <%= form.submit %>
   </div>
 <% end %>
+
+
 

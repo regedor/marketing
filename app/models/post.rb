@@ -6,6 +6,7 @@ class Post < ApplicationRecord
   has_many :comments, dependent: :destroy
   accepts_nested_attributes_for :comments, allow_destroy: true
   has_many :perspectives, dependent: :destroy
+  accepts_nested_attributes_for :perspectives, allow_destroy: true
 
   validates :status, inclusion: { in: %w[approved in_analysis rejected] }
   validates :publish_date, presence: true
