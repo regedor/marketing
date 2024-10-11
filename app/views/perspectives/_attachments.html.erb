@@ -1,18 +1,22 @@
-
 <div id="attachments">
-<h2>Attachments</h2>
+  <h2>Attachments</h2>
 
-  <%= render "attachments/form",  %>
-  
-  <% @post.attachment.each do |attachment| %>
-    <% if attachment.id.present? %>
-      <%= render attachment%>
-      <div>
-        <%= link_to "Edit attachment", edit_calendar_post_comment_path() %> |
-        <%= link_to "Download", download_attachment_path(attachment), class: "button" %> |
-        <%= link_to "Delete attachment", calendar_post_comment_path(), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
-      </div>
+  <!-- Render the form for new attachment -->
+  <%= render "attachments/form", calendar: @calendar, post: @post, perspective: @perspective, attachment: @attachment %>
+
+  <div id="attachments_info">
+    <% @perspective.attachments.each do |attachment| %>
+      <% if attachment.id.present? %>
+        <div id="<%= dom_id(attachment) %>_info" class="attachment">
+          <%= render attachment %>
+          
+          <div id="<%= dom_id(attachment) %>_actions" class="attachment-actions">
+            <%= link_to "Edit attachment", edit_calendar_post_perspective_attachment_path(@calendar, @post, @perspective, attachment) %> |
+            <%= link_to "Download", download_calendar_post_perspective_attachment_path(@calendar, @post, @perspective, attachment), class: "button" %> |
+            <%= link_to "Delete attachment", calendar_post_perspective_attachment_path(@calendar, @post, @perspective, attachment), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
+          </div>
+        </div>
+      <% end %>
     <% end %>
-  <% end %>
+  </div>
 </div>
-

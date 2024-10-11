@@ -1,0 +1,12 @@
+<% content_for :title, "Editing presctive" %>
+
+<h1>Editing presctive</h1>
+
+<%= render "form",attachment: @attachment ,perspective: @perspective, calendar: @calendar, post: @post%>
+
+<br>
+
+<div>
+  <%= link_to "Back to post", calendar_post_path(@calendar,@post) %>
+  <%= link_to "Back to prespective", calendar_post_perspective_path(@calendar,@post,@perspective) %>
+</div>

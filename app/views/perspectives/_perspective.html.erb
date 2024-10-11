@@ -15,23 +15,4 @@
   <p><strong>Created at:</strong> <%= perspective.created_at.strftime("%B %d, %Y %I:%M %p") %></p>
   <p><strong>Last updated:</strong> <%= perspective.updated_at.strftime("%B %d, %Y %I:%M %p") %></p>
 
-  <!-- Attachments Section -->
-  <h4>Attachments:</h4>
-  <% if perspective.attachments.any? %>
-    <ul>
-      <% perspective.attachments.each do |attachment| %>
-        <li>
-          <p><strong>Filename:</strong> <%= attachment.filename %></p>
-          <p><strong>Status:</strong> <%= attachment.status %></p>
-          <% if attachment.content.present? %>
-            <p><%= link_to "Download Attachment", download_attachment_path(attachment), class: "button" %></p>
-          <% else %>
-            <p>No content available.</p>
-          <% end %>
-        </li>
-      <% end %>
-    </ul>
-  <% else %>
-    <p>No attachments available.</p>
-  <% end %>
 </div>

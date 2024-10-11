@@ -6,12 +6,12 @@ Rails.application.routes.draw do
           member do
             get :download
           end
-          resources :attachementcounters
+          resources :attachmentcounters
         end
       end
       resources :comments
     end
-  end
+  end  
 
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)

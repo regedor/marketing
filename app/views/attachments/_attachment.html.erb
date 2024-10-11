@@ -1,0 +1,18 @@
+<div id="<%= dom_id(attachment) %>" class="attachment">
+  <!-- Display the name of the  attachment-->
+  <h3>Attachement:</h3>
+  <p><strong>Filename:</strong> <%= attachment.filename %></p>
+
+  <!-- Display the content if associated -->
+  <% if attachment.content.present? %>
+    <p><strong>Content:</strong> <%= attachment.content %></p>
+  <% end %>
+
+  <!-- Display the status of the attachment -->
+  <p><strong>Status:</strong> <%= attachment.status %></p>
+
+  <!-- Display the timestamps -->
+  <p><strong>Created at:</strong> <%= attachment.created_at.strftime("%B %d, %Y %I:%M %p") %></p>
+  <p><strong>Last updated:</strong> <%= attachment.updated_at.strftime("%B %d, %Y %I:%M %p") %></p>
+
+</div>
