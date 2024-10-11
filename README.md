@@ -34,6 +34,7 @@ DATABASE_PORT=5432
 ```bash
 rails db:create
 rails db:migrate
+rails db:seed
 ```
 
 # Usage
