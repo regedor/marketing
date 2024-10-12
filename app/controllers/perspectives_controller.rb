@@ -26,7 +26,7 @@ class PerspectivesController < ApplicationController
     @perspective_new = @post.perspectives.new(perspective_params)
 
     if @perspective_new.save
-      redirect_to calendar_post_path(@calendar, @post), notice: "Perspective was successfully created."
+      redirect_to calendar_post_perspective_path(@calendar, @post, @perspective_new), notice: "Perspective was successfully created."
     else
       @comment = @post.comments.new
       render :new, status: :unprocessable_entity
@@ -40,7 +40,7 @@ class PerspectivesController < ApplicationController
   # PATCH/PUT /calendars/:calendar_id/posts/:post_id/perspectives/:id
   def update
     if @perspective.update(perspective_params)
-      redirect_to calendar_post_path(@calendar, @post), notice: "Perspective was successfully updated."
+      redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Perspective was successfully updated."
     else
       render :edit, status: :unprocessable_entity
     end

@@ -1,0 +1,10 @@
+<div id="<%= dom_id(perspective) %>">
+  <div id="<%= dom_id(perspective) %>_name">
+    <% if perspective.socialplatform.present? %>
+      <%= perspective.socialplatform.name %>
+    <% else %>
+      Default
+    <% end %>
+  </div>
+  <%= link_to "Show Perspective", calendar_post_perspective_path(@calendar, @post, perspective) %>
+</div>

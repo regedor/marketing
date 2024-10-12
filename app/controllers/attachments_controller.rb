@@ -2,7 +2,7 @@ class AttachmentsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_data
   before_action :check_organization!
-  before_action :set_attachment, only: [:show, :edit, :update, :destroy, :download, :approved, :in_analysis, :rejected, :like, :dislike]
+  before_action :set_attachment, only: [ :show, :edit, :update, :destroy, :download, :approved, :in_analysis, :rejected, :like, :dislike ]
 
   # GET /calendars/:calendar_id/posts/:post_id/perspectives/:perspective_id/attachments
   def index
@@ -21,13 +21,13 @@ class AttachmentsController < ApplicationController
   # POST /calendars/:calendar_id/posts/:post_id/perspectives/:perspective_id/attachments
   def create
     @attachment = @perspective.attachments.new(attachment_params)
-  
+
     if params[:attachment][:content].present?
       # Read the file data into binary format
       @attachment.content = params[:attachment][:content].read
       @attachment.filename = params[:attachment][:content].original_filename
     end
-  
+
     if @attachment.save
       redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Attachment was successfully created."
     else
@@ -58,7 +58,7 @@ class AttachmentsController < ApplicationController
 
   # GET /calendars/:calendar_id/posts/:post_id/perspectives/:perspective_id/attachments/:id/download
   def download
-    send_data @attachment.content, filename: @attachment.filename,  type: "image/jpeg", disposition: 'attachment'
+    send_data @attachment.content, filename: @attachment.filename,  type: "image/jpeg", disposition: "attachment"
   end
 
   # PATCH /calendars/:calendar_id/posts/:post_id/perspectives/:perspective_id/attachments/:id/approved

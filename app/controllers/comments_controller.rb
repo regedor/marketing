@@ -13,7 +13,8 @@ class CommentsController < ApplicationController
       redirect_to calendar_post_path(@calendar, @post), notice: "Comment was successfully created."
     else
       @perspective = @post.perspectives.new
-      redirect_to calendar_post_path(@calendar, @post), status: :unprocessable_entity
+      error_messages = @comment.errors.full_messages.join(", ")
+      redirect_to calendar_post_path(@calendar, @post), alert: "Failed to create comment: #{error_messages}"
     end
   end
 
