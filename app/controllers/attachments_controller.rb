@@ -11,6 +11,9 @@ class AttachmentsController < ApplicationController
     if params[:attachment][:content].present?
       @attachment.content = params[:attachment][:content].read
       @attachment.filename = params[:attachment][:content].original_filename
+      @attachment.type_content = params[:attachment][:content].content_type
+    else
+      @attachment.type_content = "cloud"
     end
 
     if @attachment.save
@@ -43,7 +46,11 @@ class AttachmentsController < ApplicationController
 
   # GET /calendars/:calendar_id/posts/:post_id/perspectives/:perspective_id/attachments/:id/download
   def download
-    send_data @attachment.content, filename: @attachment.filename,  type: "image/jpeg", disposition: "attachment"
+    if @attachment.type_content == "cloud"
+      redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), alert: "The Attachment is a url for google drive."
+    else
+      send_data @attachment.content, filename: @attachment.filename,  type: @attachment.type_content, disposition: "attachment"
+    end
   end
 
   # PATCH /calendars/:calendar_id/posts/:post_id/perspectives/:perspective_id/attachments/:id/approved

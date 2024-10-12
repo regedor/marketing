@@ -21,11 +21,12 @@ if Rails.env.development?
     Rails.root.join('db', 'images', 'sample5.jpg')
   ]
 
-  puts "Creating Social Platforms"
+  print "Creating Social Platforms:"
   1.upto(5) do |sp|
-    puts "Creating Social Platform #{sp}"
+    print " #{sp}"
     Socialplatform.find_or_create_by!(name: "Yap#{sp}", link: "https://Yap/#{sp}.pt/", link_form: "https://Yap/form/#{sp}.pt/")
   end
+  puts " done;"
 
   puts "Creating Organizations and related data"
   1.upto(5) do |o|
@@ -33,14 +34,17 @@ if Rails.env.development?
     organization = Organization.find_or_create_by!(name: "Org #{o}")
 
     # Create 5 users for each org, 2 leaders, 3 normal users
-    puts "- Users: "
+    print "- Users: "
     1.upto(2) do |n|
+      print " #{n}"
       User.create!(email: "user#{n}_#{o}@ww.com", password: "1234567", password_confirmation: "1234567", isLeader: true, organization_id: organization.id)
     end
     3.upto(5) do |n|
+      print " #{n}"
       User.create!(email: "user#{n}_#{o}@ww.com", password: "1234567", password_confirmation: "1234567", isLeader: false, organization_id: organization.id)
     end
-    puts "Users created."
+
+    puts " done;"
 
     # Create 5 calendars for each org
     1.upto(5) do |c|
@@ -63,23 +67,31 @@ if Rails.env.development?
         )
 
         # Create 5 comments for each post
+        print "     - Creating Comments"
         1.upto(5) do |u|
+          print " #{u}"
           Comment.create!(content: text, post: post, user_id: u)
         end
+        puts " done;"
 
         # Create 5 perspectives for each post
         1.upto(5) do |perspective_num|
-          puts "     - Creating Perspective #{perspective_num}"
-          perspective = Perspective.create!(copy: "Perspective #{perspective_num} for post #{p}", post: post, socialplatform_id: Socialplatform.first.id)
+          print "     - Creating Perspective #{perspective_num}"
+          if perspective_num == 1
+            perspective = Perspective.create!(copy: "Perspective #{perspective_num} for post #{p}", post: post)
+          else
+            perspective = Perspective.create!(copy: "Perspective #{perspective_num} for post #{p}", post: post, socialplatform_id: Socialplatform.first.id)
+          end
 
           # Create 5 attachments for each perspective with real image content
           1.upto(5) do |attachment_num|
-            puts "       - Creating Attachment #{attachment_num}"
+            print " #{attachment_num}"
             image_file_path = image_files[attachment_num % image_files.size]  # Cycle through the image files
             image_binary = read_image_as_binary(image_file_path)
 
-            Attachment.create!(filename: File.basename(image_file_path), content: image_binary, perspective: perspective)
+            Attachment.create!(filename: File.basename(image_file_path), content: image_binary, perspective: perspective, type_content: "image/jpeg")
           end
+          puts " done;"
         end
       end
     end

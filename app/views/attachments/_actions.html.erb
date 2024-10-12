@@ -4,6 +4,8 @@
   <%= link_to "Reject", rejected_calendar_post_perspective_attachment_path(@calendar, @post, @perspective, attachment), data: { turbo_method: :patch } %> |
   <%= link_to attachment.attachmentcounters.where(aproved: true).count.to_s + " likes", like_calendar_post_perspective_attachment_path(@calendar, @post, @perspective, attachment), data: {turbo_method: :patch } %> |
   <%= link_to attachment.attachmentcounters.where(rejected: true).count.to_s + " dislikes", dislike_calendar_post_perspective_attachment_path(@calendar, @post, @perspective, attachment), data: {turbo_method: :patch } %> |
-  <%= link_to "Download", download_calendar_post_perspective_attachment_path(@calendar, @post, @perspective, attachment) %> |
+  <% if attachment.type_content != "cloud" %>
+    <%= link_to "Download", download_calendar_post_perspective_attachment_path(@calendar, @post, @perspective, attachment) %> |
+  <% end %>
   <%= link_to "Delete attachment", calendar_post_perspective_attachment_path(@calendar, @post, @perspective, attachment), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>   
 </div>

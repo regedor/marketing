@@ -47,7 +47,7 @@ class PerspectivesController < ApplicationController
       redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), alert: "Perspective cannot be deleted."
     else
       @perspective.destroy
-      redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Perspective was successfully destroyed."
+      redirect_to calendar_post_path(@calendar, @post), notice: "Perspective was successfully destroyed."
     end
   end
 
