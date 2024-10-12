@@ -1,5 +1,9 @@
 Rails.application.routes.draw do
   resources :calendars, only: [ :index, :create, :edit, :update, :destroy ] do
+    collection do
+      get :selector
+      post :select_calendar
+    end
     resources :posts, only: [ :show, :new, :create, :edit, :update, :destroy ] do
       member do
         patch :approved

@@ -41,6 +41,14 @@ class CalendarsController < ApplicationController
     redirect_to calendars_url, notice: "Calendar was successfully destroyed."
   end
 
+  def selector
+  end
+
+  def select_calendar
+    redirect_to new_calendar_post_path(Calendar.find(params[:calendar][:calendar_id]))
+  end
+
+
   private
     def set_calendars
       @calendars = Calendar.where(organization: current_user.organization)
