@@ -22,6 +22,11 @@
     </div>
 
     <div>
+      <%= form.label :categories, style: "display: block" %>
+      <%= form.text_area :categories, value: post.categories.join(", ") %>
+  </div>
+
+    <div>
       <%= form.label :publish_date, style: "display: block" %>
       <%= form.datetime_field :publish_date %>
     </div>

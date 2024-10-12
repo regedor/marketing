@@ -99,6 +99,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_10_145202) do
   create_table "posts", force: :cascade do |t|
     t.string "title"
     t.text "design_idea"
+    t.string "categories", default: [], array: true
     t.bigint "user_id", null: false
     t.bigint "calendar_id", null: false
     t.string "status", default: "in_analysis"
