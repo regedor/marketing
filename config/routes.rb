@@ -1,14 +1,33 @@
-Rails.application.routes.draw do
+Rails.application.routes.draw do 
   resources :calendars do
     resources :posts do
+      member do
+        patch :approved
+        patch :in_analysis
+        patch :rejected
+      end
+
       resources :perspectives do
+        member do
+          patch :approved
+          patch :in_analysis
+          patch :rejected
+        end
+
         resources :attachments do
           member do
             get :download
+            patch :approved
+            patch :in_analysis
+            patch :rejected
+            post :like
+            post :dislike
           end
+
           resources :attachmentcounters
         end
       end
+
       resources :comments
     end
   end  
@@ -24,11 +43,10 @@ Rails.application.routes.draw do
   get "dashboard", to: "dashboard#index"
 
   namespace :dashboard do
-    resources :users, only: [ :new, :create, :edit, :update, :destroy, :show ]
+    resources :users, only: [:new, :create, :edit, :update, :destroy, :show]
   end
 
   get "up" => "rails/health#show", as: :rails_health_check
-
   get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
   get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
 end

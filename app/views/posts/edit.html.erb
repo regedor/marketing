@@ -2,11 +2,10 @@
 
 <h1>Editing post</h1>
 
-<%= render "form", post: @post %>
+<%= render "form", post: @post, calendar: @calendar, is_new: false %>
 
 <br>
 
 <div>
-  <%= link_to "Show this post", @post %> |
-  <%= link_to "Back to posts", posts_path %>
+  <%= link_to "Show this post", calendar_post_path(@calendar,@post) %>
 </div>

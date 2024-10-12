@@ -4,7 +4,7 @@ class CreateAttachments < ActiveRecord::Migration[7.2]
       t.references :perspective, null: false, foreign_key: true
       t.string :filename
       t.binary :content
-      t.string :status
+      t.string :status, default: "in_analysis"
 
       t.timestamps
     end

@@ -2,8 +2,8 @@ class PostsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_calendar
   before_action :check_organization!
-  before_action :set_post, only: [ :show, :edit, :update, :destroy ]
-  before_action :check_author!, only: [ :edit, :update, :destroy ]
+  before_action :set_post, only: [:show, :edit, :update, :destroy, :approved, :in_analysis, :rejected]
+  before_action :check_author!, only: [:edit, :update, :destroy]
 
   # GET /posts
   def index
@@ -13,8 +13,12 @@ class PostsController < ApplicationController
 
   # GET /posts/:id
   def show
-    @comment = @post.comments.new
-    @perspective = @post.perspectives.new
+    @perspective = Perspective.where(post: @post, socialplatform: nil).first
+    if @perspective
+      redirect_to calendar_post_perspective_path(@calendar, @post, @perspective)
+    else
+      redirect_to calendars_path()
+    end
   end
 
   # GET /posts/new
@@ -42,16 +46,34 @@ class PostsController < ApplicationController
   # PATCH/PUT /posts/:id
   def update
     if @post.update(post_params)
-      redirect_to @post, notice: "Post was successfully updated."
+      redirect_to calendar_post_path(@calendar, @post), notice: "Post was successfully updated."
     else
-      render :edit
+      render :edit, status: :unprocessable_entity
     end
   end
 
   # DELETE /posts/:id
   def destroy
     @post.destroy
-    redirect_to posts_url, notice: "Post was successfully destroyed."
+    redirect_to calendars_path(), notice: "Post was successfully deleted."
+  end
+
+   # PATCH /posts/:id/approved
+   def approved
+    @post.update(status: "approved")
+    redirect_to calendar_post_path(@calendar, @post), notice: "Post status updated to Approved."
+   end
+
+  # PATCH /posts/:id/in_analysis
+  def in_analysis
+    @post.update(status: "in_analysis")
+    redirect_to calendar_post_path(@calendar, @post), notice: "Post status updated to In Analysis."
+  end
+
+  # PATCH /posts/:id/rejected
+  def rejected
+    @post.update(status: "rejected")
+    redirect_to calendar_post_path(@calendar, @post), notice: "Post status updated to Rejected."
   end
 
   private

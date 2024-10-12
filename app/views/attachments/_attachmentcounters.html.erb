@@ -2,7 +2,7 @@
   <h2>Attachment Counters</h2>
 
   <!-- Render the form for a new attachment counter -->
-  <%= render "attachmentcounters/form", calendar: @calendar, post: @post, perspective: @perspective, attachment: @attachment, attachmentcounter: @attachmentcounter %>
+  <%= render "attachmentcounters/form", calendar: @calendar, post: @post, perspective: @perspective, attachment: @attachment, attachmentcounter: Attachmentcounter.new %>
 
   <div id="attachmentcounters_info">
     <% @attachment.attachmentcounters.each do |attachmentcounter| %>

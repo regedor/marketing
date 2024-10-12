@@ -55,7 +55,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_10_145202) do
     t.bigint "perspective_id", null: false
     t.string "filename"
     t.binary "content"
-    t.string "status"
+    t.string "status", default: "in_analysis"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["perspective_id"], name: "index_attachments_on_perspective_id"

@@ -25,10 +25,12 @@
     <%= form.datetime_field :publish_date %>
   </div>
 
-  <!-- Nested form for perspectives -->
-  <h3>Default Perspective</h3>
-  <%= form.fields_for :perspectives do |perspective_form| %>
-    <%= render partial: "formperspective", locals: { form: perspective_form } %>
+  <% if is_new %>
+    <!-- Nested form for perspectives -->
+    <h3>Default Perspective</h3>
+    <%= form.fields_for :perspectives do |perspective_form| %>
+      <%= render partial: "formperspective", locals: { form: perspective_form } %>
+    <% end %>
   <% end %>
 
   <div>

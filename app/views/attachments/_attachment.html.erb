@@ -3,11 +3,6 @@
   <h3>Attachement:</h3>
   <p><strong>Filename:</strong> <%= attachment.filename %></p>
 
-  <!-- Display the content if associated -->
-  <% if attachment.content.present? %>
-    <p><strong>Content:</strong> <%= attachment.content %></p>
-  <% end %>
-
   <!-- Display the status of the attachment -->
   <p><strong>Status:</strong> <%= attachment.status %></p>
 

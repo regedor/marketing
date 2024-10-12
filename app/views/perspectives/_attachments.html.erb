@@ -1,22 +1,30 @@
-<div id="attachments">
-  <h2>Attachments</h2>
-
-  <!-- Render the form for new attachment -->
-  <%= render "attachments/form", calendar: @calendar, post: @post, perspective: @perspective, attachment: Attachment.new %>
-
-  <div id="attachments_info">
-    <% @perspective.attachments.each do |attachment| %>
-      <% if attachment.id.present? %>
-        <div id="<%= dom_id(attachment) %>_info" class="attachment">
-          <%= render attachment %>
-          
-          <div id="<%= dom_id(attachment) %>_actions" class="attachment-actions">
-            <%= link_to "Edit attachment", edit_calendar_post_perspective_attachment_path(@calendar, @post, @perspective, attachment) %> |
-            <%= link_to "Download", download_calendar_post_perspective_attachment_path(@calendar, @post, @perspective, attachment), class: "button" %> |
-            <%= link_to "Delete attachment", calendar_post_perspective_attachment_path(@calendar, @post, @perspective, attachment), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
-          </div>
+<div id="attachments_info">
+  <% @perspective.attachments.each do |attachment| %>
+    <% if attachment.id.present? %>
+      <div id="<%= dom_id(attachment) %>_info" class="attachment">
+        <%= render attachment %>
+        
+        <!-- Status Update Buttons -->
+        <div class="status-buttons">
+          <%= button_to "Approve", approved_calendar_post_perspective_attachment_path(@calendar, @post, @perspective, attachment), method: :patch, class: "button" %>
+          <%= button_to "In Analysis", in_analysis_calendar_post_perspective_attachment_path(@calendar, @post, @perspective, attachment), method: :patch, class: "button" %>
+          <%= button_to "Reject", rejected_calendar_post_perspective_attachment_path(@calendar, @post, @perspective, attachment), method: :patch, class: "button" %>
         </div>
-      <% end %>
+
+        <div id="<%= dom_id(attachment) %>_actions" class="attachment-actions">
+          <%= link_to "Like", like_calendar_post_perspective_attachment_path(@calendar, @post, @perspective, attachment), data: {turbo_method: :post } %>
+          <%= link_to "Dislike", dislike_calendar_post_perspective_attachment_path(@calendar, @post, @perspective, attachment), data: {turbo_method: :post } %>
+          <%= link_to "Download", download_calendar_post_perspective_attachment_path(@calendar, @post, @perspective, attachment), class: "button" %> |
+          <%= link_to "Delete attachment", calendar_post_perspective_attachment_path(@calendar, @post, @perspective, attachment), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
+        </div>
+        
+        <!-- Display like and dislike counts -->
+        <div>
+          Likes: <%= attachment.attachmentcounters.where(aproved: true).count %>
+          Dislikes: <%= attachment.attachmentcounters.where(rejected: true).count %>
+        </div>
+      </div>
     <% end %>
-  </div>
+  <% end %>
 </div>
+

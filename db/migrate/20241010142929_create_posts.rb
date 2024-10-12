@@ -7,7 +7,7 @@ class CreatePosts < ActiveRecord::Migration[7.2]
       t.references :calendar, null: false, foreign_key: true
       t.string :status, default: "in_analysis"
       t.datetime :publish_date
-
+      
       t.timestamps
     end
   end
