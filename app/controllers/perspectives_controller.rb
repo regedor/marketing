@@ -2,7 +2,7 @@ class PerspectivesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_data
   before_action :check_organization!
-  before_action :set_perspective, only: [:show, :edit, :update, :destroy, :approved, :in_analysis, :rejected]
+  before_action :set_perspective, only: [ :show, :edit, :update, :destroy, :approved, :in_analysis, :rejected ]
 
   # GET /calendars/:calendar_id/posts/:post_id/perspectives
   def index
@@ -29,7 +29,7 @@ class PerspectivesController < ApplicationController
       redirect_to calendar_post_path(@calendar, @post), notice: "Perspective was successfully created."
     else
       @comment = @post.comments.new
-      render "posts/show", status: :unprocessable_entity
+      render :new, status: :unprocessable_entity
     end
   end
 
@@ -55,7 +55,7 @@ class PerspectivesController < ApplicationController
       redirect_to calendar_post_path(@calendar, @post), notice: "Perspective was successfully destroyed."
     end
   end
-  
+
   # PATCH /calendars/:calendar_id/posts/:post_id/perspectives/:id/approved
   def approved
     @perspective.update(status: "approved")

@@ -13,7 +13,7 @@ class CommentsController < ApplicationController
       redirect_to calendar_post_path(@calendar, @post), notice: "Comment was successfully created."
     else
       @perspective = @post.perspectives.new
-      render "posts/show", status: :unprocessable_entity
+      redirect_to calendar_post_path(@calendar, @post), status: :unprocessable_entity
     end
   end
 
