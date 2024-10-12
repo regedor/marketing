@@ -2,28 +2,13 @@ class AttachmentsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_data
   before_action :check_organization!
-  before_action :set_attachment, only: [ :show, :edit, :update, :destroy, :download, :approved, :in_analysis, :rejected, :like, :dislike ]
-
-  # GET /calendars/:calendar_id/posts/:post_id/perspectives/:perspective_id/attachments
-  def index
-    @attachments = @perspective.attachments
-  end
-
-  # GET /calendars/:calendar_id/posts/:post_id/perspectives/:perspective_id/attachments/:id
-  def show
-  end
-
-  # GET /calendars/:calendar_id/posts/:post_id/perspectives/:perspective_id/attachments/new
-  def new
-    @attachment = @perspective.attachments.build
-  end
+  before_action :set_attachment, only: [ :update, :destroy, :download, :approved, :in_analysis, :rejected, :like, :dislike ]
 
   # POST /calendars/:calendar_id/posts/:post_id/perspectives/:perspective_id/attachments
   def create
     @attachment = @perspective.attachments.new(attachment_params)
 
     if params[:attachment][:content].present?
-      # Read the file data into binary format
       @attachment.content = params[:attachment][:content].read
       @attachment.filename = params[:attachment][:content].original_filename
     end
@@ -31,8 +16,8 @@ class AttachmentsController < ApplicationController
     if @attachment.save
       redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Attachment was successfully created."
     else
-      @attachments = @perspective.attachments
-      render "perspectives/show", status: :unprocessable_entity
+      error_messages = @attachment.errors.full_messages.join(", ")
+      redirect_to calendar_post_perspective_path(@calendar, @post, @perspective),  alert: "Failed to create attachment: #{error_messages}"
     end
   end
 
@@ -79,6 +64,7 @@ class AttachmentsController < ApplicationController
     redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Attachment status updated to Rejected."
   end
 
+  # PATCH /calendars/:calendar_id/posts/:post_id/perspectives/:perspective_id/attachments/:id/like
   def like
     @attachmentcounter = find_or_initialize_attachmentcounter
     @attachmentcounter.aproved = true
@@ -86,6 +72,7 @@ class AttachmentsController < ApplicationController
     save_counter(@attachmentcounter)
   end
 
+  # PATCH /calendars/:calendar_id/posts/:post_id/perspectives/:perspective_id/attachments/:id/dislike
   def dislike
     @attachmentcounter = find_or_initialize_attachmentcounter
     @attachmentcounter.aproved = false
@@ -119,11 +106,11 @@ class AttachmentsController < ApplicationController
 
     def save_counter(attachmentcounter)
       if attachmentcounter.save
-        redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Your response was successfully recorded."
+        redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Reaction was successfully saved."
       else
         error_message = attachmentcounter.errors.full_messages.join(", ")
         puts error_message
-        redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), alert: "There was an error recording your response." + error_message
+        redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), alert: "There was an error saving the reaction." + error_message
       end
     end
 end

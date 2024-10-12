@@ -2,25 +2,27 @@ class CommentsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_data
   before_action :check_organization!
-  before_action :set_comment, only: [ :show, :edit, :update, :destroy ]
+  before_action :set_comment, only: [ :edit, :update, :destroy ]
   before_action :check_author!, only: [ :edit, :update, :destroy ]
 
+  # POST /calendars/:calendar_id/posts/:post_id/comments
   def create
     @comment = @post.comments.new(comment_params)
     @comment.user_id = current_user.id
 
     if @comment.save
-      redirect_to calendar_post_path(@calendar, @post), notice: "Comment was successfully created."
+      redirect_back(fallback_location: calendar_post_path(@calendar, @post), notice: "Comment was successfully created.")
     else
-      @perspective = @post.perspectives.new
       error_messages = @comment.errors.full_messages.join(", ")
-      redirect_to calendar_post_path(@calendar, @post), alert: "Failed to create comment: #{error_messages}"
+      redirect_back(fallback_location: calendar_post_path(@calendar, @post), alert: "Failed to create comment: #{error_messages}")
     end
   end
 
+  # GET /calendars/:calendar_id/posts/:post_id/comments/:id/edit
   def edit
   end
 
+  # PATCH /calendars/:calendar_id/posts/:post_id/comments/:id
   def update
     if @comment.update(comment_params)
       redirect_to calendar_post_path(@calendar, @post), notice: "Comment was successfully updated."
@@ -29,9 +31,10 @@ class CommentsController < ApplicationController
     end
   end
 
+  # DELETE /calendars/:calendar_id/posts/:post_id/comments/:id
   def destroy
     @comment.destroy
-    redirect_to calendar_post_path(@calendar, @post), notice: "Comment was successfully deleted."
+    redirect_back(fallback_location: calendar_post_path(@calendar, @post),  notice: "Comment was successfully deleted.")
   end
 
   private

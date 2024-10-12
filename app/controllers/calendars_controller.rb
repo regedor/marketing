@@ -9,11 +9,6 @@ class CalendarsController < ApplicationController
     @calendar = Calendar.new
   end
 
-  # GET /calendars/new
-  def new
-    @calendar = Calendar.new
-  end
-
   # POST /calendars
   def create
     @calendar = Calendar.new(calendar_params)
