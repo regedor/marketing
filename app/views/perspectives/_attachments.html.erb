@@ -2,7 +2,7 @@
   <h2>Attachments</h2>
 
   <!-- Render the form for new attachment -->
-  <%= render "attachments/form", calendar: @calendar, post: @post, perspective: @perspective, attachment: @attachment %>
+  <%= render "attachments/form", calendar: @calendar, post: @post, perspective: @perspective, attachment: Attachment.new %>
 
   <div id="attachments_info">
     <% @perspective.attachments.each do |attachment| %>

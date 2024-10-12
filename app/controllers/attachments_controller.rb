@@ -23,7 +23,7 @@ class AttachmentsController < ApplicationController
     @attachment = @perspective.attachments.build(attachment_params)
 
     if @attachment.save
-      redirect_to [ @calendar, @post, @perspective ], notice: "Attachment was successfully created."
+      redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Attachment was successfully created."
     else
       render :new, status: :unprocessable_entity
     end
@@ -31,12 +31,13 @@ class AttachmentsController < ApplicationController
 
   # GET /calendars/:calendar_id/posts/:post_id/perspectives/:perspective_id/attachments/:id/edit
   def edit
+    @attachment = @perspective.attachments.find(params[:id])
   end
 
   # PATCH/PUT /calendars/:calendar_id/posts/:post_id/perspectives/:perspective_id/attachments/:id
   def update
     if @attachment.update(attachment_params)
-      redirect_to [ @calendar, @post, @perspective ], notice: "Attachment was successfully updated."
+      redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Attachment was successfully updated."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -45,7 +46,7 @@ class AttachmentsController < ApplicationController
   # DELETE /calendars/:calendar_id/posts/:post_id/perspectives/:perspective_id/attachments/:id
   def destroy
     @attachment.destroy
-    redirect_to [ @calendar, @post, @perspective ], notice: "Attachment was successfully destroyed."
+    redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Attachment was successfully destroyed."
   end
 
   # GET /calendars/:calendar_id/posts/:post_id/perspectives/:perspective_id/attachments/:id/download
