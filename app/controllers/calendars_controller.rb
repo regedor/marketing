@@ -1,16 +1,12 @@
 class CalendarsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_calendars
-  before_action :set_calendar, only: [ :show, :edit, :update, :destroy ]
-  before_action :check_organization!, only: [ :show, :edit, :update, :destroy ]
+  before_action :set_calendar, only: [ :edit, :update, :destroy ]
+  before_action :check_organization!, only: [ :edit, :update, :destroy ]
 
   # GET /calendars
   def index
     @calendar = Calendar.new
-  end
-
-  # GET /calendars/:id
-  def show
   end
 
   # GET /calendars/new
