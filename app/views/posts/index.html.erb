@@ -1,0 +1,9 @@
+
+<div id=<%= "posts_calendar_" + calendar.id %>>
+  <h1>Posts of <%= calendar.name %></h1>
+    <% posts.each do |post| %>
+      <%= render post %>
+    <% end %>
+    <%= link_to "New post", new_calendar_post_path(calendar), calendar: calendar, post:Post.new %>
+</div>
+

@@ -1,7 +1,14 @@
 <h1>Welcome, <%= current_user.email %>!</h1>
+<% if current_user.organization.present? %>
+  <p>You are part of the <%= current_user.organization.name%> organization as 
+    <% if current_user.isLeader %>
+      Leader
+    <% else %>
+      normal user
+    <% end %>
+  </p>
+<% end %>
 
-<p>You are logged in as <%= current_user.admin? ? "Admin" : "User" %>.</p>
-
-<% if current_user.admin? %>
-  <%= link_to "Go to Dashboard", admin_dashboard_path %>
+<% if current_user.isLeader %>
+  <%= link_to "Go to Dashboard", dashboard_path %>
 <% end %>

@@ -1,0 +1,6 @@
+
+<!-- Nested form for perspectives -->
+<h3>Default Perspective</h3>
+<%= form.fields_for :perspectives do |perspective_form| %>
+  <%= render partial: "formperspective", locals: { form: perspective_form } %>
+<% end %>

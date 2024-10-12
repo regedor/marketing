@@ -1,22 +1,52 @@
-Rails.application.routes.draw do
-  get "social", to: "social#index"
-  get "crm/index"
-  devise_for :users, controllers: {
-    sessions: 'users/sessions'
-  }
-  
-  root 'home#index'
-  get 'first_setup', to: 'home#first_setup'
+Rails.application.routes.draw do 
+  resources :calendars do
+    resources :posts do
+      member do
+        patch :approved
+        patch :in_analysis
+        patch :rejected
+      end
 
-  namespace :admin do
-    get 'dashboard', to: 'dashboard#index'
-    resources :users, only: [:index, :new, :create, :edit, :update, :destroy, :show]
+      resources :perspectives do
+        member do
+          patch :approved
+          patch :in_analysis
+          patch :rejected
+        end
+
+        resources :attachments do
+          member do
+            get :download
+            patch :approved
+            patch :in_analysis
+            patch :rejected
+            post :like
+            post :dislike
+          end
+
+          resources :attachmentcounters
+        end
+      end
+
+      resources :comments
+    end
+  end  
+
+  devise_for :admin_users, ActiveAdmin::Devise.config
+  ActiveAdmin.routes(self)
+
+  devise_for :users, controllers: {
+    sessions: "users/sessions"
+  }
+
+  root "home#index"
+  get "dashboard", to: "dashboard#index"
+
+  namespace :dashboard do
+    resources :users, only: [:new, :create, :edit, :update, :destroy, :show]
   end
 
-  resources :organizations
-
   get "up" => "rails/health#show", as: :rails_health_check
-
   get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
   get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
 end

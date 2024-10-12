@@ -1,0 +1,12 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @user %>
+
+<div>
+  <%= link_to "Edit this user", edit_dashboard_user_path(@user) %> |
+  <%= link_to 'Back to Dashboard', dashboard_path %>
+
+  <%= button_to "Destroy this user", dashboard_user_path(@user), method: :delete, data: {turbo_method: :delete,  turbo_confirm: "Are you sure you want to delete the user " + @user.email + " ?" } %> 
+</div>
+
+

@@ -1,0 +1,21 @@
+<div id="form_comment">
+  <%= form_with(model: [calendar, post, @comment], local: true) do |form| %>
+    <% if @comment.errors.any? %>
+      <div style="color: red">
+        <h2><%= pluralize(@comment.errors.count, "error") %> prohibited this comment from being saved:</h2>
+        <ul>
+          <% @comment.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+    <div>
+      <%= form.label :content, "Content" %><br/>
+      <%= form.text_area :content, rows: 3 %>
+    </div>
+    <div>
+      <%= form.submit "Post Comment" %>
+    </div>
+  <% end %>
+</div>

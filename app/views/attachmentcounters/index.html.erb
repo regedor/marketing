@@ -1,0 +1,9 @@
+<h1>Attachment Counters</h1>
+
+<ul>
+  <% @attachmentcounters.each do |counter| %>
+    <li>
+      User: <%= counter.user.email %>, Liked: <%= counter.aproved ? "Yes" : "No" %>, Disliked: <%= counter.rejected ? "Yes" : "No" %>
+    </li>
+  <% end %>
+</ul>

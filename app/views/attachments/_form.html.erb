@@ -1,0 +1,28 @@
+<div id="form_attachment">
+<%= form_with(model: [calendar, post, perspective, @attachment], local: true, html: { multipart: true }) do |form| %>
+  <% if @attachment.errors.any? %>
+    <div id="error_explanation" style="color: red">
+      <h2><%= pluralize(@attachment.errors.count, "error") %> prohibited this attachment from being saved:</h2>
+      <ul>
+        <% @attachment.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :filename %>
+    <%= form.text_field :filename %>
+  </div>
+
+  <div class="field">
+    <%= form.label :content %>
+    <%= form.file_field :content %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>
+

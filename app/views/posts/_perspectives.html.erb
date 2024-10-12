@@ -1,0 +1,30 @@
+<div id="perspectives">
+  <h2>Perspectives</h2>
+  <%= link_to "Create Perspective", new_calendar_post_perspective_path(@calendar, @post) %>
+  <div id="perspectives_info">
+    <% @post.perspectives.each do |perspective| %>
+      <% if perspective.id.present? %>
+        <div id="<%= dom_id(perspective) %>">
+          <div id="<%= dom_id(perspective) %>_name">
+            <% if perspective.socialplatform.present? %>
+              <%= perspective.socialplatform.name %>
+            <% else %>
+              Default
+            <% end %>
+          </div>
+          <div id="<%= dom_id(perspective) %>_actions">
+            <%= link_to "Show Perspective", calendar_post_perspective_path(@calendar, @post, perspective) %> |
+            <%= link_to "Edit Perspective", edit_calendar_post_perspective_path(@calendar, @post, perspective) %> |
+            <%= link_to "Delete Perspective", calendar_post_perspective_path(@calendar, @post, perspective), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>|
+            
+            <%= button_to "Approve", approved_calendar_post_perspective_path(@calendar, @post, perspective), method: :patch, class: "button" %>
+            <%= button_to "In Analysis", in_analysis_calendar_post_perspective_path(@calendar, @post, perspective), method: :patch, class: "button" %>
+            <%= button_to"Reject", rejected_calendar_post_perspective_path(@calendar, @post, perspective), method: :patch, class: "button" %>
+          </div>
+
+          
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+</div>
