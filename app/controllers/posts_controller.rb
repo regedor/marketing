@@ -4,6 +4,7 @@ class PostsController < ApplicationController
   before_action :check_organization!
   before_action :set_post, only: [ :show, :edit, :update, :destroy, :approved, :in_analysis, :rejected ]
   before_action :check_author!, only: [ :edit, :update, :destroy ]
+  before_action :sanitize_categories, only: [ :create, :update ]
 
   # GET /calendars/:calendar_id/posts/:id
   def show
@@ -85,6 +86,7 @@ class PostsController < ApplicationController
         :design_idea,
         :status,
         :publish_date,
+        categories: [],
         perspectives_attributes: [
           :copy
         ]
@@ -97,5 +99,11 @@ class PostsController < ApplicationController
 
     def check_author!
       redirect_to root_path, alert: "Access Denied" unless current_user == @post.user
+    end
+
+    def sanitize_categories
+      if params[:post][:categories].present?
+        params[:post][:categories] = params[:post][:categories].split(",").map(&:strip).reject(&:blank?)
+      end
     end
 end

@@ -13,6 +13,7 @@ Rails.application.routes.draw do
 
       resources :perspectives, only: [ :show, :new, :create, :edit, :update, :destroy ] do
         member do
+          get :download
           patch :approved
           patch :in_analysis
           patch :rejected

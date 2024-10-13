@@ -1,4 +1,5 @@
 <div id="<%= dom_id(perspective) %>_actions">
+  <%= link_to "Download Images", download_calendar_post_perspective_path(@calendar, @post, perspective) %> |
   <%= link_to "Edit Perspective", edit_calendar_post_perspective_path(@calendar, @post, perspective) %> |
   <%= link_to "Delete Perspective", calendar_post_perspective_path(@calendar, @post, perspective), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>|
   <%= link_to "Approve", approved_calendar_post_perspective_path(@calendar, @post, perspective), data: { turbo_method: :patch }%> |

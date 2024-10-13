@@ -1,8 +1,10 @@
+require "zip"
+
 class PerspectivesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_data
   before_action :check_organization!
-  before_action :set_perspective, only: [ :show, :edit, :update, :destroy, :approved, :in_analysis, :rejected ]
+  before_action :set_perspective, only: [ :show, :edit, :update, :destroy, :download, :approved, :in_analysis, :rejected ]
 
   # GET /calendars/:calendar_id/posts/:post_id/perspectives/:id
   def show
@@ -67,6 +69,19 @@ class PerspectivesController < ApplicationController
   def rejected
     @perspective.update(status: "rejected")
     redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Perspective status updated to Rejected."
+  end
+
+  def download
+    attachments = @perspective.attachments.where(status: "approved").where.not(type_content: "cloud")
+    zip_filename = "#{@perspective.id}_attachments.zip"
+    zip_data = Zip::OutputStream.write_buffer do |zip|
+      attachments.each do |attachment|
+        zip.put_next_entry(attachment.filename)
+        zip.print attachment.content
+      end
+    end
+    zip_data.rewind
+    send_data zip_data.read, filename: zip_filename, type: "application/zip", disposition: "attachment"
   end
 
   private
