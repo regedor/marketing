@@ -48,7 +48,7 @@ end
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
-  gem 'letter_opener'
+  gem "letter_opener"
 end
 
 group :test do
@@ -57,9 +57,10 @@ group :test do
   gem "selenium-webdriver"
 end
 
-gem 'devise'
-gem 'jwt'
-gem 'dotenv-rails', groups: [:development, :test]
-gem 'cancancan', '~> 3.0'
-gem 'activeadmin'
-gem 'sassc-rails'
+gem "devise"
+gem "jwt"
+gem "dotenv-rails", groups: [ :development, :test ]
+gem "cancancan", "~> 3.0"
+gem "activeadmin"
+gem "sassc-rails"
+gem "rubyzip"

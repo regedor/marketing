@@ -1,0 +1,11 @@
+<div id="calendar_form">
+  <%= form_with(model: calendar) do |form| %>
+    <div>
+      <%= form.label :name, style: "display: block" %>
+      <%= form.text_field :name %>
+    </div>
+    <div>
+      <%= form.submit %>
+    </div>
+  <% end %>
+</div>

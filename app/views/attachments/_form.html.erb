@@ -1,0 +1,19 @@
+<div id="form_attachment">
+  <h3>Form Attachement</h3>
+  <%= form_with(model: [calendar, post, perspective, @attachment], local: true, html: { multipart: true }) do |form| %>
+    <div class="field">
+      <%= form.label :filename %>
+      <%= form.text_field :filename %>
+    </div>
+
+    <div class="field">
+      <%= form.label :content %>
+      <%= form.file_field :content %>
+    </div>
+
+    <div class="actions">
+      <%= form.submit %>
+    </div>
+  <% end %>
+</div>
+

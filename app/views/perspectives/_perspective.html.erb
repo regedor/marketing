@@ -1,0 +1,10 @@
+<div id="<%= dom_id(perspective) %>" class="perspective">
+  <h3>Perspective:</h3>
+  <p><strong>Copy:</strong> <%= perspective.copy %></p>
+  <% if perspective.socialplatform.present? %>
+    <p><strong>Social Platform:</strong> <%= perspective.socialplatform.name %></p>
+  <% end %>
+  <p><strong>Status:</strong> <%= perspective.status %></p>
+  <p><strong>Created at:</strong> <%= perspective.created_at.strftime("%B %d, %Y %I:%M %p") %></p>
+  <p><strong>Last updated:</strong> <%= perspective.updated_at.strftime("%B %d, %Y %I:%M %p") %></p>
+</div>

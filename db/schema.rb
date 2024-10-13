@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_10_09_165231) do
+ActiveRecord::Schema[7.2].define(version: 2024_10_10_145202) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -40,8 +40,81 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_09_165231) do
     t.index ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true
   end
 
+  create_table "attachmentcounters", force: :cascade do |t|
+    t.bigint "attachment_id", null: false
+    t.bigint "user_id", null: false
+    t.boolean "aproved", default: false
+    t.boolean "rejected", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["attachment_id"], name: "index_attachmentcounters_on_attachment_id"
+    t.index ["user_id"], name: "index_attachmentcounters_on_user_id"
+  end
+
+  create_table "attachments", force: :cascade do |t|
+    t.bigint "perspective_id", null: false
+    t.string "filename"
+    t.string "type_content"
+    t.binary "content"
+    t.string "status", default: "in_analysis"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["perspective_id"], name: "index_attachments_on_perspective_id"
+  end
+
+  create_table "calendars", force: :cascade do |t|
+    t.bigint "organization_id", null: false
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["organization_id"], name: "index_calendars_on_organization_id"
+  end
+
+  create_table "comments", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "post_id", null: false
+    t.string "content"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["post_id"], name: "index_comments_on_post_id"
+    t.index ["user_id"], name: "index_comments_on_user_id"
+  end
+
   create_table "organizations", force: :cascade do |t|
     t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "perspectives", force: :cascade do |t|
+    t.text "copy"
+    t.bigint "post_id", null: false
+    t.bigint "socialplatform_id"
+    t.string "status", default: "in_analysis"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["post_id"], name: "index_perspectives_on_post_id"
+    t.index ["socialplatform_id"], name: "index_perspectives_on_socialplatform_id"
+  end
+
+  create_table "posts", force: :cascade do |t|
+    t.string "title"
+    t.text "design_idea"
+    t.string "categories", default: [], array: true
+    t.bigint "user_id", null: false
+    t.bigint "calendar_id", null: false
+    t.string "status", default: "in_analysis"
+    t.datetime "publish_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["calendar_id"], name: "index_posts_on_calendar_id"
+    t.index ["user_id"], name: "index_posts_on_user_id"
+  end
+
+  create_table "socialplatforms", force: :cascade do |t|
+    t.string "name"
+    t.string "link"
+    t.string "link_form"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -59,4 +132,15 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_09_165231) do
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
+
+  add_foreign_key "attachmentcounters", "attachments"
+  add_foreign_key "attachmentcounters", "users"
+  add_foreign_key "attachments", "perspectives"
+  add_foreign_key "calendars", "organizations"
+  add_foreign_key "comments", "posts"
+  add_foreign_key "comments", "users"
+  add_foreign_key "perspectives", "posts"
+  add_foreign_key "perspectives", "socialplatforms"
+  add_foreign_key "posts", "calendars"
+  add_foreign_key "posts", "users"
 end

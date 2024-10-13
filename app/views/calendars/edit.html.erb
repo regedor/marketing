@@ -1,0 +1,9 @@
+<div id="edit_<%= dom_id(@calendar)%>">
+  <% content_for :title, "Editing calendar" %>
+  <h1>Editing calendar</h1>
+  <%= render "form", calendar: @calendar %>
+  <br>
+  <div>
+    <%= link_to "Back to calendars", calendars_path %>
+  </div>
+</div>
