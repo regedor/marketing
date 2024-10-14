@@ -53,12 +53,11 @@ class CalendarsController < ApplicationController
     def set_calendars
       @calendars = Calendar.where(organization: current_user.organization)
     end
-    # Find the calendar for actions like show, edit, update, destroy
+
     def set_calendar
       @calendar = Calendar.find(params[:id])
     end
 
-    # Strong parameters: Only allow the trusted parameters for calendar
     def calendar_params
       params.require(:calendar).permit(:name)
     end
