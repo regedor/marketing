@@ -1,4 +1,14 @@
 <div class="LoginSection">
+  <% if notice.present? || alert.present? %>
+    <div class="LoginAlertContainer w-full text-center mb-4">
+      <% if notice %>
+        <p class="text-green-600"><%= notice %></p>
+      <% end %>
+      <% if alert %>
+        <p class="text-red-600"><%= alert %></p>
+      <% end %>
+    </div>
+  <% end %>
   <div class="LoginContainer">
     <div class="LoginHeaderContainer">
       <h2 class="LoginHeaderText">Sign into your account</h2>
@@ -8,7 +18,7 @@
       <%= form_for(resource, as: resource_name, url: session_path(resource_name), class: "space-y-6") do |f| %>
         <div>
           <%= f.label :email, "Email", class: "LoginFormLabel" %>
-          <div class="mt-2">
+          <div class="mt-2 mb-5">
             <%= f.email_field :email, autofocus: true, autocomplete: "email", required: true, class: "LoginFormInput" %>
           </div>
         </div>
@@ -28,7 +38,7 @@
         </div>
 
         <% if devise_mapping.rememberable? %>
-          <div class="flex items-center">
+          <div class="flex items-center mt-5 mb-5">
             <%= f.check_box :remember_me, class: "RememberMeCheckBox" %>
             <%= f.label :remember_me, "Remember me", class: "RememberMeLabel" %>
           </div>

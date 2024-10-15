@@ -29,8 +29,10 @@
         <%= link_to "Posts", calendars_path %>
       <% end %>
     </nav>
-    <p class="notice" style="color:green"><%= notice %></p>
-    <p class="alert" style="color:red"><%= alert %></p>
+    <% unless controller_name == 'sessions' && action_name == 'new' %>
+      <p class="notice" style="color:green"><%= notice %></p>
+      <p class="alert" style="color:red"><%= alert %></p>
+    <% end %>
     <%= yield %>
   </body>
 </html>
