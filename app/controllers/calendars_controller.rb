@@ -1,20 +1,11 @@
 class CalendarsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_calendars
-  before_action :set_calendar, only: [ :show, :edit, :update, :destroy ]
-  before_action :check_organization!, only: [ :show, :edit, :update, :destroy ]
+  before_action :set_calendar, only: [ :edit, :update, :destroy ]
+  before_action :check_organization!, only: [ :edit, :update, :destroy ]
 
   # GET /calendars
   def index
-    @calendar = Calendar.new
-  end
-
-  # GET /calendars/:id
-  def show
-  end
-
-  # GET /calendars/new
-  def new
     @calendar = Calendar.new
   end
 
@@ -49,6 +40,14 @@ class CalendarsController < ApplicationController
     @calendar.destroy
     redirect_to calendars_url, notice: "Calendar was successfully destroyed."
   end
+
+  def selector
+  end
+
+  def select_calendar
+    redirect_to new_calendar_post_path(Calendar.find(params[:calendar][:calendar_id]))
+  end
+
 
   private
     def set_calendars

@@ -1,11 +1,9 @@
-<% content_for :title, "Editing presctive" %>
-
-<h1>Editing presctive</h1>
-
-<%= render "form", perspective: @perspective, calendar: @calendar, post: @post%>
-
-<br>
-
-<div>
-  <%= link_to "Back to post", calendar_post_path(@calendar,@post) %>
+<div id="edit_<%= dom_id(@perspective)%>">
+  <% content_for :title, "Editing presctive" %>
+  <h1>Editing perspective</h1>
+  <%= render "form", perspective: @perspective, calendar: @calendar, post: @post%>
+  <br>
+  <div>
+    <%= link_to "Back to post", calendar_post_path(@calendar,@post) %>
+  </div>
 </div>

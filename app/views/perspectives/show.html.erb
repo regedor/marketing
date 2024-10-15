@@ -1,18 +1,21 @@
-<div id="post">
-  <p style="color: green"><%= notice %></p>  
-  <%= render @perspective %>
-  <%= render "posts/perspectives"%> 
-  <%= render @post %>
-  <div id='<%= dom_id(@post) %>_actions' class="comment">
-    <%= link_to "Edit Post", edit_calendar_post_path(@calendar, @post) %> |
-    <%= link_to "Delete Post", calendar_post_path(@calendar, @post), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
-    
-    <%= button_to "Approve", approved_calendar_post_path(@calendar, @post), method: :patch, class: "button" %>
-    <%= button_to"In Analysis", in_analysis_calendar_post_path(@calendar, @post), method: :patch, class: "button" %>
-    <%= button_to "Reject", rejected_calendar_post_path(@calendar, @post), method: :patch, class: "button" %>
-
+<div id="post_perspective">
+  <div id="perspective_info"> 
+    <%= render @perspective %>
+    <%= render "actions", perspective: @perspective %>
   </div>
+  <hr />
+  <div id="post_info">
+    <h1>Post Information</h1>
+    <%= render @post %>
+    <%= render "posts/actions"%> 
+    <%= render "posts/perspectives/perspectives"%> 
   </div>
-  <%= render "perspectives/attachments"%>
-  <%= render "posts/comments", calendar: @calendar, post: @post, comment_new: @comment_new%>
+  <hr />
+  <div id="attachments">
+    <%= render "perspectives/attachments/attachments"%> 
+  </div>
+  <hr />
+  <div id="comments">
+    <%= render "posts/comments/comments", calendar: @calendar, post: @post, comment_new: @comment_new%> 
+  </div>
 </div>

@@ -1,0 +1,12 @@
+<div id="attachments_info">
+  <%= render "attachments/form", calendar: @calendar, post: @post, perspective: @perspective, attachment: Attachment.new %>
+  <% @perspective.attachments.each do |attachment| %>
+    <% if attachment.id.present? %>
+      <div id="<%= dom_id(attachment) %>_info" class="attachment">
+        <%= render attachment %>
+        <%= render "attachments/actions", attachment: attachment %>
+      </div>
+    <% end %>
+  <% end %>
+</div>
+

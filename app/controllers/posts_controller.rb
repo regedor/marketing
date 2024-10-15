@@ -2,16 +2,11 @@ class PostsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_calendar
   before_action :check_organization!
-  before_action :set_post, only: [:show, :edit, :update, :destroy, :approved, :in_analysis, :rejected]
-  before_action :check_author!, only: [:edit, :update, :destroy]
+  before_action :set_post, only: [ :show, :edit, :update, :destroy, :approved, :in_analysis, :rejected ]
+  before_action :check_author!, only: [ :edit, :update, :destroy ]
+  before_action :sanitize_categories, only: [ :create, :update ]
 
-  # GET /posts
-  def index
-    @calendars = Calendar.where(organization: current_user.organization)
-    @posts = Post.where(calendar_id: @calendars.pluck(:id)) unless @calendars.empty?
-  end
-
-  # GET /posts/:id
+  # GET /calendars/:calendar_id/posts/:id
   def show
     @perspective = Perspective.where(post: @post, socialplatform: nil).first
     if @perspective
@@ -21,13 +16,13 @@ class PostsController < ApplicationController
     end
   end
 
-  # GET /posts/new
+  # GET /calendars/:calendar_id/posts/new
   def new
     @post = @calendar.posts.new
     @perspective = @post.perspectives.new
   end
 
-  # POST /posts
+  # POST /calendars/:calendar_id/posts
   def create
     @post = @calendar.posts.new(post_params)
     @post.user = current_user
@@ -39,11 +34,11 @@ class PostsController < ApplicationController
     end
   end
 
-  # GET /posts/:id/edit
+  # GET /calendars/:calendar_id/posts/:id/edit
   def edit
   end
 
-  # PATCH/PUT /posts/:id
+  # PATCH /calendars/:calendar_id/posts/:id
   def update
     if @post.update(post_params)
       redirect_to calendar_post_path(@calendar, @post), notice: "Post was successfully updated."
@@ -52,49 +47,46 @@ class PostsController < ApplicationController
     end
   end
 
-  # DELETE /posts/:id
+  # DELETE /calendars/:calendar_id/posts/:id
   def destroy
     @post.destroy
     redirect_to calendars_path(), notice: "Post was successfully deleted."
   end
 
-   # PATCH /posts/:id/approved
-   def approved
+  # PATCH /calendars/:calendar_id/posts/:id/approved
+  def approved
     @post.update(status: "approved")
     redirect_to calendar_post_path(@calendar, @post), notice: "Post status updated to Approved."
-   end
+  end
 
-  # PATCH /posts/:id/in_analysis
+  # PATCH /calendars/:calendar_id/posts/:id/in_analysis
   def in_analysis
     @post.update(status: "in_analysis")
     redirect_to calendar_post_path(@calendar, @post), notice: "Post status updated to In Analysis."
   end
 
-  # PATCH /posts/:id/rejected
+  # PATCH /calendars/:calendar_id/posts/:id/rejected
   def rejected
     @post.update(status: "rejected")
     redirect_to calendar_post_path(@calendar, @post), notice: "Post status updated to Rejected."
   end
 
   private
-
-    # Set the calendar based on the calendar_id parameter
     def set_calendar
       @calendar = Calendar.find(params[:calendar_id])
     end
 
-    # Find the post for actions like show, edit, update, and destroy
     def set_post
       @post = Post.find(params[:id])
     end
 
-    # Strong parameters: Only allow the trusted parameters for post
     def post_params
       params.require(:post).permit(
         :title,
         :design_idea,
         :status,
         :publish_date,
+        categories: [],
         perspectives_attributes: [
           :copy
         ]
@@ -107,5 +99,11 @@ class PostsController < ApplicationController
 
     def check_author!
       redirect_to root_path, alert: "Access Denied" unless current_user == @post.user
+    end
+
+    def sanitize_categories
+      if params[:post][:categories].present?
+        params[:post][:categories] = params[:post][:categories].split(",").map(&:strip).reject(&:blank?)
+      end
     end
 end

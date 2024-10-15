@@ -1,36 +1,39 @@
-Rails.application.routes.draw do 
-  resources :calendars do
-    resources :posts do
+Rails.application.routes.draw do
+  resources :calendars, only: [ :index, :create, :edit, :update, :destroy ] do
+    collection do
+      get :selector
+      post :select_calendar
+    end
+    resources :posts, only: [ :show, :new, :create, :edit, :update, :destroy ] do
       member do
         patch :approved
         patch :in_analysis
         patch :rejected
       end
 
-      resources :perspectives do
+      resources :perspectives, only: [ :show, :new, :create, :edit, :update, :destroy ] do
         member do
+          get :download
           patch :approved
           patch :in_analysis
           patch :rejected
         end
 
-        resources :attachments do
+        resources :attachments, only: [ :create, :edit, :update, :destroy ] do
           member do
             get :download
             patch :approved
             patch :in_analysis
             patch :rejected
-            post :like
-            post :dislike
+            patch :like
+            patch :dislike
           end
-
-          resources :attachmentcounters
         end
       end
 
-      resources :comments
+      resources :comments, only: [ :create, :edit, :update, :destroy ]
     end
-  end  
+  end
 
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
@@ -43,7 +46,7 @@ Rails.application.routes.draw do
   get "dashboard", to: "dashboard#index"
 
   namespace :dashboard do
-    resources :users, only: [:new, :create, :edit, :update, :destroy, :show]
+    resources :users, only: [ :new, :create, :edit, :update, :destroy, :show ]
   end
 
   get "up" => "rails/health#show", as: :rails_health_check

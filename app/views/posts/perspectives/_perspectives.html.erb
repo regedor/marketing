@@ -1,0 +1,11 @@
+<div id="perspectives">
+  <h2>Perspectives</h2>
+  <%= link_to "Create Perspective", new_calendar_post_perspective_path(@calendar, @post) %>
+  <div id="perspectives_info">
+    <% @post.perspectives.each do |perspective| %>
+      <% if perspective.id.present? %>
+        <%= render "posts/perspectives/perspective", perspective: perspective%>
+      <% end %>
+    <% end %>
+  </div>
+</div>

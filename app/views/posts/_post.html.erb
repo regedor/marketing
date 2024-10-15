@@ -7,6 +7,12 @@
     <strong>Design idea:</strong>
     <%= post.design_idea %>
   </p>
+  
+  <p>
+    <strong>Categories:</strong>
+    <%= post.categories.join(", ") %>
+  </p>
+
   <p>
     <strong>User:</strong>
     <%= post.user_id %>

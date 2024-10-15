@@ -1,0 +1,12 @@
+<div id="calendar_selector">
+  <h1>Select a calendar</h1>
+  <%= form_with model: Calendar.new, url: select_calendar_calendars_path, method: :post do |form| %>
+    <div>
+      <%= form.label :calendar_id, "Calendar" %>
+      <%= form.select :calendar_id, options_for_select(@calendars.map { |calendar| [calendar[:name], calendar[:id]] }), { prompt: 'Select a Calendar' } %>
+    </div>
+    <div>
+      <%= form.submit "Select" %>
+    </div>
+  <% end %>
+</div>
