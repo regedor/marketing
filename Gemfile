@@ -64,3 +64,5 @@ gem "cancancan", "~> 3.0"
 gem "activeadmin"
 gem "sassc-rails"
 gem "rubyzip"
+
+gem "tailwindcss-rails", "~> 2.7"
