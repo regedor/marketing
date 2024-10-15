@@ -1,4 +1,4 @@
-<div id="form_post">
+<div id="form_post", class="PostEditor">
   <%= form_with(model: [calendar, post], local: true) do |form| %>
     <% if post.errors.any? %>
       <div style="color: red">
@@ -11,36 +11,42 @@
       </div>
     <% end %>
 
-    <div>
-      <%= form.label :title, style: "display: block" %>
-      <%= form.text_field :title %>
+    <!-- Date and Time selection -->
+    <div class="PostFormMargin">
+      <%= form.label :publish_date, "Publish Date & Time", class: "PostLabel" %>
+      <%= form.datetime_field :publish_date, value: Time.current.strftime('%Y-%m-%d %H:%M'), class: "PostInputField" %>
+      <small class="PostFormSmallText">Select a date and time for the post.</small>
+    </div>
+
+    <!-- Title input -->
+    <div class="PostFormMargin">
+      <%= form.label :title, "Title", class: "PostLabel" %>
+      <%= form.text_field :title, class: "PostInputField", placeholder: "Title" %>
     </div>
     
-    <div>
-      <%= form.label :design_idea, style: "display: block" %>
-      <%= form.text_area :design_idea %>
-    </div>
-
-    <div>
-      <%= form.label :categories, style: "display: block" %>
-      <%= form.text_area :categories, value: post.categories.join(", ") %>
-    </div>
-
-    <div>
-      <%= form.label :publish_date, style: "display: block" %>
-      <%= form.datetime_field :publish_date %>
+    <!-- Design Idea input -->
+    <div class="PostFormMargin">
+      <%= form.label :design_idea, "Design Idea", class: "PostLabel" %>
+      <%= form.text_area :design_idea, class: "PostTextArea PostTextAreaLarge", placeholder: "Describe everything about this post here" %>
     </div>
 
     <% if is_new %>
       <!-- Nested form for perspectives -->
-      <h3>Default Perspective</h3>
       <%= form.fields_for :perspectives do |perspective_form| %>
         <%= render partial: "posts/perspectives/formperspective", locals: { form: perspective_form } %>
       <% end %>
     <% end %>
 
-    <div>
-      <%= form.submit %>
+    <!-- Categories input -->
+    <div class="PostFormMargin">
+      <%= form.label :categories, "Categories", class: "PostLabel" %>
+      <%= form.text_area :categories, class: "PostTextArea PostTextAreaMedium", placeholder: "Enter categories separated by commas...", value: post.categories.join(", ") %>
+    </div>
+
+    <!-- Form buttons -->
+    <div class="PostFormButtons">
+      <%= link_to 'Cancel', calendars_path, class: "PostButtonSecondary PostMarginLeft" %>
+      <%= form.submit "Save", class: "PostButtonPrimary PostMarginLeft" %>
     </div>
   <% end %>
 </div>
