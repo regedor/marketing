@@ -1,7 +1,5 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+organization_one:
+  name: "Organization One"
 
-one:
-  name: MyString
-
-two:
-  name: MyString
+organization_two:
+  name: "Organization Two"
