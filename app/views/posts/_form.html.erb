@@ -12,20 +12,20 @@
     <% end %>
 
     <!-- Date and Time selection -->
-    <div class="PostFormMargin">
+    <div class="mb-4">
       <%= form.label :publish_date, "Publish Date & Time", class: "PostLabel" %>
       <%= form.datetime_field :publish_date, value: Time.current.strftime('%Y-%m-%d %H:%M'), class: "PostInputField" %>
       <small class="PostFormSmallText">Select a date and time for the post.</small>
     </div>
 
     <!-- Title input -->
-    <div class="PostFormMargin">
+    <div class="mb-4">
       <%= form.label :title, "Title", class: "PostLabel" %>
       <%= form.text_field :title, class: "PostInputField", placeholder: "Title" %>
     </div>
     
     <!-- Design Idea input -->
-    <div class="PostFormMargin">
+    <div class="mb-4">
       <%= form.label :design_idea, "Design Idea", class: "PostLabel" %>
       <%= form.text_area :design_idea, class: "PostTextArea PostTextAreaLarge", placeholder: "Describe everything about this post here" %>
     </div>
@@ -38,16 +38,16 @@
     <% end %>
 
     <!-- Categories input -->
-    <div class="PostFormMargin">
+    <div class="mb-4">
       <%= form.label :categories, "Categories", class: "PostLabel" %>
       <%= form.text_area :categories, class: "PostTextArea PostTextAreaMedium", placeholder: "Enter categories separated by commas...", value: post.categories.join(", ") %>
     </div>
 
     <!-- Form buttons -->
-    <div class="PostFormButtons">
-      <%= link_to 'Cancel', calendars_path, class: "PostButtonSecondary PostMarginLeft" %>
-      <%= form.submit "Save", class: "PostButtonPrimary PostMarginLeft" %>
-    </div>
+    <div class="Bottom-right">
+      <%= link_to 'Cancel', 'javascript:history.back()', class: "Btn-secondary" %>
+      <%= form.submit "Save", class: "Btn-primary ml-2" %>
+    </div>  
   <% end %>
 </div>
 

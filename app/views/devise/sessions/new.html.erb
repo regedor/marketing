@@ -10,8 +10,8 @@
     </div>
   <% end %>
   <div class="Container max-w-md w-full">
-    <div class="LoginHeaderContainer">
-      <h2 class="LoginHeaderText">Sign into your account</h2>
+    <div class="HeaderContainer">
+      <h2 class="ContainerHeaderText">Sign into your account</h2>
     </div>
 
     <div class="LoginFormContainer">
@@ -45,12 +45,12 @@
         <% end %>
 
         <div>
-          <%= f.submit "Sign in", class: "btn-primary w-full" %>
+          <%= f.submit "Sign in", class: "Btn-primary w-full" %>
         </div>
       <% end %>
 
       <div class="mt-4">
-        <button type="button" id="google-login" class="btn-google w-full" onclick="toggleGoogleWarning()">
+        <button type="button" id="google-login" class="Btn-google w-full" onclick="toggleGoogleWarning()">
           <img src="<%= asset_path('google_icon.svg') %>" alt="Google Icon" class="h-5 w-5 mr-2" />
           Login with Google
         </button>
