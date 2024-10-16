@@ -19,20 +19,33 @@
   </head>
 
   <body>
-    <nav>
-      <% if user_signed_in? %>
-        <%= link_to "Logout", destroy_user_session_path, data: {turbo_method: :delete,  turbo_confirm: "Are you sure you want to log out?" } %>
-        <%= link_to "Home", root_path %>
-        <% if current_user.isLeader %>
-          <%= link_to "Dashboard", dashboard_path %>
+    <button id="sidebar-toggle" class="p-4 bg-white text-gray-700 fixed top-0 left-0 z-50">☰</button>
+    <%= render 'layouts/sidebar' %>
+    <div id="main" class="transition-all duration-300 ease-in-out">
+      <nav>
+        <% unless controller_name == 'sessions' && action_name == 'new' %>
+          <p class="notice" style="color:green"><%= notice %></p>
+          <p class="alert" style="color:red"><%= alert %></p>
         <% end %>
-        <%= link_to "Posts", calendars_path %>
-      <% end %>
-    </nav>
-    <% unless controller_name == 'sessions' && action_name == 'new' %>
-      <p class="notice" style="color:green"><%= notice %></p>
-      <p class="alert" style="color:red"><%= alert %></p>
-    <% end %>
-    <%= yield %>
+      </nav>
+      <%= yield %>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+      $(document).ready(function() {
+        var sidebarWidth = $('#sidebar').width();
+        
+        $('#sidebar-toggle').on('click', function() {
+          $('#sidebar').toggleClass('hidden -translate-x-full');
+
+          if ($('#sidebar').hasClass('-translate-x-full')) {
+            $('#main').css('margin-left', '0');
+          } else {
+            $('#main').css('margin-left', sidebarWidth + 'px');
+          }
+        });
+      });
+    </script>
   </body>
 </html>
