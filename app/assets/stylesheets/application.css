@@ -15,4 +15,5 @@
  *= stub "active_admin"
  *= require login
  *= require posts
+ *= require home
  */

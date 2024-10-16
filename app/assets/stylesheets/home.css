@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+    .HomeSection {
+      @apply flex items-center justify-center min-h-screen flex-col items-center text-center space-y-6;
+    }
+    .LogoImage {
+      @apply w-96 h-96 object-contain;
+    }
+  
+    .WelcomeText {
+      @apply text-2xl font-bold text-gray-900;
+    }
+  
+    .OrganizationText {
+      @apply text-lg text-gray-700;
+    }
+  }
+  

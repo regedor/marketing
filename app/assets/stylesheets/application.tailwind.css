@@ -1,5 +1,6 @@
 @import "login.css";
 @import "posts.css";
+@import "home.css";
 
 @tailwind base;
 @tailwind components;
