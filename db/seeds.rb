@@ -58,7 +58,7 @@ if Rails.env.development?
         categories = ("a".."c").to_a # Categories as ["a", "b", "c"]
         post = Post.create!(
           title: "Post #{p}",
-          user_id: uid,
+          user: User.find_by(email: "user#{uid}_#{o}@ww.com"),
           design_idea: text,
           calendar: calendar,
           publish_date: Time.zone.parse('2027-07-11 21:00'),

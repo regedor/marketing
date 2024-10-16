@@ -3,6 +3,8 @@ class User < ApplicationRecord
          :rememberable, :validatable
 
   belongs_to :organization, optional: true
+  has_many :comments, dependent: :destroy
+  has_many :posts, dependent: :destroy
 
 
 

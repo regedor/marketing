@@ -81,7 +81,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_10_145202) do
   end
 
   create_table "organizations", force: :cascade do |t|
-    t.string "name"
+    t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
