@@ -27,10 +27,10 @@
       @apply mt-10 text-2xl font-bold leading-9 tracking-tight text-gray-900;
   }
   .Sidebar {
-    @apply bg-white text-gray-700 w-64 h-full shadow-lg;
+   @apply bg-white text-gray-700 w-64 h-full shadow-lg flex flex-col;
   }
   .SidebarLink {
-    @apply block py-2 px-4 hover:bg-gray-50 rounded transition;
+    @apply block py-2 px-4 hover:bg-yellow-400 transition flex items-center; /* se quiserem mudar a cor do texto quando se passa por cima hover:text-gray-900 (no _sidebar.html.erb meter assim -> <%= 'bg-yellow-400 text-gray-900' if current_page?(dashboard_path) %>) */
   }
   .SidebarIcon {
     @apply w-6 h-6;

@@ -21,29 +21,63 @@
   <body>
     <button id="sidebar-toggle" class="p-4 bg-white text-gray-700 fixed top-0 left-0 z-50">☰</button>
     <%= render 'layouts/sidebar' %>
-    <div id="main" class="transition-all duration-300 ease-in-out">
+    <div id="main" class="relative transition-all duration-300 ease-in-out z-30">
+      <div id="overlay" class="hidden absolute inset-0 bg-gray-800 bg-opacity-50 z-40 pointer-events-none"></div>
       <nav>
-        <% unless controller_name == 'sessions' && action_name == 'new' %>
-          <p class="notice" style="color:green"><%= notice %></p>
-          <p class="alert" style="color:red"><%= alert %></p>
+        <% if notice.present? || alert.present? %>
+        <div class="absolute inset-x-0 top-0 h-16 w-full text-center mb-4 mt-4">
+          <% if notice %>
+            <p class="text-green-600"><%= notice %></p>
+          <% end %>
+          <% if alert %>
+            <p class="text-red-600"><%= alert %></p>
+          <% end %>
+        </div>
         <% end %>
       </nav>
       <%= yield %>
     </div>
-
+    
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
       $(document).ready(function() {
         var sidebarWidth = $('#sidebar').width();
-        
-        $('#sidebar-toggle').on('click', function() {
-          $('#sidebar').toggleClass('hidden -translate-x-full');
 
-          if ($('#sidebar').hasClass('-translate-x-full')) {
-            $('#main').css('margin-left', '0');
+        function updateMainMargin() {
+          if ($('#sidebar').hasClass('hidden')) {
+            $('#main').css('margin-left', '0'); 
           } else {
             $('#main').css('margin-left', sidebarWidth + 'px');
           }
+        }
+
+        updateMainMargin();
+
+        $('#sidebar-toggle').on('click', function() {
+          $('#sidebar').removeClass('hidden -translate-x-full');
+          $('#main').css('margin-left', sidebarWidth + 'px');
+          $('#overlay').removeClass('hidden pointer-events-none'); 
+          $('#sidebar-toggle').hide();
+        });
+
+        $('#sidebar-close').on('click', function() {
+          $('#sidebar').addClass('hidden -translate-x-full');
+          $('#main').css('margin-left', '0');
+          $('#overlay').addClass('hidden pointer-events-none');
+          $('#sidebar-toggle').show();
+        });
+
+        $('#overlay, #main').on('click', function() {
+          if ($('#sidebar').hasClass('hidden') === false) {
+            $('#sidebar').addClass('hidden -translate-x-full');
+            $('#main').css('margin-left', '0');
+            $('#overlay').addClass('hidden pointer-events-none'); 
+            $('#sidebar-toggle').show();
+          }
+        });
+        $(window).resize(function() {
+          sidebarWidth = $('#sidebar').width();
+          updateMainMargin();
         });
       });
     </script>

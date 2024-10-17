@@ -36,7 +36,4 @@
     .RememberMeCheckBox {
         @apply w-4 h-4 text-yellow-600 bg-gray-100 border-gray-300 rounded focus:ring-0 focus:outline-none;
     }
-    .LoginAlertContainer {
-        @apply absolute inset-x-0 top-0 h-16
-      }
 }
