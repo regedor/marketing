@@ -1,13 +1,15 @@
 # test/fixtures/attachments.yml
 
 attachment_one:
-  perspective: perspective_one # Assuming this is a string column
-  filename: MyString # Assuming this is a string column for filenames
-  content: "Sample content for attachment one" # This field might be text/blob depending on your schema
-  status: active # Assuming this is a string or enum for the status of the attachment
+  perspective: perspective_one 
+  filename: test-default-file-one.txt
+  content: "Sample content for attachment one" 
+  status: active
+  type_content: image/jpeg
 
 attachment_two:
   perspective: perspective_two
-  filename: MyString
-  content: "Sample content for attachment two"
+  filename: test-default-file-two.txt
+  content: "Sample content for attachment two" 
   status: inactive
+  type_content: image/jpeg

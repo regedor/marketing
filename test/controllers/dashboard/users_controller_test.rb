@@ -7,10 +7,6 @@ class Dashboard::UsersControllerTest < ActionDispatch::IntegrationTest
     @user = users(:user_one)
     @leader = users(:user_two)
     @organization = organizations(:organization_one)
-    @user.organization = @organization
-    @leader.organization = @organization
-    @user.save
-    @leader.save
   end
 
   test "should get show" do
