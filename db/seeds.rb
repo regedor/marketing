@@ -18,7 +18,7 @@ if Rails.env.development?
     "zebragapt@gmail.com",
     "miguelsilva@gmail.com",
     "peradi@gmail.com",
-    "adriano@gmail.com",
+    "tiagoadriano.feixamoreira@gmail.com",
     "user1_4@gmail.com"
   ]
 
