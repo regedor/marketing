@@ -1,9 +1,14 @@
 <div id="new_perspective">
-  <% content_for :title, "New presctive" %>
-  <h1>New perspective</h1>
-  <%= render "form", perspective: @perspective_new, calendar: @calendar, post: @post%>
-  <br>
-  <div>
-    <%= link_to "Back to post", calendar_post_path(@calendar,@post) %>
+  <% content_for :title, "New Perspective" %>
+
+  <div class="Container max-w-md w-full mx-auto mt-16">
+    <div class="HeaderContainer mb-8">
+      <h2 class="ContainerHeaderText">New Perspective</h2>
+    </div>
+    <div class="space-y-6 mt-8;">
+      <%= render "form", perspective: @perspective_new, calendar: @calendar, post: @post %>
+    </div>
+
   </div>
+  <br>
 </div>

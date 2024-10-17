@@ -1,26 +1,34 @@
 <div id="form_perspective">
-  <%= form_with(model: [calendar, post, perspective ], local: true) do |form|%>
+  <%= form_with(model: [calendar, post, perspective], local: true) do |form| %>
     <% if perspective.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(perspective.errors.count, "error") %> prohibited this comment from being saved:</h2>
-      <ul>
-        <% perspective.errors.full_messages.each do |msg| %>
-          <li><%= msg %></li>
+      <div style="color: red">
+        <h2><%= pluralize(perspective.errors.count, "error") %> prohibited this perspective from being saved:</h2>
+        <ul>
+          <% perspective.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="mb-4">
+      <%= form.label :copy, "Copy", class: "PerspectiveLabel" %>
+      <%= form.text_area :copy, class: "PerspectiveTextArea PerspectiveTextAreaLarge" %>
+    </div>
+
+   <div class="mb-4">
+      <%= form.label :socialplatform_id, "Social Platform", class: "PerspectiveLabel" %>
+      <select name="perspective[socialplatform_id]" id="perspective_socialplatform_id" class="PerspectiveDropdown">
+        <option value="" label=" "></option>
+        <% Socialplatform.all.each do |sp| %>
+          <option value="<%= sp.id %>"><%= sp.name %></option>
         <% end %>
-      </ul>
+      </select>
+    </div>
+
+    <div class="Bottom-right">
+      <%= link_to 'Cancel', 'javascript:history.back()', class: "Btn-secondary" %>
+      <%= form.submit "Save", class: "Btn-primary ml-2" %>
     </div>
   <% end %>
-  New Perspectives
-  <div>
-    <%= form.label :copy, "Copy", style: "display: block" %>
-    <%= form.text_area :copy %>
-  </div>
-  <div>
-    <%= form.label :socialplatform_id, "Social Platform" %>
-    <%= form.select :socialplatform_id, Socialplatform.all.collect { |sp| [sp.name, sp.id] }, include_blank: true %>
-  </div>
-  <%= form.submit %>
-  <% end %>
 </div>
-
-
