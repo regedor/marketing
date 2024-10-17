@@ -19,7 +19,7 @@
         <div>
           <%= f.label :email, "Email", class: "LoginFormLabel" %>
           <div class="mt-2 mb-5">
-            <%= f.email_field :email, autofocus: true, autocomplete: "email", required: true, class: "LoginFormInput" %>
+            <%= f.email_field :email, autofocus: true, autocomplete: "email", required: true, class: "InputField" %>
           </div>
         </div>
         <div>
@@ -30,7 +30,7 @@
             </div>
           </div>
           <div class="relative mt-2">
-            <%= f.password_field :password, autocomplete: "current-password", required: true, id: "password-field", class: "LoginFormInput pr-10" %>
+            <%= f.password_field :password, autocomplete: "current-password", required: true, id: "password-field", class: "InputField pr-10" %>
             <span id="toggle-password" class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer" onclick="togglePassword()">
               <img src="<%= asset_path('eye-icon.svg') %>" alt="Show/Hide Password" class="h-5 w-5" id="eye-icon" />
             </span>

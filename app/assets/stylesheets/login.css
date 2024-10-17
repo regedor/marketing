@@ -3,40 +3,37 @@
 @tailwind utilities;
 
 @layer utilities { 
-    .LoginSection {
-        @apply flex min-h-screen justify-center items-center;
-    }
-    .LoginContainer {
-        @apply max-w-md w-full px-6 py-12 lg:px-2 bg-gray-100 rounded-lg shadow-lg;
-    }
-    .LoginFormContainer {
-        @apply mt-10 sm:mx-auto sm:w-full sm:max-w-sm;
-    }
-    .LoginFormLabel {
-        @apply block text-sm font-medium leading-6 text-gray-900;
-    }
-    .LoginFormInput {
-        @apply block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-yellow-600 sm:text-sm sm:leading-6;
-    }
-    .ForgotPasswordContainer {
-        @apply flex items-center justify-between;
-    }
-    .ForgotPasswordLink {
-        @apply text-sm font-semibold text-yellow-600 hover:text-yellow-500;
-    }
-    .GoogleWarningText {
-        @apply mt-2 text-sm text-red-600 text-center;
-    }
-    .SignupText {
-        @apply mt-10 text-center text-sm text-gray-500;
-    }
-    .RememberMeLabel {
-        @apply ml-2 block text-sm text-gray-900 font-medium;
-    }
-    .RememberMeCheckBox {
-        @apply w-4 h-4 text-yellow-600 bg-gray-100 border-gray-300 rounded focus:ring-0 focus:outline-none;
-    }
-    .LoginAlertContainer {
-        @apply absolute inset-x-0 top-0 h-16
-      }
+  .LoginSection {
+    @apply flex min-h-screen justify-center items-center;
+  }
+  .LoginContainer {
+    @apply max-w-md w-full px-6 py-12 lg:px-2 bg-gray-100 rounded-lg shadow-lg;
+  }
+  .LoginFormContainer {
+    @apply mt-10 sm:mx-auto sm:w-full sm:max-w-sm;
+  }
+  .LoginFormLabel {
+    @apply block text-sm font-medium leading-6 text-gray-900;
+  }
+  .ForgotPasswordContainer {
+    @apply flex items-center justify-between;
+  }
+  .ForgotPasswordLink {
+    @apply text-sm font-semibold text-yellow-600 hover:text-yellow-500;
+  }
+  .GoogleWarningText {
+    @apply mt-2 text-sm text-red-600 text-center;
+  }
+  .SignupText {
+    @apply mt-10 text-center text-sm text-gray-500;
+  }
+  .RememberMeLabel {
+    @apply ml-2 block text-sm text-gray-900 font-medium;
+  }
+  .RememberMeCheckBox {
+    @apply w-4 h-4 text-yellow-600 bg-gray-100 border-gray-300 rounded focus:ring-0 focus:outline-none;
+  }
+  .LoginAlertContainer {
+    @apply absolute inset-x-0 top-0 h-16;
+  }
 }

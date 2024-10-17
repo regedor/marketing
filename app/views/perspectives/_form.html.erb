@@ -13,17 +13,12 @@
 
     <div class="mb-4">
       <%= form.label :copy, "Copy", class: "PerspectiveLabel" %>
-      <%= form.text_area :copy, class: "PerspectiveTextArea PerspectiveTextAreaLarge" %>
+      <%= form.text_area :copy, class: "TextArea  h-40" %>
     </div>
 
    <div class="mb-4">
       <%= form.label :socialplatform_id, "Social Platform", class: "PerspectiveLabel" %>
-      <select name="perspective[socialplatform_id]" id="perspective_socialplatform_id" class="PerspectiveDropdown">
-        <option value="" label=" "></option>
-        <% Socialplatform.all.each do |sp| %>
-          <option value="<%= sp.id %>"><%= sp.name %></option>
-        <% end %>
-      </select>
+      <%= form.select :socialplatform_id, options_for_select(Socialplatform.all.map { |sp| [sp.name, sp.id] }), { prompt: ' ' }, class: "InputField" %>
     </div>
 
     <div class="Bottom-right">
