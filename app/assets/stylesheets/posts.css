@@ -9,7 +9,4 @@
   .PostEditor {
     @apply mx-auto w-10/12 flex flex-col bg-gray-100 text-gray-200 border border-gray-300 p-6 shadow-lg max-w-2xl rounded-lg;
   }
-  .PostLabel {
-    @apply block text-gray-700;
-  }
 }
