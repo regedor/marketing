@@ -24,7 +24,7 @@
     @apply sm:mx-auto sm:w-full sm:max-w-sm flex items-center justify-center;
   }
   .ContainerHeaderText {
-      @apply mt-10 text-2xl font-bold leading-9 tracking-tight text-gray-900;
+    @apply mt-10 text-2xl font-bold leading-9 tracking-tight text-gray-900;
   }
   .Sidebar {
    @apply bg-white text-gray-700 w-64 h-full shadow-lg flex flex-col;
@@ -41,11 +41,19 @@
   .TableEntry {
     @apply px-4 py-4 whitespace-nowrap text-sm text-gray-600 border-b border-gray-200;
   }
+  .InputField {
+    @apply block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-yellow-600 sm:text-sm sm:leading-6;
+  }
+  .TextArea {
+    @apply block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-yellow-600;
+  }
 }
 
 @layer utilities {
-
   .Bottom-right {
     @apply flex justify-end;
-}
+  }
+  .SmallText {
+    @apply text-gray-500;
+  }
 }
