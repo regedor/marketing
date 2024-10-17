@@ -19,10 +19,18 @@
   </head>
 
   <body>
+    <!-- Botão para abrir a Sidebar -->
     <button id="sidebar-toggle" class="p-4 bg-white text-gray-700 fixed top-0 left-0 z-50">☰</button>
+
+    <!-- Sidebar -->
     <%= render 'layouts/sidebar' %>
-    <div id="main" class="relative transition-all duration-300 ease-in-out z-30">
-      <div id="overlay" class="hidden absolute inset-0 bg-gray-800 bg-opacity-50 z-40 pointer-events-none"></div>
+
+    <!-- Conteúdo principal -->
+    <div id="main" class="relative transition-all duration-300 ease-in-out z-30 ml-64">
+      <!-- Overlay de escurecimento -->
+      <div id="overlay" class="fixed top-0 left-56 right-0 bottom-0 bg-gray-900 bg-opacity-60 z-40 pointer-events-none opacity-0 transition-opacity duration-300"></div>
+
+      <!-- Navegação e conteúdo -->
       <nav>
         <% if notice.present? || alert.present? %>
         <div class="absolute inset-x-0 top-0 h-16 w-full text-center mb-4 mt-4">
@@ -37,44 +45,51 @@
       </nav>
       <%= yield %>
     </div>
-    
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
       $(document).ready(function() {
         var sidebarWidth = $('#sidebar').width();
 
+        // Função para atualizar a margem do main
         function updateMainMargin() {
           if ($('#sidebar').hasClass('hidden')) {
-            $('#main').css('margin-left', '0'); 
+            $('#main').css('margin-left', '0'); // Remover margem se a sidebar estiver oculta
           } else {
-            $('#main').css('margin-left', sidebarWidth + 'px');
+            $('#main').css('margin-left', sidebarWidth + 'px'); // Adicionar margem se a sidebar estiver visível
           }
         }
 
+        // Chama a função quando a página é carregada
         updateMainMargin();
 
+        // Abrir a sidebar e mostrar o overlay
         $('#sidebar-toggle').on('click', function() {
           $('#sidebar').removeClass('hidden -translate-x-full');
           $('#main').css('margin-left', sidebarWidth + 'px');
-          $('#overlay').removeClass('hidden pointer-events-none'); 
+          $('#overlay').removeClass('pointer-events-none').css('opacity', '1'); // Mostrar o overlay suavemente
           $('#sidebar-toggle').hide();
         });
 
+        // Fechar a sidebar e esconder o overlay
         $('#sidebar-close').on('click', function() {
           $('#sidebar').addClass('hidden -translate-x-full');
           $('#main').css('margin-left', '0');
-          $('#overlay').addClass('hidden pointer-events-none');
+          $('#overlay').addClass('pointer-events-none').css('opacity', '0'); // Esconder o overlay suavemente
           $('#sidebar-toggle').show();
         });
 
-        $('#overlay, #main').on('click', function() {
+        // Fechar a sidebar ao clicar no overlay
+        $('#overlay').on('click', function() {
           if ($('#sidebar').hasClass('hidden') === false) {
             $('#sidebar').addClass('hidden -translate-x-full');
             $('#main').css('margin-left', '0');
-            $('#overlay').addClass('hidden pointer-events-none'); 
+            $('#overlay').addClass('pointer-events-none').css('opacity', '0'); // Esconder o overlay suavemente
             $('#sidebar-toggle').show();
           }
         });
+
+        // Atualizar a margem sempre que a janela for redimensionada
         $(window).resize(function() {
           sidebarWidth = $('#sidebar').width();
           updateMainMargin();
