@@ -1,13 +1,9 @@
 class User < ApplicationRecord
   devise :database_authenticatable, :recoverable,
-         :rememberable, :validatable
+         :rememberable, :validatable,
+         :omniauthable, omniauth_providers: [ :google_oauth2 ]
 
   belongs_to :organization, optional: true
-  has_many :comments, dependent: :destroy
-  has_many :posts, dependent: :destroy
-
-
-
 
   def self.recent(limit)
     order(created_at: :desc).limit(limit)

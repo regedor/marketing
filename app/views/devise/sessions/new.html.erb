@@ -40,14 +40,9 @@
       <% end %>
 
       <div class="mt-4">
-        <button type="button" id="google-login" class="Btn-google w-full" onclick="toggleGoogleWarning()">
-          <img src="<%= asset_path('google_icon.svg') %>" alt="Google Icon" class="h-5 w-5 mr-2" />
-          Login with Google
-        </button>
-        <p id="google-warning" class="GoogleWarningText hidden">This feature is not available yet.</p>
+        <%= render "devise/shared/links" %>
+        <p class="SignupText">Wellbeing Warrior</p>
       </div>
-
-      <p class="SignupText">Wellbeing Warrior</p>
     </div>
   </div>
 </div>
