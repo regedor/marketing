@@ -4,10 +4,10 @@ perspective_one:
   copy: MyText
   post: post_one
   socialplatform: socialplatform_one
-  status: MyString
+  status: in_analysis
 
 perspective_two:
   copy: MyText
   post: post_two
   socialplatform: socialplatform_two
-  status: MyString
+  status: in_analysis

@@ -112,10 +112,6 @@ GEM
     connection_pool (2.4.1)
     crass (1.0.6)
     csv (3.3.0)
-    database_cleaner-active_record (2.2.0)
-      activerecord (>= 5.a)
-      database_cleaner-core (~> 2.0.0)
-    database_cleaner-core (2.0.1)
     date (3.3.4)
     debug (1.9.2)
       irb (~> 1.10)
@@ -259,6 +255,10 @@ GEM
       activesupport (= 7.2.1)
       bundler (>= 1.15.0)
       railties (= 7.2.1)
+    rails-controller-testing (1.0.5)
+      actionpack (>= 5.0.1.rc1)
+      actionview (>= 5.0.1.rc1)
+      activesupport (>= 5.0.1.rc1)
     rails-dom-testing (2.2.0)
       activesupport (>= 5.0.0)
       minitest
@@ -385,7 +385,6 @@ DEPENDENCIES
   brakeman
   cancancan (~> 3.0)
   capybara
-  database_cleaner-active_record
   debug
   devise
   dotenv-rails
@@ -397,6 +396,7 @@ DEPENDENCIES
   pg (~> 1.1)
   puma (>= 5.0)
   rails (~> 7.2.1)
+  rails-controller-testing
   rubocop-rails-omakase
   rubyzip
   sassc-rails
