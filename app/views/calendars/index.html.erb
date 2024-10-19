@@ -3,37 +3,3 @@
   <%= render "calendars", calendars: @calendars %>
   <%= render "posts", calendars: @calendars %>
 </div>
-
-
-<div id="calendars_page">
-  <p style="color: green"><%= notice %></p>
-
-  <% content_for :title, "Calendars" %>
-  <div id="calendar">
-    <table>
-      <thead>
-        <tr>
-          <% ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].each do |day| %>
-            <th><%= day %></th>
-          <% end %>
-        </tr>
-      </thead>
-      <tbody>
-        <% first_day_of_month = Date.today.beginning_of_month %>
-        <% last_day_of_month = Date.today.end_of_month %>
-        <% start_day = first_day_of_month.beginning_of_week(:sunday) %>
-        <% end_day = last_day_of_month.end_of_week(:sunday) %>
-        <% (start_day..end_day).each_slice(7) do |week| %>
-          <tr>
-            <% week.each do |date| %>
-              <td data-date="<%= date %>">
-                <%= date.month == Date.today.month ? date.day : '' %>
-              </td>
-            <% end %>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-  </div>
-  <div id="posts"></div>
-</div>
