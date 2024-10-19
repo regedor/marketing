@@ -27,6 +27,7 @@ Rails.application.routes.draw do
             patch :rejected
             patch :like
             patch :dislike
+            patch :update_status
           end
         end
       end

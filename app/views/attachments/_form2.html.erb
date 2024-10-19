@@ -1,0 +1,29 @@
+<div id="form_attachment_file">
+  <h3 class="GenericFormLabel">Alternatively you can provide a file.</h3>
+  <div class="field">
+    <%= form_with(model: [calendar, post, perspective, @attachment], local: true, html: { multipart: true, id: 'file_form' }) do |form| %>
+      <%= form.file_field :content, class: "FileSelect SmallText" %>
+    
+      <div class="Bottom-right">
+        <%= link_to 'Cancel', 'javascript:void(0)', class: "Btn-secondary", id: "cancel_link_file" %>
+        <%= form.submit "Save", class: "Btn-primary ml-2" %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function() {
+    // Reset filename form
+    $('#cancel_link_filename').on('click', function() {
+      $('#filename_form')[0].reset();
+    });
+
+    // Reset file upload form
+    $('#cancel_link_file').on('click', function() {
+      $('#file_form')[0].reset();
+    });
+  });
+</script>

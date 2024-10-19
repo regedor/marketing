@@ -53,6 +53,9 @@
   .GenericFormLabel {
     @apply block text-gray-700;
   }
+  .FileSelect {
+    @apply block w-full text-lg text-gray-900 border border-gray-300 rounded-lg cursor-pointer focus:outline-none bg-white;
+  }
 }
 
 @layer utilities {

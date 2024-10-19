@@ -1,12 +1,75 @@
 <div id="attachments_info">
+  <h2 class="ContainerHeaderText">Attachments</h2>
   <%= render "attachments/form", calendar: @calendar, post: @post, perspective: @perspective, attachment: Attachment.new %>
-  <% @perspective.attachments.each do |attachment| %>
-    <% if attachment.id.present? %>
-      <div id="<%= dom_id(attachment) %>_info" class="attachment">
-        <%= render attachment %>
-        <%= render "attachments/actions", attachment: attachment %>
-      </div>
-    <% end %>
-  <% end %>
+  <%= render "attachments/form2", calendar: @calendar, post: @post, perspective: @perspective, attachment: Attachment.new %>
+  <h3 class="GenericFormLabel"><strong>Current Attachments:</strong></h3>
+
+   <div class="overflow-x-auto">
+      <table class="min-w-full bg-white shadow-md rounded-lg border border-gray-200">
+        <thead>
+          <tr>
+            <th class="TableHeader border-r border-gray-200">Filename</th>
+            <th class="TableHeader border-r border-gray-200">Status</th>
+            <th class="TableHeader border-r border-gray-200">Likes</th>
+            <th class="TableHeader border-r border-gray-200">Dislikes</th>
+            <th class="TableHeader">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <% @perspective.attachments.each do |attachment| %>
+            <% if attachment.id.present? %>
+              <tr class="hover:bg-gray-100">
+                <td class="TableEntry border-r border-gray-200"><strong><%= attachment.filename %></strong></td>
+                
+                
+                <td class="TableEntry border-r border-gray-200">
+                  <%= form_with url: update_status_calendar_post_perspective_attachment_path(@calendar, @post, @perspective, attachment), method: :patch, local: true, id: "status-form-#{dom_id(attachment)}" do %>
+                    <select name="attachment[status]" id="selector_<%= dom_id(attachment) %>" class="selector_status_attachment" onchange="this.form.submit()">
+                      <option value="approved" class= "text-green-600" <% if attachment.status == "approved" %> selected <% end %>>Approved</option>
+                      <option value="in_analysis" class= "text-yellow-600" <% if attachment.status == "in_analysis" %> selected <% end %>>In Analysis</option>
+                      <option value="rejected" class= "text-red-600" <% if attachment.status == "rejected" %> selected <% end %>>Rejected</option>
+                    </select>
+                  <% end %>
+                </td>
+
+
+                <td class="TableEntry border-r border-gray-200">
+                  <%= link_to attachment.attachmentcounters.where(aproved: true).count.to_s + " likes", 
+                              like_calendar_post_perspective_attachment_path(@calendar, @post, @perspective, attachment), 
+                              data: { turbo_method: :patch } %>
+                </td>
+                <td class="TableEntry border-r border-gray-200">
+                  <%= link_to attachment.attachmentcounters.where(rejected: true).count.to_s + " dislikes", 
+                              dislike_calendar_post_perspective_attachment_path(@calendar, @post, @perspective, attachment), 
+                              data: { turbo_method: :patch } %>
+                </td>
+                <td class="TableEntry border-r border-gray-200">
+                  <% if attachment.type_content != "cloud" %>
+                    <%= link_to "Download", download_calendar_post_perspective_attachment_path(@calendar, @post, @perspective, attachment), 
+                                class: "text-blue-600 hover:text-blue-500 hover:underline" %>
+                  <% end %>
+                  <%= link_to "Delete", calendar_post_perspective_attachment_path(@calendar, @post, @perspective, attachment), 
+                              data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, 
+                              class: "text-red-600 hover:text-red-500 hover:underline" %>   
+                </td>
+              </tr>
+            <% end %>
+          <% end %>
+        </tbody>
+      </table>
 </div>
 
+
+<style>
+  select:has(option[value="approved"]:checked) {
+    color: #2fa458;
+  }
+  
+  select:has(option[value="in_analysis"]:checked) {
+    color: #ca8a04;
+  }
+
+  select:has(option[value="rejected"]:checked) {
+   color: #dd2626;
+  }
+</style>
