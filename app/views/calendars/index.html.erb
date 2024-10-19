@@ -3,3 +3,11 @@
   <%= render "calendars", calendars: @calendars %>
   <%= render "posts", calendars: @calendars %>
 </div>
+
+<div class="container">
+  <%= month_calendar do |date| %>
+    <div class="day">
+      <%= date %>
+    </div>
+  <% end %>
+</div>
