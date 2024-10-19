@@ -1,6 +1,8 @@
-<div id='<%= dom_id(comment) %>' class="comment">
-  <p><strong>User:</strong> <%= comment.user_id %></p>
-  <p><%= comment.content %></p>
+<div id='<%= dom_id(comment) %>' class="comment mb-4">
+  <div class="flex items-center">
+    <p class="GenericFormLabel pl-4"><strong><%= comment.user.email %></strong></p>
+    <p class="flex-grow"></p> 
+    <p class="SmallText text-right pr-4"><%= time_ago_in_words(comment.created_at) %> ago</p>
+  </div>
+  <p class="Comment"><%= comment.content %></p>
 </div>
-
-

@@ -5,11 +5,11 @@
   <div id="comments_info">
     <% @post.comments.each do |comment| %>
       <% if comment.id.present? %>
-          <div id='<%= dom_id(comment) %>_info' class="comment">
+        <div id='<%= dom_id(comment) %>_info' class="comment">
           <%= render comment %>
-          <div id='<%= dom_id(comment) %>_actions' class="comment">
-            <%= link_to "Edit Comment", edit_calendar_post_comment_path(calendar, post, comment) %> |
-            <%= link_to "Delete Comment", calendar_post_comment_path(calendar, post, comment), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
+          <div id='<%= dom_id(comment) %>_actions' class="comment Bottom-right mb-4">
+            <%= link_to "Edit", edit_calendar_post_comment_path(calendar, post, comment), class: "Btn-secondary", method: :get %>
+            <%= link_to "Delete", calendar_post_comment_path(calendar, post, comment), data: { turbo_method: :delete, turbo_confirm: "Are you sure you wish to delete this comment?" }, class: "Btn-secondary ml-2" %>
           </div>
         </div>
       <% end %>
