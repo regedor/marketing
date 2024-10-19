@@ -1,10 +1,33 @@
-<div id="<%= dom_id(perspective) %>" class="perspective">
-  <h3>Perspective:</h3>
-  <p><strong>Copy:</strong> <%= perspective.copy %></p>
-  <% if perspective.socialplatform.present? %>
-    <p><strong>Social Platform:</strong> <%= perspective.socialplatform.name %></p>
-  <% end %>
-  <p><strong>Status:</strong> <%= perspective.status %></p>
-  <p><strong>Created at:</strong> <%= perspective.created_at.strftime("%B %d, %Y %I:%M %p") %></p>
-  <p><strong>Last updated:</strong> <%= perspective.updated_at.strftime("%B %d, %Y %I:%M %p") %></p>
+<div id="<%= dom_id(perspective) %>" class="text-gray-900">
+   <div class="mb-4">
+    <label class="GenericFormLabel">Copy:</label>
+    <div class="TextArea h-40 bg-white p-4 border border-gray-300 rounded-md overflow-y-auto">
+        <%= perspective.copy %>
+    </div>
+  </div>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2 mb-4">
+    <div>
+      <p class="font-medium">Status:</p>
+      <p class="font-semibold <%= case perspective.status
+        when 'approved'
+          'text-green-600'
+        when 'in_analysis'
+          'text-yellow-600'
+        when 'rejected'
+          'text-red-600'
+        else
+          'text-gray-900'
+      end %>">
+        <%= perspective.status.humanize %>
+      </p>
+    </div>
+    <div>
+      <p class="font-medium">Created at:</p>
+      <p class="text-sm"><%= perspective.created_at.strftime("%B %d, %Y %I:%M %p") %></p>
+    </div>
+    <div>
+      <p class="font-medium">Last updated:</p>
+      <p class="text-sm"><%= perspective.updated_at.strftime("%B %d, %Y %I:%M %p") %></p>
+    </div>
+  </div>
 </div>

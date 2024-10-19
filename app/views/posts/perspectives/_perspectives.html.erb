@@ -1,11 +1,25 @@
-<div id="perspectives">
-  <h2>Perspectives</h2>
-  <%= link_to "Create Perspective", new_calendar_post_perspective_path(@calendar, @post) %>
-  <div id="perspectives_info">
-    <% @post.perspectives.each do |perspective| %>
-      <% if perspective.id.present? %>
-        <%= render "posts/perspectives/perspective", perspective: perspective%>
-      <% end %>
-    <% end %>
-  </div>
+<div id="perspectives" class="mb-4"> 
+  <%= select_tag :perspective_id, options_for_select(
+    [['Create New Perspective', new_calendar_post_perspective_path(@calendar, @post)]] +
+    (@post.perspectives.select { |perspective| perspective.id.present? }
+      .sort_by(&:id)  
+      .map { |perspective| 
+        [
+          perspective.socialplatform.present? ? perspective.socialplatform.name : 'Default Perspective', 
+          calendar_post_perspective_path(@calendar, @post, perspective)
+        ]
+      })
+    ), 
+    prompt: 'Current Perspective: ' + (@perspective.socialplatform.present? ? @perspective.socialplatform.name : 'Default Perspective'), class: "InputField", onchange: "navigateToPerspective(this)"
+  %>
 </div>
+
+<script>
+  function navigateToPerspective(selectElement) {
+    var selectedUrl = selectElement.value;
+    
+    if (selectedUrl) {
+      window.location.href = selectedUrl;
+    }
+  }
+</script>

@@ -1,10 +1,7 @@
-<div id="<%= dom_id(perspective) %>">
-  <div id="<%= dom_id(perspective) %>_name">
-    <% if perspective.socialplatform.present? %>
-      <%= perspective.socialplatform.name %>
-    <% else %>
-      Default
-    <% end %>
-  </div>
-  <%= link_to "Show Perspective", calendar_post_perspective_path(@calendar, @post, perspective) %>
-</div>
+<a href="<%= calendar_post_perspective_path(@calendar, @post, perspective) %>" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" role="menuitem">
+  <% if perspective.socialplatform.present? %>
+    <%= perspective.socialplatform.name %>
+  <% else %>
+    Default Perspective
+  <% end %>
+</a>
