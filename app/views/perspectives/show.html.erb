@@ -7,14 +7,13 @@
   
   <div id="perspective_info"> 
     <%= render "posts/perspectives/perspectives"%> 
-    <%= render @perspective %>
+    <%= render @perspective, post: @post %> 
     <%= render "actions", perspective: @perspective %>
   </div>
 
   <hr />
   
   <div id="post_info">
-    <h1>Post Information</h1>
     <%= render @post %>
     <%= render "posts/actions"%> 
   </div>
