@@ -7,6 +7,12 @@ class CalendarsController < ApplicationController
   # GET /calendars
   def index
     @calendar = Calendar.new
+    @consultations = Consultation.where(
+      start_time: Time.now.beginning_of_month.beginning_of_week..Time.now.end_of_month.end_of_week
+    )
+    @posts = Post.where(calendar: @calendars).where(
+      publish_date: Time.now.beginning_of_month.beginning_of_week..Time.now.end_of_month.end_of_week
+    )
   end
 
   # POST /calendars

@@ -5,9 +5,16 @@
 </div>
 
 <div class="container">
-  <%= month_calendar do |date| %>
+  <%= month_calendar(events: @posts, attribute: :publish_date) do |date, post| %>
     <div class="day">
-      <%= date %>
+      <%= date.day %>
     </div>
+    <% post.each do |post| %>
+      <div class="card-header">
+        <div class="card-title">
+          <%= link_to post.title, calendar_post_path(post.calendar, post) %>
+        </div>
+      </div>
+    <% end %>
   <% end %>
 </div>
