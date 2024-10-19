@@ -1,8 +1,7 @@
 <div id="perspectives" class="mb-4"> 
   <%= select_tag :perspective_id, options_for_select(
     [['Create New Perspective', new_calendar_post_perspective_path(@calendar, @post)]] +
-    (@post.perspectives.select { |perspective| perspective.id.present? }
-      .sort_by(&:id)  
+    (@post.perspectives 
       .map { |perspective| 
         [
           perspective.socialplatform.present? ? perspective.socialplatform.name : 'Default Perspective', 

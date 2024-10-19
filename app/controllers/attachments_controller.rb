@@ -74,7 +74,7 @@ class AttachmentsController < ApplicationController
   # PATCH /calendars/:calendar_id/posts/:post_id/perspectives/:perspective_id/attachments/:id/update_status
   def update_status
     @attachment.update(attachment_params_status)
-    redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Attachment status updated to Rejected."
+    redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Attachment status updated."
   end
 
   # PATCH /calendars/:calendar_id/posts/:post_id/perspectives/:perspective_id/attachments/:id/like

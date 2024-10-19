@@ -1,43 +1,20 @@
 <div id="<%= dom_id(post) %>" class="text-gray-900">
-  <div class="mt-4 mb-4">
-    <label class="GenericFormLabel">Design Idea:</label>
-    <div class="TextArea h-40 bg-white p-4 border border-gray-300 rounded-md overflow-y-auto">
+  <div class="flex gap-4 mt-4 mb-4">
+    <div class="w-1/3">
+      <label class="GenericFormLabel">Categories:</label>
+      <div class="TextArea bg-white p-4 border border-gray-300 rounded-md overflow-y-auto h-40">
+        <ul class="list-disc pl-5">
+          <% post.categories.each do |category| %>
+            <li><%= category %></li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+    <div class="w-2/3">
+      <label class="GenericFormLabel">Design Idea:</label>
+      <div class="TextArea h-40 bg-white p-4 border border-gray-300 rounded-md overflow-y-auto">
         <%= post.design_idea %>
-    </div>
-  </div>
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2 mb-4">
-    <div>
-      <p class="font-medium">Status:</p>
-      <p class="font-semibold <%= case post.status
-        when 'approved'
-          'text-green-600'
-        when 'in_analysis'
-          'text-yellow-600'
-        when 'rejected'
-          'text-red-600'
-        else
-          'text-gray-900'
-      end %>">
-        <%= post.status.humanize %>
-      </p>
-    </div>
-    <div>
-      <p class="font-medium">Publish Date:</p>
-      <p class="text-sm"><%= post.publish_date.strftime("%B %d, %Y %I:%M %p") %></p>
-    </div>
-  </div>
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2 mb-4">
-    <div>
-      <p class="font-medium">Categories:</p>
-      <p class="text-sm"><%= post.categories.join(", ") %></p>
-    </div>
-    <div>
-      <p class="font-medium">Calendar:</p>
-      <p class="text-sm"><%= post.calendar_id %></p>
-    </div>
-    <div>
-      <p class="font-medium">Creator:</p>
-      <p class="text-sm"><%= post.user_id %></p>
+      </div>
     </div>
   </div>
 </div>
