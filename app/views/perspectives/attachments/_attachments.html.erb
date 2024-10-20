@@ -33,16 +33,21 @@
                 </td>
 
 
-                <td class="TableEntry border-r border-gray-200">
-                  <%= link_to attachment.attachmentcounters.where(aproved: true).count.to_s + " likes", 
+                <td class="TableEntry border-r border-gray-200 text-center">
+                  <%= link_to image_tag('thumbs-up.svg', alt: 'Thumbs Up', class: 'h-5 w-5 inline-block') + 
+                              " #{attachment.attachmentcounters.where(aproved: true).count}".html_safe, 
                               like_calendar_post_perspective_attachment_path(@calendar, @post, @perspective, attachment), 
-                              data: { turbo_method: :patch } %>
+                              data: { turbo_method: :patch }, class: 'flex justify-center items-center space-x-1' %>
                 </td>
-                <td class="TableEntry border-r border-gray-200">
-                  <%= link_to attachment.attachmentcounters.where(rejected: true).count.to_s + " dislikes", 
+                <td class="TableEntry border-r border-gray-200 text-center">
+                  <%= link_to image_tag('thumbs-down.svg', alt: 'Thumbs Down', class: 'h-5 w-5 inline-block') + 
+                              " #{attachment.attachmentcounters.where(rejected: true).count}".html_safe, 
                               dislike_calendar_post_perspective_attachment_path(@calendar, @post, @perspective, attachment), 
-                              data: { turbo_method: :patch } %>
+                              data: { turbo_method: :patch }, class: 'flex justify-center items-center space-x-1' %>
                 </td>
+
+
+
                 <td class="TableEntry border-r border-gray-200">
                   <% if attachment.type_content != "cloud" %>
                     <%= link_to "Download", download_calendar_post_perspective_attachment_path(@calendar, @post, @perspective, attachment), 

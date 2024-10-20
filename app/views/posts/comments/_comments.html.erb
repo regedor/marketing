@@ -9,7 +9,7 @@
           <%= render comment %>
           <div id='<%= dom_id(comment) %>_actions' class="comment Bottom-right mb-4">
             <%= link_to "Edit", edit_calendar_post_comment_path(calendar, post, comment), class: "Btn-secondary", method: :get %>
-            <%= link_to "Delete", calendar_post_comment_path(calendar, post, comment), data: { turbo_method: :delete, turbo_confirm: "Are you sure you wish to delete this comment?" }, class: "Btn-secondary ml-2" %>
+            <%= link_to "Delete", calendar_post_comment_path(calendar, post, comment), data: { turbo_method: :delete, turbo_confirm: "Are you sure you wish to delete this comment?" }, class: "Btn-delete ml-2" %>
           </div>
         </div>
       <% end %>
