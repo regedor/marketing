@@ -2,7 +2,7 @@ class AttachmentsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_data
   before_action :check_organization!
-  before_action :set_attachment, only: [ :update, :destroy, :download, :approved, :in_analysis, :rejected, :like, :dislike ]
+  before_action :set_attachment, only: [ :update, :destroy, :download, :approved, :in_analysis, :rejected, :like, :dislike, :update_status ]
 
   # POST /calendars/:calendar_id/posts/:post_id/perspectives/:perspective_id/attachments
   def create
@@ -71,6 +71,12 @@ class AttachmentsController < ApplicationController
     redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Attachment status updated to Rejected."
   end
 
+  # PATCH /calendars/:calendar_id/posts/:post_id/perspectives/:perspective_id/attachments/:id/update_status
+  def update_status
+    @attachment.update(attachment_params_status)
+    redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Attachment status updated."
+  end
+
   # PATCH /calendars/:calendar_id/posts/:post_id/perspectives/:perspective_id/attachments/:id/like
   def like
     @attachmentcounter = find_or_initialize_attachmentcounter
@@ -119,5 +125,8 @@ class AttachmentsController < ApplicationController
         puts error_message
         redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), alert: "There was an error saving the reaction." + error_message
       end
+    end
+    def attachment_params_status
+      params.require(:attachment).permit(:status)
     end
 end

@@ -4,13 +4,12 @@ class PerspectivesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_data
   before_action :check_organization!
-  before_action :set_perspective, only: [ :show, :edit, :update, :destroy, :download, :approved, :in_analysis, :rejected ]
+  before_action :set_perspective, only: [ :show, :edit, :update, :destroy, :download, :approved, :in_analysis, :rejected, :update_status, :update_status_post ]
 
   # GET /calendars/:calendar_id/posts/:post_id/perspectives/:id
   def show
     @attachment = @perspective.attachments.new
     @comment = @post.comments.new
-    @perspective_new = @post.perspectives.new
   end
 
   # GET /calendars/:calendar_id/posts/:post_id/perspectives/new
@@ -71,6 +70,18 @@ class PerspectivesController < ApplicationController
     redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Perspective status updated to Rejected."
   end
 
+  # PATCH /calendars/:calendar_id/posts/:post_id/perspectives/:id/update_status
+  def update_status
+    @perspective.update(perspective_params_status)
+    redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Perspective status updated."
+  end
+
+   # PATCH /calendars/:calendar_id/posts/:post_id/perspectives/:id/update_status_post
+  def update_status_post
+    @post.update(post_params_status)
+    redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Post status updated."
+  end
+
   def download
     attachments = @perspective.attachments.where(status: "approved").where.not(type_content: "cloud")
     zip_filename = "#{@perspective.id}_attachments.zip"
@@ -100,5 +111,13 @@ class PerspectivesController < ApplicationController
 
     def check_organization!
       redirect_to root_path, alert: "Access Denied" unless current_user.organization_id == @calendar.organization.id
+    end
+
+    def perspective_params_status
+      params.require(:perspective).permit(:status)
+    end
+
+    def post_params_status
+      params.require(:post).permit(:status)
     end
 end

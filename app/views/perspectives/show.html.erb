@@ -1,21 +1,32 @@
-<div id="post_perspective">
+<div id="post_perspective" class="flex items-center justify-center min-h-screen">
+  <div id="form_post" class="Container w-full max-w-5xl px-8 mx-auto mt-16">
+  
+    <div class="HeaderContainer mb-8">
+      <h2 class="ContainerHeaderText"><%= @post.title %></h2>
+    </div>
+  
   <div id="perspective_info"> 
-    <%= render @perspective %>
+    <%= render "posts/perspectives/perspectives"%> 
+    <%= render @perspective, post: @post %> 
     <%= render "actions", perspective: @perspective %>
   </div>
+
   <hr />
+  
   <div id="post_info">
-    <h1>Post Information</h1>
     <%= render @post %>
-    <%= render "posts/actions"%> 
-    <%= render "posts/perspectives/perspectives"%> 
+    <%= render "posts/actions", post: @post, perspective: @perspective%> 
   </div>
+  
   <hr />
+  
   <div id="attachments">
     <%= render "perspectives/attachments/attachments"%> 
   </div>
+  
   <hr />
+  
   <div id="comments">
-    <%= render "posts/comments/comments", calendar: @calendar, post: @post, comment_new: @comment_new%> 
+    <%= render "posts/comments/comments", perspective: @perspective, calendar: @calendar, post: @post, comment_new: @comment_new%> 
   </div>
 </div>

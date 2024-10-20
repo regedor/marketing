@@ -18,6 +18,8 @@ Rails.application.routes.draw do
           patch :approved
           patch :in_analysis
           patch :rejected
+          patch :update_status
+          patch :update_status_post
         end
 
         resources :attachments, only: [ :create, :edit, :update, :destroy ] do
@@ -28,6 +30,7 @@ Rails.application.routes.draw do
             patch :rejected
             patch :like
             patch :dislike
+            patch :update_status
           end
         end
       end

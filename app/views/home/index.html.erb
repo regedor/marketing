@@ -1,10 +1,19 @@
-<h1>Welcome, <%= current_user.email %>!</h1>
-<% if current_user.organization.present? %>
-  <p>You are part of the <%= current_user.organization.name%> organization as 
-    <% if current_user.isLeader %>
-      Leader
-    <% else %>
-      normal user
-    <% end %>
-  </p>
-<% end %>
+<div class="HomeSection">
+    <div class="mb-8">
+      <%= image_tag 'engagelogo.png', alt: 'EngageSphere', class: 'LogoImage' %>
+    </div>
+
+    <div class="space-y-4">
+      <h1 class="WelcomeText">Welcome, <%= current_user.email %>!</h1>
+      <% if current_user.organization.present? %>
+        <p class="OrganizationText">
+          You are part of the <%= current_user.organization.name %> organization as 
+          <% if current_user.isLeader %>
+            Leader
+          <% else %>
+            normal user
+          <% end %>
+        </p>
+      <% end %>
+    </div>
+</div>

@@ -1,9 +1,10 @@
 <div id="edit_<%= dom_id(@perspective)%>">
-  <% content_for :title, "Editing presctive" %>
-  <h1>Editing perspective</h1>
-  <%= render "form", perspective: @perspective, calendar: @calendar, post: @post%>
-  <br>
-  <div>
-    <%= link_to "Back to post", calendar_post_path(@calendar,@post) %>
+  <div id="form_post" class="Container w-full mx-auto mt-16">
+    <div class="HeaderContainer mb-8">
+      <h2 class="ContainerHeaderText">Edit Perspective</h2>
+    </div>
+    <div class="space-y-6 mt-8;">
+      <%= render "form", perspective: @perspective, calendar: @calendar, post: @post%>
+    </div>
   </div>
-</div>
+</div> 

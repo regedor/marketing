@@ -1,11 +1,41 @@
-<div id="perspectives">
-  <h2>Perspectives</h2>
-  <%= link_to "Create Perspective", new_calendar_post_perspective_path(@calendar, @post) %>
-  <div id="perspectives_info">
-    <% @post.perspectives.each do |perspective| %>
-      <% if perspective.id.present? %>
-        <%= render "posts/perspectives/perspective", perspective: perspective%>
-      <% end %>
-    <% end %>
+<div class="mb-4 text-gray-900 grid grid-cols-1 md:grid-cols-3 gap-2">
+  <div class="flex items-center">
+    <span class="font-medium">Publish Date:</span>
+    <span class="ml-2"><%= @post.publish_date.strftime("%B %d, %Y %I:%M %p") %></span>
+  </div>
+  <div class="flex items-center">
+    <p class="font-medium">Creator:</p>
+    <span class="ml-2"><%= @post.user.email %></span>
+  </div>
+  <div class="flex items-center">
+    <p class="font-medium">Calendar:</p>
+    <span class="ml-2"><%= @post.calendar.name %></span>
   </div>
 </div>
+<div id="perspectives" class="mb-4"> 
+  <%= select_tag :perspective_id, options_for_select(
+    (@post.perspectives 
+      .map { |perspective| 
+        [
+          perspective.socialplatform.present? ? perspective.socialplatform.name : 'Default Perspective', 
+          calendar_post_perspective_path(@calendar, @post, perspective)
+        ]
+      }) +
+      [['Create New Perspective', new_calendar_post_perspective_path(@calendar, @post), { class: 'bg-yellow-500' }] ]
+    ), 
+    prompt: 'Current Perspective: ' + (@perspective.socialplatform.present? ? @perspective.socialplatform.name : 'Default Perspective'),
+    class: "InputField",
+    onchange: "navigateToPerspective(this)"
+   %>
+</div>
+
+
+<script>
+  function navigateToPerspective(selectElement) {
+    var selectedUrl = selectElement.value;
+    
+    if (selectedUrl) {
+      window.location.href = selectedUrl;
+    }
+  }
+</script>

@@ -11,16 +11,12 @@ end
 
 if Rails.env.development?
   text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. #PI #MEI #UMINHO"
-  emails = [
-    "abhimanyu.chat@gmail.com",
-    "andre.filipe.araujo.freitas@gmail.com",
-    "jmbarbosa2002@gmail.com",
-    "zebragapt@gmail.com",
-    "mikefsi@hotmail.com",
-    "peradi2001@gmail.com",
-    "tiagoadriano.feixamoreira@gmail.com",
-    "user1_4@gmail.com"
-  ]
+  emails = {
+    1 => [ "abhimanyu.chat@gmail.com", "andre.filipe.araujo.freitas@gmail.com" ],
+    2 => [ "jmbarbosa2002@gmail.com", "zebragapt@gmail.com" ],
+    3 => [ "migasfsi@gmail.com", "peradi2001@gmail.com" ],
+    4 => [ "tiagoadriano.feixamoreira@gmail.com", "user1_4@gmail.com" ]
+  }
 
   # Add the paths for your images
   image_files = [
@@ -46,14 +42,13 @@ if Rails.env.development?
     # Create 5 users for each org, 2 leaders, 3 normal users
     print "- Users: "
     1.upto(2) do |n|
-      print " #{emails[n-1]}"
-      User.create!(email: emails[n-1], password: "1234567", password_confirmation: "1234567", isLeader: true, organization_id: organization.id)
+      print " #{emails[o][n-1]}"
+      User.create!(email: emails[o][n-1], password: "1234567", password_confirmation: "1234567", isLeader: true, organization_id: organization.id)
     end
     3.upto(5) do |n|
       print " #{n}"
       User.create!(email: "user#{n}_#{o}@ww.com", password: "1234567", password_confirmation: "1234567", isLeader: false, organization_id: organization.id)
     end
-    emails = emails.drop(2)
 
     puts " done;"
 
@@ -65,11 +60,11 @@ if Rails.env.development?
       # Create 5 posts for each calendar
       1.upto(5) do |p|
         puts "   - Creating Post #{p}"
-        uid = p.even? ? 1 : 2
+        uemail = p.even? ? emails[o][0] : emails[o][1]
         categories = ("a".."c").to_a # Categories as ["a", "b", "c"]
         post = Post.create!(
           title: "Post #{p}",
-          user_id: uid,
+          user: User.find_by(email: uemail),
           design_idea: text,
           calendar: calendar,
           publish_date: Time.zone.parse('2027-07-11 21:00'),

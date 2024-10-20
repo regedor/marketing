@@ -1,8 +1,7 @@
-<div id="form_perspective">
-  <%= form_with(model: [calendar, post, perspective ], local: true) do |form|%>
-    <% if perspective.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(perspective.errors.count, "error") %> prohibited this comment from being saved:</h2>
+<%= form_with(model: [calendar, post, perspective], local: true) do |form| %>
+  <% if perspective.errors.any? %>
+    <div class="text-red-500">
+      <h2><%= pluralize(perspective.errors.count, "error") %> prohibited this perspective from being saved:</h2>
       <ul>
         <% perspective.errors.full_messages.each do |msg| %>
           <li><%= msg %></li>
@@ -10,17 +9,17 @@
       </ul>
     </div>
   <% end %>
-  New Perspectives
-  <div>
-    <%= form.label :copy, "Copy", style: "display: block" %>
-    <%= form.text_area :copy %>
+  <div class="mb-4">
+    <%= form.label :copy, "Copy", class: "GenericFormLabel" %>
+    <%= form.text_area :copy, class: "TextArea h-40" %>
   </div>
-  <div>
-    <%= form.label :socialplatform_id, "Social Platform" %>
-    <%= form.select :socialplatform_id, Socialplatform.all.collect { |sp| [sp.name, sp.id] }, include_blank: true %>
+  <div class="mb-4">
+    <%= form.label :socialplatform_id, "Social Platform", class: "GenericFormLabel" %>
+    <%= form.select :socialplatform_id, options_for_select(Socialplatform.all.map { |sp| [sp.name, sp.id] }), { prompt: ' ' }, class: "InputField" %>
   </div>
-  <%= form.submit %>
-  <% end %>
-</div>
-
+  <div class="Bottom-right">
+    <%= link_to 'Cancel', 'javascript:history.back()', class: "Btn-secondary" %>
+    <%= form.submit "Save", class: "Btn-primary ml-2" %>
+  </div>
+<% end %>
 

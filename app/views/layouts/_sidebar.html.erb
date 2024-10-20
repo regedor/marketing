@@ -1,0 +1,47 @@
+<div id="sidebar" class="Sidebar hidden fixed inset-y-0 left-0 w-48 md:w-56 z-50 bg-zinc-800 text-white transform -translate-x-full transition-transform duration-300 ease-in-out h-screen">
+  <div class="p-6 relative flex flex-col h-full">
+    <button id="sidebar-close" class="absolute top-4 right-4 text-gray-600 text-xl cursor-pointer">&times;</button>
+    <ul class="flex-grow overflow-y-auto">
+      <% if user_signed_in? %>
+        <li class="mt-8 mb-2 <%= 'bg-yellow-400' if current_page?(root_path) %>">
+          <%= link_to root_path, class: "SidebarLink flex items-center" do %>
+            <%= image_tag 'home-icon.svg', class: 'SidebarIcon' %>
+            <span class="ml-2">Home</span>
+          <% end %>
+        </li>
+        <% if current_user.isLeader %>
+          <li class="mb-2 <%= 'bg-yellow-400' if current_page?(dashboard_path) %>">
+            <%= link_to dashboard_path, class: "SidebarLink flex items-center" do %>
+              <%= image_tag 'dashboard-icon.svg', class: 'SidebarIcon' %>
+              <span class="ml-2">Dashboard</span>
+            <% end %>
+          </li>
+        <% end %>
+        <li class="mb-2 <%= 'bg-yellow-400' if current_page?(calendars_path) %>">
+          <%= link_to calendars_path, class: "SidebarLink flex items-center" do %>
+            <%= image_tag 'posts-icon.svg', class: 'SidebarIcon' %>
+            <span class="ml-2">Posts</span>
+          <% end %>
+        </li>
+      <% else %>
+        <li class="mt-8 mb-2 <%= 'bg-yellow-400' if current_page?(new_user_session_path) %>">
+          <%= link_to new_user_session_path, class: "SidebarLink flex items-center" do %>
+            <%= image_tag 'login-icon.svg', class: 'SidebarIcon' %>
+            <span class="ml-2">Login</span>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+
+    <% if user_signed_in? %>
+      <ul class="mt-auto w-full">
+        <li class="mb-2">
+          <%= link_to destroy_user_session_path, data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to log out?" }, class: "SidebarLink flex items-center" do %>
+            <%= image_tag 'logout-icon.svg', class: 'SidebarIcon' %>
+            <span class="ml-2">Logout</span>
+          <% end %>
+        </li>
+      </ul>
+    <% end %>
+  </div>
+</div>
