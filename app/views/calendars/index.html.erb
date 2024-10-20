@@ -4,17 +4,17 @@
   <%# <%= render "posts", calendars: @calendars %>
 </div>
 
-<div class="container">
-  <%= month_calendar(events: @posts, attribute: :publish_date) do |date, post| %>
-    <div class="day">
-      <%= date.day %>
-    </div>
-    <% post.each do |post| %>
-      <div class="card-header">
-        <div class="card-title">
-          <%= link_to post.title, calendar_post_path(post.calendar, post) %>
-        </div>
+<div class="container mx-auto">
+  <%= month_calendar(events: @posts, attribute: :publish_date) do |date, posts| %>
+    <div class="day border p-2 h-32 relative">
+      <div class="date text-sm font-bold text-gray-700">
+        <%= date.day %>
       </div>
-    <% end %>
+      <% posts.each do |post| %>
+        <div class="post mt-2 bg-blue-100 p-1 rounded text-xs text-blue-700">
+          <%= link_to post.title, calendar_post_path(post.calendar, post), class: "hover:underline" %>
+        </div>
+      <% end %>
+    </div>
   <% end %>
 </div>
