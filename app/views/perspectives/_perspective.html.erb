@@ -1,28 +1,8 @@
 <div id="<%= dom_id(perspective) %>" class="text-gray-900">
-  <div class="flex justify-between mt-2 mb-4">
-    <div class="flex items-center space-x-4">
-      <%= form_with url: update_status_post_calendar_post_perspective_path(@calendar, post, perspective), method: :patch, local: true, id: "status-form-#{dom_id(post)}" do %>
-        <label class="font-medium text-sm mr-2">Post Status:</label>
-        <select name="post[status]" id="selector_<%= dom_id(post) %>" class="InputField text-sm" onchange="this.form.submit()">
-          <option value="approved" class="text-green-600" <% if post.status == "approved" %> selected <% end %>>Approved</option>
-          <option value="in_analysis" class="text-yellow-600" <% if post.status == "in_analysis" %> selected <% end %>>In Analysis</option>
-          <option value="rejected" class="text-red-600" <% if post.status == "rejected" %> selected <% end %>>Rejected</option>
-        </select>
-      <% end %>
-      <%= form_with url: update_status_calendar_post_perspective_path(@calendar, @post, perspective), method: :patch, local: true, id: "status-form-#{dom_id(perspective)}" do %>
-        <label class="font-medium text-sm mr-2">Perspective Status:</label>
-        <select name="perspective[status]" id="selector_<%= dom_id(perspective) %>" class="InputField text-sm" onchange="this.form.submit()">
-          <option value="approved" class="text-green-600" <% if perspective.status == "approved" %> selected <% end %>>Approved</option>
-          <option value="in_analysis" class="text-yellow-600" <% if perspective.status == "in_analysis" %> selected <% end %>>In Analysis</option>
-          <option value="rejected" class="text-red-600" <% if perspective.status == "rejected" %> selected <% end %>>Rejected</option>
-        </select>
-      <% end %>
-    </div>
-  </div>
   <div class="flex gap-4 mt-4 mb-4">
     <div class="w-1/3">
       <label class="GenericFormLabel">Social Media:</label>
-      <div class="TextArea bg-white p-4 border border-gray-300 rounded-md overflow-y-auto h-40">
+      <div class="pt-2 border-0 border-gray-300 overflow-y-auto h-40">
         <table class="min-w-full bg-white shadow-md rounded-lg border border-gray-200">
           <thead>
             <tr>
@@ -40,8 +20,13 @@
                     <strong>Default Perspective</strong>
                   <% end %>
                 </td>
-                <td class="TableEntry flex items-center justify-end">
-                  <span class="inline-block w-4 h-4 rounded" style="<%= case p.status when 'approved' then 'background-color: green;' when 'in_analysis' then 'background-color: yellow;' when 'rejected' then 'background-color: red;' else 'background-color: gray;' end %>"></span>
+                <td class="TableEntry">
+                  <%= case p.status
+                    when 'approved' then "<span class='text-green-600 font-semibold'>Approved</span>".html_safe
+                    when 'in_analysis' then "<span class='text-yellow-600 font-semibold'>In Analysis</span>".html_safe
+                    when 'rejected' then "<span class='text-red-600 font-semibold'>Rejected</span>".html_safe
+                    else "<span class='text-gray-600 font-semibold'>Unknown</span>".html_safe
+                  end %>
                 </td>
               </tr>
             <% end %>
@@ -58,7 +43,7 @@
             <button id="copy-button" class="relative p-2 hover:bg-gray-100 rounded transition-all duration-200 ease-in-out" data-copy-text="<%= perspective.copy %>">
               <img src="<%= asset_path('copy.svg') %>" alt="Copy" class="w-4 h-4"/>
             </button>
-            <span id="copy-message" class="mr-2 text-green-600 bg-gray-100 px-2 py-1 rounded-md text-xs opacity-0 absolute font-bold right-full top-2">Copied!</span>
+            <span id="copy-message" class="mr-2 text-green-600 bg-gray-100 px-2 py-1 rounded-md text-xs absolute font-bold right-full top-2 invisible">Copied!</span>
           </div>
         </div>
       </div>
@@ -70,6 +55,7 @@
 <script>
   $(document).ready(function() {
     $('#copy-button').on('click', function() {
+      console.log('boas')
       var copyText = $(this).data('copy-text');
       
       var tempInput = $('<input>');
@@ -78,10 +64,10 @@
       document.execCommand('copy');
       tempInput.remove();
 
-      $('#copy-message').css('opacity', '1');
+      $('#copy-message').removeClass('invisible');
       setTimeout(function() {
-        $('#copy-message').css('opacity', '0');
-      }, 2000);
+        $('#copy-message').addClass('invisible');
+      }, 1000);
     });
   });
 </script>

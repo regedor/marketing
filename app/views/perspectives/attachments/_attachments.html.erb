@@ -4,64 +4,58 @@
   <%= render "attachments/form2", calendar: @calendar, post: @post, perspective: @perspective, attachment: Attachment.new %>
   <h3 class="GenericFormLabel"><strong>Current Attachments:</strong></h3>
 
-   <div class="overflow-x-auto">
-      <table class="min-w-full bg-white shadow-md rounded-lg border border-gray-200">
-        <thead>
-          <tr>
-            <th class="TableHeader border-r border-gray-200">Filename</th>
-            <th class="TableHeader border-r border-gray-200">Status</th>
-            <th class="TableHeader border-r border-gray-200">Likes</th>
-            <th class="TableHeader border-r border-gray-200">Dislikes</th>
-            <th class="TableHeader">Actions</th>
-          </tr>
-        </thead>
-        <tbody class="bg-white divide-y divide-gray-200">
-          <% @perspective.attachments.each do |attachment| %>
-            <% if attachment.id.present? %>
-              <tr class="hover:bg-gray-100">
-                <td class="TableEntry border-r border-gray-200"><strong><%= attachment.filename %></strong></td>
-                
-                
-                <td class="TableEntry border-r border-gray-200">
-                  <%= form_with url: update_status_calendar_post_perspective_attachment_path(@calendar, @post, @perspective, attachment), method: :patch, local: true, id: "status-form-#{dom_id(attachment)}" do %>
-                    <select name="attachment[status]" id="selector_<%= dom_id(attachment) %>" class="selector_status_attachment" onchange="this.form.submit()">
-                      <option value="approved" class= "text-green-600" <% if attachment.status == "approved" %> selected <% end %>>Approved</option>
-                      <option value="in_analysis" class= "text-yellow-600" <% if attachment.status == "in_analysis" %> selected <% end %>>In Analysis</option>
-                      <option value="rejected" class= "text-red-600" <% if attachment.status == "rejected" %> selected <% end %>>Rejected</option>
-                    </select>
-                  <% end %>
-                </td>
-
-
-                <td class="TableEntry border-r border-gray-200 text-center">
-                  <%= link_to image_tag('thumbs-up.svg', alt: 'Thumbs Up', class: 'h-5 w-5 inline-block') + 
-                              " #{attachment.attachmentcounters.where(aproved: true).count}".html_safe, 
-                              like_calendar_post_perspective_attachment_path(@calendar, @post, @perspective, attachment), 
-                              data: { turbo_method: :patch }, class: 'flex justify-center items-center space-x-1' %>
-                </td>
-                <td class="TableEntry border-r border-gray-200 text-center">
-                  <%= link_to image_tag('thumbs-down.svg', alt: 'Thumbs Down', class: 'h-5 w-5 inline-block') + 
-                              " #{attachment.attachmentcounters.where(rejected: true).count}".html_safe, 
-                              dislike_calendar_post_perspective_attachment_path(@calendar, @post, @perspective, attachment), 
-                              data: { turbo_method: :patch }, class: 'flex justify-center items-center space-x-1' %>
-                </td>
-
-
-
-                <td class="TableEntry border-r border-gray-200">
-                  <% if attachment.type_content != "cloud" %>
-                    <%= link_to "Download", download_calendar_post_perspective_attachment_path(@calendar, @post, @perspective, attachment), 
-                                class: "text-blue-600 hover:text-blue-500 hover:underline" %>
-                  <% end %>
-                  <%= link_to "Delete", calendar_post_perspective_attachment_path(@calendar, @post, @perspective, attachment), 
-                              data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, 
-                              class: "text-red-600 hover:text-red-500 hover:underline" %>   
-                </td>
-              </tr>
-            <% end %>
+  <div class="overflow-x-auto">
+    <table class="min-w-full bg-white shadow-md rounded-lg border border-gray-200">
+      <thead>
+        <tr>
+          <th class="TableHeader border-r border-gray-200">Filename</th>
+          <th class="TableHeader border-r border-gray-200">Status</th>
+          <th class="TableHeader border-r border-gray-200">Likes</th>
+          <th class="TableHeader border-r border-gray-200">Dislikes</th>
+          <th class="TableHeader">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="bg-white divide-y divide-gray-200">
+        <% @perspective.attachments.each do |attachment| %>
+          <% if attachment.id.present? %>
+            <tr class="hover:bg-gray-100">
+              <td class="TableEntry border-r border-gray-200"><strong><%= attachment.filename %></strong></td>
+              <td class="TableEntry border-r border-gray-200">
+                <%= form_with url: update_status_calendar_post_perspective_attachment_path(@calendar, @post, @perspective, attachment), method: :patch, local: true, id: "status-form-#{dom_id(attachment)}" do %>
+                  <select name="attachment[status]" id="selector_<%= dom_id(attachment) %>" class="selector_status_attachment" onchange="this.form.submit()">
+                    <option value="approved" class= "text-green-600" <% if attachment.status == "approved" %> selected <% end %>>Approved</option>
+                    <option value="in_analysis" class= "text-yellow-600" <% if attachment.status == "in_analysis" %> selected <% end %>>In Analysis</option>
+                    <option value="rejected" class= "text-red-600" <% if attachment.status == "rejected" %> selected <% end %>>Rejected</option>
+                  </select>
+                <% end %>
+              </td>
+              <td class="TableEntry border-r border-gray-200 text-center">
+                <%= link_to (attachment.attachmentcounters.where(aproved: true).where(user: current_user).empty? ? image_tag('thumbs-up.svg', alt: 'Thumbs Up', class: 'h-5 w-5 inline-block') : image_tag('thumbs-up-black.svg', alt: 'Thumbs Up', class: 'h-5 w-5 inline-block')) + 
+                            " #{attachment.attachmentcounters.where(aproved: true).count}".html_safe, 
+                            like_calendar_post_perspective_attachment_path(@calendar, @post, @perspective, attachment), 
+                            data: { turbo_method: :patch }, class: 'flex justify-center items-center space-x-1' %>
+              </td>
+              <td class="TableEntry border-r border-gray-200 text-center">
+                <%= link_to (attachment.attachmentcounters.where(rejected: true).where(user: current_user).empty? ? image_tag('thumbs-down.svg', alt: 'Thumbs Down', class: 'h-5 w-5 inline-block') : image_tag('thumbs-down-black.svg', alt: 'Thumbs Down', class: 'h-5 w-5 inline-block')) +
+                            " #{attachment.attachmentcounters.where(rejected: true).count}".html_safe, 
+                            dislike_calendar_post_perspective_attachment_path(@calendar, @post, @perspective, attachment), 
+                            data: { turbo_method: :patch }, class: 'flex justify-center items-center space-x-1' %>
+              </td>
+              <td class="TableEntry border-r border-gray-200">
+                <% if attachment.type_content != "cloud" %>
+                  <%= link_to "Download", download_calendar_post_perspective_attachment_path(@calendar, @post, @perspective, attachment), 
+                              class: "text-blue-600 hover:text-blue-500 hover:underline" %>
+                <% end %>
+                <%= link_to "Delete", calendar_post_perspective_attachment_path(@calendar, @post, @perspective, attachment), 
+                            data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, 
+                            class: "text-red-600 hover:text-red-500 hover:underline" %>   
+              </td>
+            </tr>
           <% end %>
-        </tbody>
-      </table>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
 </div>
 
 

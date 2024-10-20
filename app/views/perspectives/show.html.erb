@@ -5,28 +5,25 @@
       <h2 class="ContainerHeaderText"><%= @post.title %></h2>
     </div>
   
-  <div id="perspective_info"> 
-    <%= render "posts/perspectives/perspectives"%> 
-    <%= render @perspective, post: @post %> 
-    <%= render "actions", perspective: @perspective %>
-  </div>
+    <div id="perspective_info"> 
+      <%= render "posts/info"%> 
+      <%= render "posts/perspectives/perspectives", perspective: @perspective , post: @post %> 
+      <%= render @perspective, post: @post %> 
+      <%= render "actions", perspective: @perspective %>
+      <%= render @post %>
+      <%= render "posts/actions", post: @post, perspective: @perspective%> 
+    </div>
 
-  <hr />
-  
-  <div id="post_info">
-    <%= render @post %>
-    <%= render "posts/actions", post: @post, perspective: @perspective%> 
-  </div>
-  
-  <hr />
-  
-  <div id="attachments">
-    <%= render "perspectives/attachments/attachments"%> 
-  </div>
-  
-  <hr />
-  
-  <div id="comments">
-    <%= render "posts/comments/comments", perspective: @perspective, calendar: @calendar, post: @post, comment_new: @comment_new%> 
+    <hr />
+    
+    <div id="attachments">
+      <%= render "perspectives/attachments/attachments"%> 
+    </div>
+    
+    <hr />
+    
+    <div id="comments">
+      <%= render "posts/comments/comments", perspective: @perspective, calendar: @calendar, post: @post, comment_new: @comment_new%> 
+    </div>
   </div>
 </div>

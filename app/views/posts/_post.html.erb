@@ -15,10 +15,10 @@
       <div class="TextArea h-40 bg-white p-4 border border-gray-300 rounded-md overflow-y-auto relative">
         <%= post.design_idea %>
         <div class="absolute top-2 right-2 flex items-center">
-          <button id="copy-design-button" class="relative p-2 hover:bg-gray-100 rounded transition-all duration-200 ease-in-out" data-copy-text="<%= post.design_idea %>">
+          <button id="design-copy-button" class="relative p-2 hover:bg-gray-100 rounded transition-all duration-200 ease-in-out" data-copy-text="<%= post.design_idea %>">
             <img src="<%= asset_path('copy.svg') %>" alt="Copy" class="w-4 h-4"/>
           </button>
-          <span id="design-copy-message" class="mr-2 text-green-600 bg-gray-100 px-2 py-1 rounded-md text-xs opacity-0 absolute font-bold right-full top-2">
+          <span id="design-copy-message" class="mr-2 text-green-600 bg-gray-100 px-2 py-1 rounded-md text-xs invisible absolute font-bold right-full top-2">
             Copied!
           </span>
         </div>
@@ -30,7 +30,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
   $(document).ready(function() {
-    $('#copy-design-button').on('click', function() {
+    $('#design-copy-button').on('click', function() {
       var copyText = $(this).data('copy-text');
       
       var tempInput = $('<input>');
@@ -38,11 +38,11 @@
       tempInput.val(copyText).select();
       document.execCommand('copy');
       tempInput.remove();
-
-      $('#design-copy-message').css('opacity', '1');
+       
+       $('#design-copy-message').removeClass('invisible');
       setTimeout(function() {
-        $('#design-copy-message').css('opacity', '0');
-      }, 2000);
+        $('#design-copy-message').addClass('invisible');
+      }, 1000);
     });
   });
 </script>
