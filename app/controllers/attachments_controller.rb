@@ -2,7 +2,7 @@ class AttachmentsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_data
   before_action :check_organization!
-  before_action :set_attachment, only: [ :update, :destroy, :download, :approved, :in_analysis, :rejected, :like, :dislike, :update_status ]
+  before_action :set_attachment, only: [:show, :update, :destroy, :download, :approved, :in_analysis, :rejected, :like, :dislike, :update_status ]
 
   # POST /calendars/:calendar_id/posts/:post_id/perspectives/:perspective_id/attachments
   def create
@@ -22,6 +22,11 @@ class AttachmentsController < ApplicationController
       error_messages = @attachment.errors.full_messages.join(", ")
       redirect_to calendar_post_perspective_path(@calendar, @post, @perspective),  alert: "Failed to create attachment: #{error_messages}"
     end
+  end
+
+  # POST /calendars/:calendar_id/posts/:post_id/perspectives/:perspective_id/attachments/:id
+  def show
+    send_data @attachment.content, type: @attachment.type_content, disposition: 'inline'
   end
 
   # GET /calendars/:calendar_id/posts/:post_id/perspectives/:perspective_id/attachments/:id/edit

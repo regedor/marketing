@@ -19,7 +19,11 @@
         <% @perspective.attachments.each do |attachment| %>
           <% if attachment.id.present? %>
             <tr class="hover:bg-gray-100">
-              <td class="TableEntry border-r border-gray-200"><strong><%= attachment.filename %></strong></td>
+              <td class="TableEntry border-r border-gray-200">
+                <strong>
+                  <%= link_to attachment.type_content == "cloud" ? "Link" : attachment.filename, attachment.type_content == "cloud" ? attachment.filename : calendar_post_perspective_attachment_path(@calendar, @post, @perspective, attachment), class: "hover:underline", target: :_blank  %>
+                </strong>
+              </td>
               <td class="TableEntry border-r border-gray-200">
                 <%= form_with url: update_status_calendar_post_perspective_attachment_path(@calendar, @post, @perspective, attachment), method: :patch, local: true, id: "status-form-#{dom_id(attachment)}" do %>
                   <select name="attachment[status]" id="selector_<%= dom_id(attachment) %>" class="selector_status_attachment" onchange="this.form.submit()">

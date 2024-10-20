@@ -22,7 +22,7 @@ Rails.application.routes.draw do
           patch :update_status_post
         end
 
-        resources :attachments, only: [ :create, :edit, :update, :destroy ] do
+        resources :attachments, only: [:show, :create, :edit, :update, :destroy ] do
           member do
             get :download
             patch :approved
