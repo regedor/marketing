@@ -16,17 +16,17 @@
         </tr>
       </thead>
       <tbody class="bg-white divide-y divide-gray-200">
-        <% @perspective.attachments.each do |attachment| %>
+        <% @perspective.attachments.sort_by { |attachment| attachment.filename.to_s.downcase }.each do |attachment| %>
           <% if attachment.id.present? %>
             <tr class="hover:bg-gray-100">
               <td class="TableEntry border-r border-gray-200">
                 <strong>
-                  <%= link_to attachment.type_content == "cloud" ? "Link" : attachment.filename, attachment.type_content == "cloud" ? attachment.filename : calendar_post_perspective_attachment_path(@calendar, @post, @perspective, attachment), class: "hover:underline", target: :_blank  %>
+                  <%= link_to attachment.type_content == "cloud" ? "Link id: " + attachment.id.to_s : attachment.filename, attachment.type_content == "cloud" ? attachment.filename : calendar_post_perspective_attachment_path(@calendar, @post, @perspective, attachment), class: "hover:underline", target: :_blank  %>
                 </strong>
               </td>
               <td class="TableEntry border-r border-gray-200">
                 <%= form_with url: update_status_calendar_post_perspective_attachment_path(@calendar, @post, @perspective, attachment), method: :patch, local: true, id: "status-form-#{dom_id(attachment)}" do %>
-                  <select name="attachment[status]" id="selector_<%= dom_id(attachment) %>" class="selector_status_attachment" onchange="this.form.submit()">
+                  <select name="attachment[status]" id="selector_<%= dom_id(attachment) %>" class="selector_status_attachment InputField text-sm'" onchange="this.form.submit()">
                     <option value="approved" class= "text-green-600" <% if attachment.status == "approved" %> selected <% end %>>Approved</option>
                     <option value="in_analysis" class= "text-yellow-600" <% if attachment.status == "in_analysis" %> selected <% end %>>In Analysis</option>
                     <option value="rejected" class= "text-red-600" <% if attachment.status == "rejected" %> selected <% end %>>Rejected</option>
@@ -61,18 +61,3 @@
     </table>
   </div>
 </div>
-
-
-<style>
-  select:has(option[value="approved"]:checked) {
-    color: #2fa458;
-  }
-  
-  select:has(option[value="in_analysis"]:checked) {
-    color: #ca8a04;
-  }
-
-  select:has(option[value="rejected"]:checked) {
-   color: #dd2626;
-  }
-</style>
