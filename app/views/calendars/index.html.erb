@@ -1,11 +1,19 @@
-<div id="calendars_page">
+<div id="calendars_page" class="p-4">
   <%# <% content_for :title, "Calendars" %>
   <%# <%= render "calendars", calendars: @calendars %>
   <%# <%= render "posts", calendars: @calendars %>
 </div>
 
 <div class="container mx-auto">
-  <%= month_calendar(events: @posts, attribute: :publish_date) do |date, posts| %>
+  <div class="flex justify-between items-center mb-4">
+    <%= link_to "Previous", @permitted_params.merge(start_date: @start_date.prev_month), class: "text-blue-500 hover:underline" %>
+    <div class="text-lg font-bold text-gray-700">
+      <%= @start_date.strftime("%B %Y") %>
+    </div>
+    <%= link_to "Next", @permitted_params.merge(start_date: @start_date.next_month), class: "text-blue-500 hover:underline" %>
+  </div>
+
+  <%= month_calendar(events: @posts, attribute: :publish_date, previous_label: nil, next_label: nil) do |date, posts| %>
     <div class="day border p-2 h-32 relative">
       <div class="date text-sm font-bold text-gray-700">
         <%= date.day %>
@@ -18,3 +26,9 @@
     </div>
   <% end %>
 </div>
+
+<style>
+  .calendar-heading {
+    display: none;
+  }
+</style>
