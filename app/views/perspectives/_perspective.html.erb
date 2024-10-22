@@ -1,32 +1,45 @@
 <div id="<%= dom_id(perspective) %>" class="text-gray-900">
   <div class="flex flex-col md:flex-row gap-4 mt-4 mb-4">
     <div class="w-full md:w-1/3">
-      <label class="GenericFormLabel">Social Media:</label>
       <div class="pt-2 border-0 border-gray-300 overflow-y-auto h-40">
         <table class="min-w-full bg-white shadow-md rounded-lg border border-gray-200">
           <thead>
             <tr>
-              <th class="TableHeader border-r border-gray-200">Platform</th>
-              <th class="TableHeader">Status</th>
+              <th class="TableHeader border-r border-gray-200 text-xs px-2 py-2">Platform</th>
+              <th class="TableHeader text-xs px-2 py-2">Status</th>
             </tr>
           </thead>
           <tbody class="bg-white divide-y divide-gray-200">
-            <% @post.perspectives.each do |p| %>
+            <% @post_perspectives.each do |p| %>
               <tr class="hover:bg-gray-100">
-                <td class="TableEntry border-r border-gray-200">
-                  <% if p.socialplatform.present? %>
-                    <strong><%= p.socialplatform.name %></strong>
-                  <% else %>
-                    <strong>Default Perspective</strong>
-                  <% end %>
+                <td class="TableEntry border-r border-gray-200 text-sm px-2 py-2">
+                  <strong>
+                    <%= link_to p.socialplatform.present? ? p.socialplatform.name : "Default", calendar_post_perspective_path(@calendar, @post, p), class: "hover:underline" %>
+                  </strong>
                 </td>
-                <td class="TableEntry">
+                <td class="TableEntry text-sm px-1 py-2">
                   <%= case p.status
-                    when 'approved' then "<span class='text-green-600 font-semibold'>Approved</span>".html_safe
-                    when 'in_analysis' then "<span class='text-yellow-600 font-semibold'>In Analysis</span>".html_safe
-                    when 'rejected' then "<span class='text-red-600 font-semibold'>Rejected</span>".html_safe
-                    else "<span class='text-gray-600 font-semibold'>Unknown</span>".html_safe
+                    when 'approved' then "<span class='text-green-600 font-semibold text-sm'>Approved</span>".html_safe
+                    when 'in_analysis' then "<span class='text-yellow-600 font-semibold text-sm'>In Analysis</span>".html_safe
+                    when 'rejected' then "<span class='text-red-600 font-semibold text-sm'>Rejected</span>".html_safe
+                    else "<span class='text-gray-600 font-semibold text-sm'>Unknown</span>".html_safe
                   end %>
+                </td>
+              </tr>
+            <% end %>
+            <% @new_social_platforms.each do |s| %>
+              <tr class="hover:bg-gray-100">
+                <td class="TableEntry border-r border-gray-200 text-sm px-2 py-2">
+                  <strong>
+                    <%= link_to s.name, calendar_post_perspectives_path(@calendar, @post),
+                      method: :post, 
+                      data: { turbo_method: :post, turbo_params: { perspective: { socialplatform_id: s.id } } },
+                      class: "hover:underline" %>
+
+                  </strong>
+                </td>
+                <td class="TableEntry text-sm px-1 py-2">
+                  None
                 </td>
               </tr>
             <% end %>

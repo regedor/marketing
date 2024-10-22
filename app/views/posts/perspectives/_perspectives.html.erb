@@ -1,21 +1,4 @@
-<div id="perspectives" class="mb-4 grid grid-cols-1 md:grid-cols-3 gap-2 text-gray-900 w-full"> 
-  <div class="mt-2 mb-4">
-    <label class="font-medium text-sm">Perspective Selection:</label>
-    <%= select_tag :perspective_id, options_for_select(
-      (@post.perspectives 
-        .map { |perspective| 
-          [
-            perspective.socialplatform.present? ? perspective.socialplatform.name : 'Default Perspective', 
-            calendar_post_perspective_path(@calendar, @post, perspective)
-          ]
-        }) +
-        [['Create New Perspective', new_calendar_post_perspective_path(@calendar, @post), { class: 'bg-yellow-500' }] ]
-      ), 
-      prompt: 'Current Perspective: ' + (@perspective.socialplatform.present? ? @perspective.socialplatform.name : 'Default Perspective'),
-      class: "InputField text-sm",
-      onchange: "navigateToPerspective(this)"
-    %>
-  </div>
+<div id="perspectives" class="mb-4 grid grid-cols-1 md:grid-cols-2 gap-2 text-gray-900 w-full"> 
   <div class="mb-4 mt-2 space-x-4">
     <%= form_with url: update_status_post_calendar_post_perspective_path(@calendar, post, perspective), method: :patch, local: true, id: "status-form-#{dom_id(post)}" do %>
       <label class="font-medium text-sm">Post Status:</label>

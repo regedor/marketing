@@ -4,12 +4,16 @@ class PerspectivesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_data
   before_action :check_organization!
-  before_action :set_perspective, only: [ :show, :edit, :update, :destroy, :download, :approved, :in_analysis, :rejected, :update_status, :update_status_post ]
+  before_action :set_perspective, only: [ :show,  :edit, :update, :destroy, :download, :approved, :in_analysis, :rejected, :update_status, :update_status_post ]
 
   # GET /calendars/:calendar_id/posts/:post_id/perspectives/:id
   def show
     @attachment = @perspective.attachments.new
     @comment = @post.comments.new
+    all_socialplatforms = Socialplatform.all
+    post_socialplatforms = @post.perspectives.map(&:socialplatform)
+    @post_perspectives = @post.perspectives 
+    @new_social_platforms = Socialplatform.all.reject{ |socialplatform| post_socialplatforms.include?(socialplatform) }
   end
 
   # GET /calendars/:calendar_id/posts/:post_id/perspectives/new
@@ -20,10 +24,13 @@ class PerspectivesController < ApplicationController
   # POST /calendars/:calendar_id/posts/:post_id/perspectives
   def create
     @perspective_new = @post.perspectives.new(perspective_params)
+    @perspective_new.copy = "Default sei lá"
 
     if @perspective_new.save
       redirect_to calendar_post_perspective_path(@calendar, @post, @perspective_new), notice: "Perspective was successfully created."
     else
+      puts "========================"
+      puts @perspective_new.errors.full_messages.join(", ")
       @comment = @post.comments.new
       render :new, status: :unprocessable_entity
     end
@@ -106,7 +113,7 @@ class PerspectivesController < ApplicationController
     end
 
     def perspective_params
-      params.require(:perspective).permit(:copy, :socialplatform_id)
+      params.require(:perspective).permit(:socialplatform_id)
     end
 
     def check_organization!
