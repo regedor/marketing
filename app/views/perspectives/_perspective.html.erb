@@ -10,36 +10,31 @@
             </tr>
           </thead>
           <tbody class="bg-white divide-y divide-gray-200">
-            <% @post_perspectives.each do |p| %>
-              <tr class="hover:bg-gray-100">
+            <% @perspectives.each do |p| %>
+              <tr class="<% if @perspective.id == p.id %> bg-gray-200 <% else %> hover:bg-gray-100 <% end %>">
                 <td class="TableEntry border-r border-gray-200 text-sm px-2 py-2">
                   <strong>
-                    <%= link_to p.socialplatform.present? ? p.socialplatform.name : "Default", calendar_post_perspective_path(@calendar, @post, p), class: "hover:underline" %>
+                    <% if p.id.present?%>
+                      <%= link_to p.socialplatform.present? ? p.socialplatform.name : "Default", calendar_post_perspective_path(@calendar, @post, p), class: "hover:underline" %>
+                    <% else %>
+                      <%= button_to p.socialplatform.name, calendar_post_perspectives_path(@calendar, @post),
+                        method: :post, 
+                        params: { perspective: { socialplatform_id: p.socialplatform.id} },
+                        class: "hover:underline" %>
+                    <% end %>
                   </strong>
                 </td>
                 <td class="TableEntry text-sm px-1 py-2">
-                  <%= case p.status
-                    when 'approved' then "<span class='text-green-600 font-semibold text-sm'>Approved</span>".html_safe
-                    when 'in_analysis' then "<span class='text-yellow-600 font-semibold text-sm'>In Analysis</span>".html_safe
-                    when 'rejected' then "<span class='text-red-600 font-semibold text-sm'>Rejected</span>".html_safe
-                    else "<span class='text-gray-600 font-semibold text-sm'>Unknown</span>".html_safe
-                  end %>
-                </td>
-              </tr>
-            <% end %>
-            <% @new_social_platforms.each do |s| %>
-              <tr class="hover:bg-gray-100">
-                <td class="TableEntry border-r border-gray-200 text-sm px-2 py-2">
-                  <strong>
-                    <%= link_to s.name, calendar_post_perspectives_path(@calendar, @post),
-                      method: :post, 
-                      data: { turbo_method: :post, turbo_params: { perspective: { socialplatform_id: s.id } } },
-                      class: "hover:underline" %>
-
-                  </strong>
-                </td>
-                <td class="TableEntry text-sm px-1 py-2">
-                  None
+                  <% if p.id.present?%>
+                    <%= case p.status
+                      when 'approved' then "<span class='text-green-600 font-semibold text-sm'>Approved</span>".html_safe
+                      when 'in_analysis' then "<span class='text-yellow-600 font-semibold text-sm'>In Analysis</span>".html_safe
+                      when 'rejected' then "<span class='text-red-600 font-semibold text-sm'>Rejected</span>".html_safe
+                      else "<span class='text-gray-600 font-semibold text-sm'>Unknown</span>".html_safe
+                    end %>
+                  <% else %>
+                    None
+                  <% end %>
                 </td>
               </tr>
             <% end %>

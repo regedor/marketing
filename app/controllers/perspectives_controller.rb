@@ -10,29 +10,22 @@ class PerspectivesController < ApplicationController
   def show
     @attachment = @perspective.attachments.new
     @comment = @post.comments.new
-    all_socialplatforms = Socialplatform.all
     post_socialplatforms = @post.perspectives.map(&:socialplatform)
-    @post_perspectives = @post.perspectives 
-    @new_social_platforms = Socialplatform.all.reject{ |socialplatform| post_socialplatforms.include?(socialplatform) }
-  end
-
-  # GET /calendars/:calendar_id/posts/:post_id/perspectives/new
-  def new
-    @perspective_new = @post.perspectives.build
+    post_perspectives = @post.perspectives
+    new_perspectives = Socialplatform.all.reject { |socialplatform| post_socialplatforms.include?(socialplatform) }.map { |s| Perspective.new(socialplatform: s) }
+    @perspectives = (post_perspectives + new_perspectives).sort_by { |perspective| perspective.socialplatform.present? ? perspective.socialplatform&.name : "Default" }
   end
 
   # POST /calendars/:calendar_id/posts/:post_id/perspectives
   def create
     @perspective_new = @post.perspectives.new(perspective_params)
-    @perspective_new.copy = "Default sei lá"
+    @perspective_new.copy = @post.perspectives.reject { |p| p.socialplatform.present? }.map(&:copy).first
 
     if @perspective_new.save
       redirect_to calendar_post_perspective_path(@calendar, @post, @perspective_new), notice: "Perspective was successfully created."
     else
-      puts "========================"
-      puts @perspective_new.errors.full_messages.join(", ")
       @comment = @post.comments.new
-      render :new, status: :unprocessable_entity
+      redirect_to calendar_post_perspective_path(@calendar, @post), alert: "Error creating Perspective."
     end
   end
 
@@ -83,7 +76,7 @@ class PerspectivesController < ApplicationController
     redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Perspective status updated."
   end
 
-   # PATCH /calendars/:calendar_id/posts/:post_id/perspectives/:id/update_status_post
+  # PATCH /calendars/:calendar_id/posts/:post_id/perspectives/:id/update_status_post
   def update_status_post
     @post.update(post_params_status)
     redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Post status updated."
@@ -113,7 +106,7 @@ class PerspectivesController < ApplicationController
     end
 
     def perspective_params
-      params.require(:perspective).permit(:socialplatform_id)
+      params.require(:perspective).permit(:socialplatform_id, :copy)
     end
 
     def check_organization!

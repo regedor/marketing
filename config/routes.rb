@@ -12,7 +12,7 @@ Rails.application.routes.draw do
         patch :rejected
       end
 
-      resources :perspectives, only: [ :show, :new, :create, :edit, :update, :destroy ] do
+      resources :perspectives, only: [ :show, :create, :edit, :update, :destroy ] do
         member do
           get :download
           patch :approved
@@ -22,7 +22,7 @@ Rails.application.routes.draw do
           patch :update_status_post
         end
 
-        resources :attachments, only: [:show, :create, :edit, :update, :destroy ] do
+        resources :attachments, only: [ :show, :create, :edit, :update, :destroy ] do
           member do
             get :download
             patch :approved
