@@ -94,8 +94,13 @@
         let url = "<%= update_copy_calendar_post_perspective_path(@calendar,@post,perspective)%>"
         build_axios()
         axios.patch(url, {perspective : {copy : copy_data}})
-        .then((response) => console.log("success copy"))
-        .catch((error) => console.log("error copy"))
+        .then((response) => {
+          console.log("success copy")
+          original_copy = copy_data
+        })
+        .catch((error) => {
+          console.log("error copy")
+        })
       }
       else
         console.log("No updated copy")

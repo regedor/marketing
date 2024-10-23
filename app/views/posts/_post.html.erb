@@ -63,8 +63,13 @@
         let url = "<%= update_design_idea_calendar_post_path(@calendar,post)%>"
         build_axios()
         axios.patch(url, {post : {design_idea : design_idea_data}})
-        .then((response) => console.log("success design idea"))
-        .catch((error) => console.log("error design idea"))
+        .then((response) => {
+          console.log("success design idea")
+          original_design_idea = design_idea_data
+        })
+        .catch((error) => {
+          console.log("error design idea")
+        })
       }
       else
         console.log("No updated Design Idea")
