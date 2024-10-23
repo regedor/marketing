@@ -48,9 +48,9 @@
       </div>
     </div>
     <div class="flex flex-col w-full md:w-2/3 min-h-full">
-      <label class="GenericFormLabel">Copy:</label>
+      <label class="GenericFormLabel flex">Copy: <p id="savedCopy" class ="ml-auto"></p></label>
       <div class="TextArea bg-white overflow-y-auto h-60 p-4 rounded-md relative flex-grow">
-        <div id="copy">
+        <div id="copy" contenteditable="true" class="border-none outline-none focus:outline-none">
           <% perspective.copy.split("\n").each do |newline| %>
             <p><%= newline %></p>
           <% end %>
@@ -83,27 +83,34 @@
       }, 1000);
     });
 
+    var count = 1;
+    
     function build_axios() {
       axios.defaults.withCredentials = true;
       const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
       axios.defaults.headers.common['X-CSRF-Token'] = csrfToken;
     }
     function update_copy() {
-      let copy_data = $('#copy p').map(function() { return $(this).text(); }).get().join('\n') + " updated";
+      let copy_data = $('#copy p').map(function() { return $(this).text(); }).get().join('\n');
       if(copy_data != original_copy) {
         let url = "<%= update_copy_calendar_post_perspective_path(@calendar,@post,perspective)%>"
         build_axios()
         axios.patch(url, {perspective : {copy : copy_data}})
         .then((response) => {
           console.log("success copy")
+          $("#savedCopy").text("(saved)");
+          setTimeout(function() {
+            $('#savedCopy').text("");
+          }, 3000);
+          count = 1;
           original_copy = copy_data
         })
         .catch((error) => {
-          console.log("error copy")
+          console.log("error copy");
+          $("#savedCopy").text("(failed " + count + " times, retrying...)");
+          count++;
         })
       }
-      else
-        console.log("No updated copy")
     }
     setInterval(update_copy, 2000);
   });
