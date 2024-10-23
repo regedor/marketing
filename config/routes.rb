@@ -10,6 +10,7 @@ Rails.application.routes.draw do
         patch :approved
         patch :in_analysis
         patch :rejected
+        patch :update_design_idea
       end
 
       resources :perspectives, only: [ :show, :create, :edit, :update, :destroy ] do
@@ -20,6 +21,7 @@ Rails.application.routes.draw do
           patch :rejected
           patch :update_status
           patch :update_status_post
+          patch :update_copy
         end
 
         resources :attachments, only: [ :show, :create, :edit, :update, :destroy ] do

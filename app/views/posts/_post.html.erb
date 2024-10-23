@@ -13,9 +13,11 @@
     <div class="w-full md:w-2/3">
       <label class="GenericFormLabel">Design Idea:</label>
       <div class="TextArea h-60 bg-white p-4 rounded-md overflow-y-auto relative">
-        <% post.design_idea.split("\n").each do |newline| %>
-          <p><%= newline %></p>
-        <% end %>
+        <div id="design_idea">
+          <% post.design_idea.split("\n").each do |newline| %>
+            <p><%= newline %></p>
+          <% end %>
+        </div>
         <div class="absolute top-2 right-2 flex items-center">
           <button id="design-copy-button" class="relative p-2 hover:bg-gray-100 rounded transition-all duration-200 ease-in-out" data-copy-text="<%= post.design_idea %>">
             <img src="<%= asset_path('copy.svg') %>" alt="Copy" class="w-4 h-4"/>
@@ -31,6 +33,8 @@
 
 <script>
   $(document).ready(function() {
+    let original_design_idea = "<%= j(post.design_idea) %>";
+
     $('#design-copy-button').on('click', function() {
       var copyText = $(this).data('copy-text');
       
@@ -45,5 +49,26 @@
         $('#design-copy-message').addClass('invisible');
       }, 1000);
     });
+    
+      
+    function build_axios() {
+      axios.defaults.withCredentials = true;
+      const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+      axios.defaults.headers.common['X-CSRF-Token'] = csrfToken;
+    }
+    
+    function update_design_idea() {
+      let design_idea_data = $('#design_idea p').map(function() { return $(this).text(); }).get().join('\n') + "1";
+      if(design_idea_data != original_design_idea) {
+        let url = "<%= update_design_idea_calendar_post_path(@calendar,post)%>"
+        build_axios()
+        axios.patch(url, {post : {design_idea : design_idea_data}})
+        .then((response) => console.log("success design idea"))
+        .catch((error) => console.log("error design idea"))
+      }
+      else
+        console.log("No updated Design Idea")
+    }
+    setInterval(update_design_idea, 2000);
   });
 </script>

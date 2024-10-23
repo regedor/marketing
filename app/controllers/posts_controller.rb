@@ -2,8 +2,8 @@ class PostsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_calendar
   before_action :check_organization!
-  before_action :set_post, only: [ :show, :edit, :update, :destroy, :approved, :in_analysis, :rejected ]
-  before_action :check_author!, only: [ :edit, :update, :destroy ]
+  before_action :set_post, only: [ :show, :edit, :update, :destroy, :approved, :in_analysis, :rejected, :update_design_idea ]
+  before_action :check_author!, only: [ :edit, :update, :destroy, :update_design_idea ]
   before_action :sanitize_categories, only: [ :create, :update ]
 
   # GET /calendars/:calendar_id/posts/:id
@@ -71,6 +71,11 @@ class PostsController < ApplicationController
     redirect_to calendar_post_path(@calendar, @post), notice: "Post status updated to Rejected."
   end
 
+  # PATCH /calendars/:calendar_id/posts/:id/update_design_idea
+  def update_design_idea
+    @post.update(perspective_params_design_idea)
+  end
+
   private
     def set_calendar
       @calendar = Calendar.find(params[:calendar_id])
@@ -105,5 +110,9 @@ class PostsController < ApplicationController
       if params[:post][:categories].present?
         params[:post][:categories] = params[:post][:categories].split(",").map(&:strip).reject(&:blank?)
       end
+    end
+
+    def perspective_params_design_idea
+      params.require(:post).permit(:design_idea)
     end
 end

@@ -4,7 +4,7 @@ class PerspectivesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_data
   before_action :check_organization!
-  before_action :set_perspective, only: [ :show,  :edit, :update, :destroy, :download, :approved, :in_analysis, :rejected, :update_status, :update_status_post ]
+  before_action :set_perspective, only: [ :show,  :edit, :update, :destroy, :download, :approved, :in_analysis, :rejected, :update_status, :update_status_post, :update_copy ]
 
   # GET /calendars/:calendar_id/posts/:post_id/perspectives/:id
   def show
@@ -82,6 +82,11 @@ class PerspectivesController < ApplicationController
     redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Post status updated."
   end
 
+  # PATCH /calendars/:calendar_id/posts/:post_id/perspectives/:id/update_copy
+  def update_copy
+    @perspective.update(perspective_params_copy)
+  end
+
   def download
     attachments = @perspective.attachments.where(status: "approved").where.not(type_content: "cloud")
     zip_filename = "#{@perspective.id}_attachments.zip"
@@ -119,5 +124,9 @@ class PerspectivesController < ApplicationController
 
     def post_params_status
       params.require(:post).permit(:status)
+    end
+
+    def perspective_params_copy
+      params.require(:perspective).permit(:copy)
     end
 end
