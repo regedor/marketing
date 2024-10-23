@@ -38,6 +38,8 @@ Rails.application.routes.draw do
       end
 
       resources :comments, only: [ :create, :edit, :update, :destroy ]
+      
+      resources :publishplatforms, only: [:create, :destroy]
     end
   end
 
