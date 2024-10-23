@@ -52,6 +52,11 @@
     
     var count = 1;
 
+    
+    $('#design_idea').on('input', function() {
+      $("#savedDI").text("saving...");
+    })
+
     function build_axios() {
       axios.defaults.withCredentials = true;
       const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');

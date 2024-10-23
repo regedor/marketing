@@ -13,8 +13,8 @@
           <tbody class="bg-white divide-y divide-gray-200">
             <% @perspectives.each do |p| %>
               <tr class="<% if @perspective.id == p.id %> bg-gray-200 <% else %> hover:bg-gray-100 <% end %>">
-                <td>
-                  <input type="checkbox" class="ml-2" <% if p.socialplatform.nil? %> checked <% end %>>
+                <td class="text-center">
+                  <input type="checkbox" class="socialplatformcb" data-social-id="<%= p.socialplatform.present? ? p.socialplatform.id : "null" %>" <% if p.socialplatform.nil? || @publishplatform.include?(p.socialplatform) %> checked <% end %>>
                 </td>
                 <td class="TableEntry border-r text-sm">
                   <strong>
@@ -83,8 +83,42 @@
       }, 1000);
     });
 
+    $('.socialplatformcb').on('change', function() {
+      var isChecked = $(this).is(':checked');
+      var socialId = $(this).data('social-id');
+      if(socialId) {
+        build_axios()
+        if(isChecked) {
+          axios.post("<%= calendar_post_publishplatforms_path(@calendar,@post)%>", { publishplatform: { socialplatform_id : socialId } })
+          .then((response) => {
+            console.log("Create Sucess")
+          })
+          .catch((error) => {
+            $(this).prop('checked', !isChecked)
+            console.log("Create Error")
+          })
+        }
+        else {
+          axios.delete(`/calendars/<%= @calendar.id %>/posts/<%= @post.id %>/publishplatforms/${socialId}`)
+          .then((response) => {
+            console.log("Destroy Sucess")
+          })
+          .catch((error) => {
+            $(this).prop('checked', !isChecked)
+            console.log("Destroy Error")
+          })
+        }
+      }
+      else
+        $(this).prop('checked', !isChecked)
+    })
+
     var count = 1;
     
+    $('#copy').on('input', function() {
+      $("#savedCopy").text("saving...");
+    })
+
     function build_axios() {
       axios.defaults.withCredentials = true;
       const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');

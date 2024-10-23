@@ -120,7 +120,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_23_141020) do
     t.index ["user_id"], name: "index_posts_on_user_id"
   end
 
-  create_table "publishplatforms", force: :cascade do |t|
+  create_table "publishplatforms", primary_key: ["socialplatform_id", "post_id"], force: :cascade do |t|
     t.bigint "socialplatform_id", null: false
     t.bigint "post_id", null: false
     t.datetime "created_at", null: false
