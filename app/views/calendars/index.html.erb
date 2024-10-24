@@ -51,7 +51,7 @@
     </div>
 
     <%= month_calendar(events: @posts, attribute: :publish_date, previous_label: nil, next_label: nil) do |date, posts| %>
-      <div class="border p-2 relative overflow-hidden calendar-box text-gray-700 hover:bg-yellow-600 hover:text-white">
+      <div class="post border p-2 relative overflow-hidden calendar-box text-gray-700 hover:bg-yellow-600 hover:text-white">
         <div class="date text-sm font-bold">
           <%= date.day %>
         </div>
@@ -69,6 +69,17 @@
       </div>
     <% end %>
   </div>
+
+  <div id="modal_post" class="fixed inset-0 bg-gray-800 bg-opacity-75 hidden items-center justify-center">
+    <div class="bg-white p-6 rounded-lg shadow-lg">
+      <h2 class="text-xl font-semibold mb-4">Modal Title</h2>
+      <p class="mb-4">This is the modal content.</p>
+      <button id="closeModalBtn" class="bg-red-500 text-white px-4 py-2 rounded">
+        Close Modal
+      </button>
+    </div>
+  </div>
+
 </div>
 
 <style>
@@ -84,3 +95,24 @@
     box-sizing: border-box;
   }
 </style>
+
+<script>
+$(document).ready(function () {
+  // Open the modal when the button is clicked
+  $('.post').on('click', function () {
+    $('#modal_post').removeClass('hidden').addClass('flex');
+  });
+
+  // Close the modal when the close button is clicked
+  $('#closeModalBtn').on('click', function () {
+    $('#modal_post').addClass('hidden').removeClass('flex');
+  });
+
+  // Optional: Close the modal when clicking outside of the modal content
+  $('#modal_post').on('click', function (e) {
+    if ($(e.target).is('#modal')) {
+      $('#modal_post').addClass('hidden').removeClass('flex');
+    }
+  });
+});
+</script>
