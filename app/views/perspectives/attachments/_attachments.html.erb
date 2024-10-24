@@ -1,7 +1,7 @@
 <div id="attachments_info">
   <h2 class="ContainerHeaderText">Attachments</h2>
-  <%= render "attachments/form", calendar: @calendar, post: @post, perspective: @perspective, attachment: Attachment.new %>
-  <%= render "attachments/form2", calendar: @calendar, post: @post, perspective: @perspective, attachment: Attachment.new %>
+  <%= render "attachments/formurl", calendar: @calendar, post: @post, perspective: @perspective, attachment: Attachment.new %>
+  <%= render "attachments/formfile", calendar: @calendar, post: @post, perspective: @perspective, attachment: Attachment.new %>
   <h3 class="GenericFormLabel"><strong>Current Attachments:</strong></h3>
 
   <div class="overflow-x-auto">

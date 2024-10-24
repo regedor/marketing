@@ -4,7 +4,7 @@ class PerspectivesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_data
   before_action :check_organization!
-  before_action :set_perspective, only: [ :show,  :edit, :update, :destroy, :download, :approved, :in_analysis, :rejected, :update_status, :update_status_post, :update_copy ]
+  before_action :set_perspective, only: [ :show, :destroy, :download, :update_status, :update_status_post, :update_copy ]
 
   # GET /calendars/:calendar_id/posts/:post_id/perspectives/:id
   def show
@@ -30,19 +30,6 @@ class PerspectivesController < ApplicationController
     end
   end
 
-  # GET /calendars/:calendar_id/posts/:post_id/perspectives/:id/edit
-  def edit
-  end
-
-  # PATCH/PUT /calendars/:calendar_id/posts/:post_id/perspectives/:id
-  def update
-    if @perspective.update(perspective_params)
-      redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Perspective was successfully updated."
-    else
-      render :edit, status: :unprocessable_entity
-    end
-  end
-
   # DELETE /calendars/:calendar_id/posts/:post_id/perspectives/:id
   def destroy
     if @perspective.socialplatform.nil?
@@ -51,24 +38,6 @@ class PerspectivesController < ApplicationController
       @perspective.destroy
       redirect_to calendar_post_path(@calendar, @post), notice: "Perspective was successfully destroyed."
     end
-  end
-
-  # PATCH /calendars/:calendar_id/posts/:post_id/perspectives/:id/approved
-  def approved
-    @perspective.update(status: "approved")
-    redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Perspective status updated to Approved."
-  end
-
-  # PATCH /calendars/:calendar_id/posts/:post_id/perspectives/:id/in_analysis
-  def in_analysis
-    @perspective.update(status: "in_analysis")
-    redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Perspective status updated to In Analysis."
-  end
-
-  # PATCH /calendars/:calendar_id/posts/:post_id/perspectives/:id/rejected
-  def rejected
-    @perspective.update(status: "rejected")
-    redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Perspective status updated to Rejected."
   end
 
   # PATCH /calendars/:calendar_id/posts/:post_id/perspectives/:id/update_status

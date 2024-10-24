@@ -33,7 +33,6 @@
 
 <script>
   $(document).ready(function() {
-    let original_design_idea = "<%= j(post.design_idea) %>";
 
     $('#design-copy-button').on('click', function() {
       var copyText = $(this).data('copy-text');
@@ -51,10 +50,14 @@
     });
     
     var count = 1;
-
+    let original_design_idea = "<%= j(post.design_idea) %>";
+    let will_update_di = false
     
     $('#design_idea').on('input', function() {
       $("#savedDI").text("saving...");
+      if(will_update_di) 
+        setTimeout(update_design_idea, 3000);
+      will_update_di = true
     })
 
     function build_axios() {
@@ -65,7 +68,7 @@
     
     function update_design_idea() {
       let design_idea_data = $('#design_idea p').map(function() { return $(this).text(); }).get().join('\n');
-      if(design_idea_data != original_design_idea) {
+      if(design_idea_data != original_design_idea && design_idea_data.length > 0) {
         let url = "<%= update_design_idea_calendar_post_path(@calendar,post)%>"
         build_axios()
         axios.patch(url, {post : {design_idea : design_idea_data}})
@@ -84,7 +87,9 @@
           count++;
         })
       }
+      else if(design_idea_data.length == 0)
+        $("#savedDI").text("Design Idea can not be blanked");
+      will_update_di = false
     }
-    setInterval(update_design_idea, 2000);
   });
 </script>
