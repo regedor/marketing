@@ -114,10 +114,13 @@
 
     var count = 1;
     let original_copy = "<%= j(perspective.copy) %>";
+    let will_update_copy = false;
     
     $('#copy').on('input', function() {
       $("#savedCopy").text("saving...");
-      update_copy()
+      if(will_update_copy)
+        setTimeout(update_copy, 3000);
+      will_update_copy = true
     })
 
     function build_axios() {
@@ -149,6 +152,7 @@
       }
       else if(copy_data.length == 0)
         $("#savedCopy").text("Copy can not be blanked");
+      will_update_copy = false
     }
   });
 </script>

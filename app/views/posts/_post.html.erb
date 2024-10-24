@@ -51,10 +51,13 @@
     
     var count = 1;
     let original_design_idea = "<%= j(post.design_idea) %>";
+    let will_update_di = false
     
     $('#design_idea').on('input', function() {
       $("#savedDI").text("saving...");
-      update_design_idea()
+      if(will_update_di) 
+        setTimeout(update_design_idea, 3000);
+      will_update_di = true
     })
 
     function build_axios() {
@@ -86,6 +89,7 @@
       }
       else if(design_idea_data.length == 0)
         $("#savedDI").text("Design Idea can not be blanked");
+      will_update_di = false
     }
   });
 </script>
