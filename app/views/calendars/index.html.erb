@@ -28,15 +28,17 @@
     </div>
 
     <%= month_calendar(events: @posts, attribute: :publish_date, previous_label: nil, next_label: nil) do |date, posts| %>
-      <div class="day border p-2 h-32 relative">
+      <div class="day border p-2 h-32 relative overflow-hidden">
         <div class="date text-sm font-bold text-gray-700">
           <%= date.day %>
         </div>
-        <% posts.each do |post| %>
-          <div class="post mt-2 bg-blue-100 p-1 rounded text-xs text-blue-700">
-            <%= link_to post.title, calendar_post_path(post.calendar, post), class: "hover:underline" %>
-          </div>
-        <% end %>
+        <div class="posts-container overflow-y-auto max-h-24">
+          <% posts.each do |post| %>
+            <div class="post mt-2 bg-blue-100 p-1 rounded text-xs text-blue-700">
+              <%= link_to post.title, calendar_post_path(post.calendar, post), class: "hover:underline" %>
+            </div>
+          <% end %>
+        </div>
       </div>
     <% end %>
   </div>
@@ -45,5 +47,8 @@
 <style>
   .calendar-heading {
     display: none;
+  }
+  .posts-container {
+    max-height: 6rem; /* Adjust this value as needed */
   }
 </style>
