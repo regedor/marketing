@@ -41,15 +41,17 @@
 
   <div class="w-3/4 p-4">
     <div class="flex justify-between items-center mb-4">
+      <%= link_to "Previous Year", params.permit(:start_date, calendar_ids: []).merge(start_date: @start_date.prev_year), class: "text-blue-500 hover:underline" %>
       <%= link_to "Previous", params.permit(:start_date, calendar_ids: []).merge(start_date: @start_date.prev_month), class: "text-blue-500 hover:underline" %>
       <div class="text-lg font-bold text-gray-700">
         <%= @start_date.strftime("%B %Y") %>
       </div>
       <%= link_to "Next", params.permit(:start_date, calendar_ids: []).merge(start_date: @start_date.next_month), class: "text-blue-500 hover:underline" %>
+      <%= link_to "Next Year", params.permit(:start_date, calendar_ids: []).merge(start_date: @start_date.next_year), class: "text-blue-500 hover:underline" %>
     </div>
 
     <%= month_calendar(events: @posts, attribute: :publish_date, previous_label: nil, next_label: nil) do |date, posts| %>
-      <div class="day border p-2 relative overflow-hidden calendar-box">
+      <div class="day wday-<%= date.wday %> past current-month border p-2 relative overflow-hidden calendar-box">
         <div class="date text-sm font-bold text-gray-700">
           <%= date.day %>
         </div>
