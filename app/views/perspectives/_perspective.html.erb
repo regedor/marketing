@@ -30,15 +30,15 @@
                 </td>
                 <td class="TableEntry border-r text-sm w-1/4 text-center">
                   <div class="w-4 h-4 mx-auto rounded-md <%= 
-                  if p.id.present?
-                    case p.status
-                      when 'approved' then 'bg-green-600'
-                      when 'in_analysis' then 'bg-yellow-500'
-                      else 'bg-red-600'
-                    end 
-                  else
-                    'bg-gray-400' 
-                  end%>">
+                    if p.id.present?
+                      case p.status
+                        when 'approved' then 'bg-green-600'
+                        when 'in_analysis' then 'bg-yellow-500'
+                        else 'bg-red-600'
+                      end 
+                    else
+                      'bg-gray-400' 
+                    end %>">
                   </div>
                 </td>
               </tr>

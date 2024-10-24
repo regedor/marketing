@@ -8,9 +8,6 @@ class CalendarsController < ApplicationController
   def index
     @calendar = Calendar.new
     @start_date = params[:start_date] ? Date.parse(params[:start_date]) : Date.today
-    @consultations = Consultation.where(
-      start_time: @start_date.beginning_of_month.beginning_of_week..@start_date.end_of_month.end_of_week
-    )
     @posts = Post.where(calendar: @calendars).where(
       publish_date: @start_date.beginning_of_month.beginning_of_week..@start_date.end_of_month.end_of_week
     )

@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  resources :consultations
   resources :calendars, only: [ :index, :create, :edit, :update, :destroy ] do
     collection do
       get :selector
