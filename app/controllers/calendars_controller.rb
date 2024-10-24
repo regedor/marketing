@@ -8,7 +8,8 @@ class CalendarsController < ApplicationController
   def index
     @calendar = Calendar.new
     @start_date = params[:start_date] ? Date.parse(params[:start_date]) : Date.today
-    @posts = Post.where(calendar: @calendars).where(
+    selected_calendar_ids = params[:calendar_ids] || @calendars.pluck(:id)
+    @posts = Post.where(calendar_id: selected_calendar_ids).where(
       publish_date: @start_date.beginning_of_month.beginning_of_week..@start_date.end_of_month.end_of_week
     )
     @permitted_params = permitted_params
@@ -76,6 +77,6 @@ class CalendarsController < ApplicationController
   end
 
   def permitted_params
-    params.permit(:start_date)
+    params.permit(:start_date, calendar_ids: [])
   end
 end
