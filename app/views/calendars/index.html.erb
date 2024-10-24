@@ -8,9 +8,11 @@
       <h2 class="text-lg font-bold mb-4">Calendars</h2>
       <%= form_with url: calendars_path, method: :get, local: true, id: "calendar_filter_form" do %>
         <% @calendars.each do |calendar| %>
-          <div class="mb-2">
+          <div class="mb-2 flex items-center">
             <%= check_box_tag "calendar_ids[]", calendar.id, params[:calendar_ids]&.include?(calendar.id.to_s) || params[:calendar_ids].nil?, class: "mr-2" %>
-            <%= label_tag "calendar_ids_#{calendar.id}", calendar.name %>
+            <%= label_tag "calendar_ids_#{calendar.id}", calendar.name, class: "flex-grow" %>
+            <%= link_to "Edit", edit_calendar_path(calendar), class: "text-blue-500 hover:underline mr-2" %>
+            <%= link_to "Delete", calendar_path(calendar), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "text-red-500 hover:underline" %>
           </div>
         <% end %>
         <%= hidden_field_tag :start_date, @start_date %>
