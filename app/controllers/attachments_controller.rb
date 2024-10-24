@@ -2,7 +2,7 @@ class AttachmentsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_data
   before_action :check_organization!
-  before_action :set_attachment, only: [:show, :update, :destroy, :download, :approved, :in_analysis, :rejected, :like, :dislike, :update_status ]
+  before_action :set_attachment, only: [ :show, :update, :destroy, :download, :like, :dislike, :update_status ]
 
   # POST /calendars/:calendar_id/posts/:post_id/perspectives/:perspective_id/attachments
   def create
@@ -26,7 +26,7 @@ class AttachmentsController < ApplicationController
 
   # POST /calendars/:calendar_id/posts/:post_id/perspectives/:perspective_id/attachments/:id
   def show
-    send_data @attachment.content, type: @attachment.type_content, disposition: 'inline'
+    send_data @attachment.content, type: @attachment.type_content, disposition: "inline"
   end
 
   # GET /calendars/:calendar_id/posts/:post_id/perspectives/:perspective_id/attachments/:id/edit
@@ -58,24 +58,6 @@ class AttachmentsController < ApplicationController
     end
   end
 
-  # PATCH /calendars/:calendar_id/posts/:post_id/perspectives/:perspective_id/attachments/:id/approved
-  def approved
-    @attachment.update(status: "approved")
-    redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Attachment status updated to Approved."
-  end
-
-  # PATCH /calendars/:calendar_id/posts/:post_id/perspectives/:perspective_id/attachments/:id/in_analysis
-  def in_analysis
-    @attachment.update(status: "in_analysis")
-    redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Attachment status updated to In Analysis."
-  end
-
-  # PATCH /calendars/:calendar_id/posts/:post_id/perspectives/:perspective_id/attachments/:id/rejected
-  def rejected
-    @attachment.update(status: "rejected")
-    redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Attachment status updated to Rejected."
-  end
-
   # PATCH /calendars/:calendar_id/posts/:post_id/perspectives/:perspective_id/attachments/:id/update_status
   def update_status
     @attachment.update(attachment_params_status)
@@ -85,7 +67,7 @@ class AttachmentsController < ApplicationController
   # PATCH /calendars/:calendar_id/posts/:post_id/perspectives/:perspective_id/attachments/:id/like
   def like
     @attachmentcounter = find_or_initialize_attachmentcounter
-    @attachmentcounter.aproved = true
+    @attachmentcounter.aproved = !@attachmentcounter.aproved
     @attachmentcounter.rejected = false
     save_counter(@attachmentcounter)
   end
@@ -94,7 +76,7 @@ class AttachmentsController < ApplicationController
   def dislike
     @attachmentcounter = find_or_initialize_attachmentcounter
     @attachmentcounter.aproved = false
-    @attachmentcounter.rejected = true
+    @attachmentcounter.rejected = !@attachmentcounter.rejected
     save_counter(@attachmentcounter)
   end
 

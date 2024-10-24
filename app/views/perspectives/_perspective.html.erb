@@ -68,7 +68,6 @@
 
 <script>
   $(document).ready(function() {
-    let original_copy = "<%= j(perspective.copy) %>";
     $('#copy-button').on('click', function() {
       var copyText = $(this).data('copy-text');
       var tempInput = $('<input>');
@@ -114,9 +113,11 @@
     })
 
     var count = 1;
+    let original_copy = "<%= j(perspective.copy) %>";
     
     $('#copy').on('input', function() {
       $("#savedCopy").text("saving...");
+      update_copy()
     })
 
     function build_axios() {
@@ -124,14 +125,15 @@
       const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
       axios.defaults.headers.common['X-CSRF-Token'] = csrfToken;
     }
+
     function update_copy() {
       let copy_data = $('#copy p').map(function() { return $(this).text(); }).get().join('\n');
-      if(copy_data != original_copy) {
+      if(copy_data != original_copy && copy_data.length > 0) {
         let url = "<%= update_copy_calendar_post_perspective_path(@calendar,@post,perspective)%>"
         build_axios()
         axios.patch(url, {perspective : {copy : copy_data}})
         .then((response) => {
-          console.log("success copy")
+          console.log("success copy <%= dom_id(perspective) %>")
           $("#savedCopy").text("(saved)");
           setTimeout(function() {
             $('#savedCopy').text("");
@@ -145,7 +147,8 @@
           count++;
         })
       }
+      else if(copy_data.length == 0)
+        $("#savedCopy").text("Copy can not be blanked");
     }
-    setInterval(update_copy, 2000);
   });
 </script>
