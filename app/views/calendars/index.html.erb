@@ -49,11 +49,11 @@
     </div>
 
     <%= month_calendar(events: @posts, attribute: :publish_date, previous_label: nil, next_label: nil) do |date, posts| %>
-      <div class="day border p-2 h-32 relative overflow-hidden">
+      <div class="day border p-2 relative overflow-hidden calendar-box">
         <div class="date text-sm font-bold text-gray-700">
           <%= date.day %>
         </div>
-        <div class="posts-container overflow-y-auto max-h-24">
+        <div class="posts-container overflow-y-auto">
           <% posts.each do |post| %>
             <div class="post mt-2 bg-blue-100 p-1 rounded text-xs text-blue-700">
               <%= link_to post.title, calendar_post_path(post.calendar, post), class: "hover:underline" %>
@@ -71,5 +71,10 @@
   }
   .posts-container {
     max-height: 6rem; /* Adjust this value as needed */
+  }
+  .calendar-box {
+    height: 150px; /* Set a fixed height */
+    width: 100%; /* Ensure it takes the full width of the container */
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
   }
 </style>
