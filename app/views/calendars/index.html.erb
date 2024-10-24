@@ -1,5 +1,5 @@
-<div id="calendars_page" class="p-4 flex">
-  <div class="w-1/4 p-4 bg-gray-100 rounded-lg shadow-md flex flex-col">
+<div id="calendars_page" class="p-4 flex flex-wrap flex-row md:flex-col">
+  <div class="w-full md:w-1/4 p-4 bg-gray-100 rounded-lg shadow-md flex flex-col">
     <div class="mb-4">
       <%= link_to "Create New Post", selector_calendars_path, class: "Btn-primary w-full text-center" %>
     </div>
@@ -39,7 +39,7 @@
     </div>
   </div>
 
-  <div class="w-3/4 p-4">
+  <div class="w-full md:w-3/4 md:p-4">
     <div class="flex justify-between items-center mb-4">
       <%= link_to "Previous Year", params.permit(:start_date, calendar_ids: []).merge(start_date: @start_date.prev_year), class: "text-blue-500 hover:underline" %>
       <%= link_to "Previous", params.permit(:start_date, calendar_ids: []).merge(start_date: @start_date.prev_month), class: "text-blue-500 hover:underline" %>
@@ -51,16 +51,20 @@
     </div>
 
     <%= month_calendar(events: @posts, attribute: :publish_date, previous_label: nil, next_label: nil) do |date, posts| %>
-      <div class="day wday-<%= date.wday %> past current-month border p-2 relative overflow-hidden calendar-box">
-        <div class="date text-sm font-bold text-gray-700">
+      <div class="border p-2 relative overflow-hidden calendar-box text-gray-700 hover:bg-yellow-600 hover:text-white">
+        <div class="date text-sm font-bold">
           <%= date.day %>
         </div>
         <div class="posts-container overflow-y-auto">
-          <% posts.each do |post| %>
-            <div class="post mt-2 bg-blue-100 p-1 rounded text-xs text-blue-700">
+          <% if posts.any? %>
+            <%= posts.length %>
+          <% end %>
+          <!-- Like https://github.com/excid3/simple_calendar, when clicking a box, a right side bar is opened showing all the posts of that day. -->
+          <!-- <% posts.each do |post| %>
+            <div class="mt-2 bg-blue-100 p-1 rounded text-xs text-blue-700">
               <%= link_to post.title, calendar_post_path(post.calendar, post), class: "hover:underline" %>
             </div>
-          <% end %>
+          <% end %> -->
         </div>
       </div>
     <% end %>
@@ -75,8 +79,8 @@
     max-height: 6rem; /* Adjust this value as needed */
   }
   .calendar-box {
-    height: 150px; /* Set a fixed height */
-    width: 100%; /* Ensure it takes the full width of the container */
-    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    height: 150px;
+    width: 100%;
+    box-sizing: border-box;
   }
 </style>
