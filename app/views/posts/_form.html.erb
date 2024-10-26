@@ -1,6 +1,6 @@
 <div>
   <%= form_with(model: [calendar, post], local: true) do |form| %>
-     <% if post.errors.any? %>
+    <% if post.errors.any? %>
       <div class="text-red-500 mb-1">
         <ol class="list-decimal list-inside">
           <% post.errors.each do |error| %>
