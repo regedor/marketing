@@ -1,32 +1,52 @@
 <div id="<%= dom_id(perspective) %>" class="text-gray-900">
   <div class="flex flex-col md:flex-row gap-4 mt-4 mb-4">
-    <div class="w-full md:w-1/3">
-      <label class="GenericFormLabel">Social Media:</label>
-      <div class="pt-2 border-0 border-gray-300 overflow-y-auto h-40">
+    <div id="perspectives" class="w-full md:w-1/3 items-center">
+      <div class="overflow-x-auto">
         <table class="min-w-full bg-white shadow-md rounded-lg border border-gray-200">
           <thead>
             <tr>
-              <th class="TableHeader border-r border-gray-200">Platform</th>
-              <th class="TableHeader">Status</th>
+              <th class="TableHeader border border-gray-200 text-xs"></th>
+              <th class="TableHeader border border-gray-200 text-xs">Platform</th>
+              <th class="TableHeader border border-gray-200 text-xs w-1/4">Status</th>
             </tr>
           </thead>
           <tbody class="bg-white divide-y divide-gray-200">
-            <% @post.perspectives.each do |p| %>
-              <tr class="hover:bg-gray-100">
-                <td class="TableEntry border-r border-gray-200">
-                  <% if p.socialplatform.present? %>
-                    <strong><%= p.socialplatform.name %></strong>
-                  <% else %>
-                    <strong>Default Perspective</strong>
-                  <% end %>
+            <% @perspectives.each do |p| %>
+              <tr class="<% if @perspective.id == p.id %> bg-gray-200 <% else %> hover:bg-gray-100 <% end %>">
+                <td class="text-center">
+                  <div class="relative inline-block">
+                    <input 
+                      type="checkbox" 
+                      class="socialplatformcb <% if p.socialplatform.nil? %> default-checkbox pointer-events-none opacity-50 <% end %>" 
+                      data-social-id="<%= p.socialplatform.present? ? p.socialplatform.id : "null" %>" 
+                      <% if p.socialplatform.nil? || @publishplatform.include?(p.socialplatform) %> checked <% end %>
+                    >
+                  </div>
                 </td>
-                <td class="TableEntry">
-                  <%= case p.status
-                    when 'approved' then "<span class='text-green-600 font-semibold'>Approved</span>".html_safe
-                    when 'in_analysis' then "<span class='text-yellow-600 font-semibold'>In Analysis</span>".html_safe
-                    when 'rejected' then "<span class='text-red-600 font-semibold'>Rejected</span>".html_safe
-                    else "<span class='text-gray-600 font-semibold'>Unknown</span>".html_safe
-                  end %>
+                <td class="TableEntry border-r text-sm">
+                  <strong>
+                    <% if p.id.present? %>
+                      <%= link_to p.socialplatform.present? ? p.socialplatform.name : "Default", calendar_post_perspective_path(@calendar, @post, p), class: "hover:underline" %>
+                    <% else %>
+                      <%= button_to p.socialplatform.name, calendar_post_perspectives_path(@calendar, @post),
+                        method: :post, 
+                        params: { perspective: { socialplatform_id: p.socialplatform.id } },
+                        class: "hover:underline" %>
+                    <% end %>
+                  </strong>
+                </td>
+                <td class="TableEntry border-r text-sm w-1/4 text-center">
+                  <div class="w-4 h-4 mx-auto rounded-md <%= 
+                    if p.id.present?
+                      case p.status
+                        when 'approved' then 'bg-green-600'
+                        when 'in_analysis' then 'bg-yellow-500'
+                        else 'bg-red-600'
+                      end 
+                    else
+                      'bg-gray-400' 
+                    end %>">
+                  </div>
                 </td>
               </tr>
             <% end %>
@@ -34,10 +54,14 @@
         </table>
       </div>
     </div>
-    <div class="w-full md:w-2/3">
-      <label class="GenericFormLabel">Copy:</label>
-      <div class="TextArea h-40 bg-white p-4 rounded-md overflow-y-auto relative">
-        <%= perspective.copy %>
+    <div class="flex flex-col w-full md:w-2/3 min-h-full">
+      <label class="GenericFormLabel flex">Copy: <p id="savedCopy" class ="ml-auto"></p></label>
+      <div class="TextArea bg-white overflow-y-auto h-60 p-4 rounded-md flex-grow">
+        <div id="copy" contenteditable="true" class="border-none outline-none focus:outline-none">
+          <% perspective.copy.split("\n").each do |newline| %>
+            <p><%= newline %></p>
+          <% end %>
+        </div>
         <div class="absolute top-2 right-2 flex items-center">
           <button id="copy-button" class="relative p-2 hover:bg-gray-100 rounded transition-all duration-200 ease-in-out" data-copy-text="<%= perspective.copy %>">
             <img src="<%= asset_path('copy.svg') %>" alt="Copy" class="w-4 h-4"/>
@@ -52,9 +76,7 @@
 <script>
   $(document).ready(function() {
     $('#copy-button').on('click', function() {
-      console.log('boas')
       var copyText = $(this).data('copy-text');
-      
       var tempInput = $('<input>');
       $('body').append(tempInput);
       tempInput.val(copyText).select();
@@ -66,5 +88,78 @@
         $('#copy-message').addClass('invisible');
       }, 1000);
     });
+
+    $('.socialplatformcb').on('change', function() {
+      var isChecked = $(this).is(':checked');
+      var socialId = $(this).data('social-id');
+      if(socialId) {
+        build_axios()
+        if(isChecked) {
+          axios.post("<%= calendar_post_publishplatforms_path(@calendar,@post)%>", { publishplatform: { socialplatform_id : socialId } })
+          .then((response) => {
+            console.log("Create Sucess")
+          })
+          .catch((error) => {
+            $(this).prop('checked', !isChecked)
+            console.log("Create Error")
+          })
+        }
+        else {
+          axios.delete(`/calendars/<%= @calendar.id %>/posts/<%= @post.id %>/publishplatforms/${socialId}`)
+          .then((response) => {
+            console.log("Destroy Sucess")
+          })
+          .catch((error) => {
+            $(this).prop('checked', !isChecked)
+            console.log("Destroy Error")
+          })
+        }
+      }
+      else
+        $(this).prop('checked', !isChecked)
+    })
+
+    var count = 1;
+    let original_copy = "<%= j(perspective.copy) %>";
+    let will_update_copy = false;
+    
+    $('#copy').on('input', function() {
+      if(!will_update_copy){
+        setTimeout(update_copy, 3000);
+        $("#savedCopy").text("saving...");
+      }
+      will_update_copy = true
+    })
+
+    function build_axios() {
+      axios.defaults.withCredentials = true;
+      const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+      axios.defaults.headers.common['X-CSRF-Token'] = csrfToken;
+    }
+
+    function update_copy() {
+      let copy_data = $('#copy p').map(function() { return $(this).text(); }).get().join('\n');
+      if(copy_data != original_copy && copy_data.length > 0) {
+        let url = "<%= update_copy_calendar_post_perspective_path(@calendar,@post,perspective)%>"
+        build_axios()
+        axios.patch(url, {perspective : {copy : copy_data}})
+        .then((response) => {
+          console.log("success copy <%= dom_id(perspective) %>")
+          $("#savedCopy").text("(saved)");
+          count = 1;
+          original_copy = copy_data
+        })
+        .catch((error) => {
+          console.log("error copy");
+          $("#savedCopy").text("(failed " + count + " times, retrying...)");
+          count++;
+        })
+      }
+      else if(copy_data.length == 0)
+        $("#savedCopy").text("Copy can not be blanked");
+      else
+        $("#savedCopy").text("Same copy");
+      will_update_copy = false
+    }
   });
 </script>

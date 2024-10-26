@@ -4,41 +4,29 @@ class PerspectivesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_data
   before_action :check_organization!
-  before_action :set_perspective, only: [ :show, :edit, :update, :destroy, :download, :approved, :in_analysis, :rejected, :update_status, :update_status_post ]
+  before_action :set_perspective, only: [ :show, :destroy, :download, :update_status, :update_status_post, :update_copy ]
 
   # GET /calendars/:calendar_id/posts/:post_id/perspectives/:id
   def show
     @attachment = @perspective.attachments.new
     @comment = @post.comments.new
-  end
-
-  # GET /calendars/:calendar_id/posts/:post_id/perspectives/new
-  def new
-    @perspective_new = @post.perspectives.build
+    post_socialplatforms = @post.perspectives.map(&:socialplatform)
+    post_perspectives = @post.perspectives
+    new_perspectives = Socialplatform.all.reject { |socialplatform| post_socialplatforms.include?(socialplatform) }.map { |s| Perspective.new(socialplatform: s) }
+    @perspectives = (post_perspectives + new_perspectives).sort_by { |perspective| perspective.socialplatform.present? ? perspective.socialplatform&.name : "Default" }
+    @publishplatform = Publishplatform.where(post: @post).map { |pp| pp.socialplatform }
   end
 
   # POST /calendars/:calendar_id/posts/:post_id/perspectives
   def create
     @perspective_new = @post.perspectives.new(perspective_params)
+    @perspective_new.copy = @post.perspectives.reject { |p| p.socialplatform.present? }.map(&:copy).first
 
     if @perspective_new.save
       redirect_to calendar_post_perspective_path(@calendar, @post, @perspective_new), notice: "Perspective was successfully created."
     else
       @comment = @post.comments.new
-      render :new, status: :unprocessable_entity
-    end
-  end
-
-  # GET /calendars/:calendar_id/posts/:post_id/perspectives/:id/edit
-  def edit
-  end
-
-  # PATCH/PUT /calendars/:calendar_id/posts/:post_id/perspectives/:id
-  def update
-    if @perspective.update(perspective_params)
-      redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Perspective was successfully updated."
-    else
-      render :edit, status: :unprocessable_entity
+      redirect_to calendar_post_perspective_path(@calendar, @post), alert: "Error creating Perspective."
     end
   end
 
@@ -52,34 +40,21 @@ class PerspectivesController < ApplicationController
     end
   end
 
-  # PATCH /calendars/:calendar_id/posts/:post_id/perspectives/:id/approved
-  def approved
-    @perspective.update(status: "approved")
-    redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Perspective status updated to Approved."
-  end
-
-  # PATCH /calendars/:calendar_id/posts/:post_id/perspectives/:id/in_analysis
-  def in_analysis
-    @perspective.update(status: "in_analysis")
-    redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Perspective status updated to In Analysis."
-  end
-
-  # PATCH /calendars/:calendar_id/posts/:post_id/perspectives/:id/rejected
-  def rejected
-    @perspective.update(status: "rejected")
-    redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Perspective status updated to Rejected."
-  end
-
   # PATCH /calendars/:calendar_id/posts/:post_id/perspectives/:id/update_status
   def update_status
     @perspective.update(perspective_params_status)
     redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Perspective status updated."
   end
 
-   # PATCH /calendars/:calendar_id/posts/:post_id/perspectives/:id/update_status_post
+  # PATCH /calendars/:calendar_id/posts/:post_id/perspectives/:id/update_status_post
   def update_status_post
     @post.update(post_params_status)
     redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Post status updated."
+  end
+
+  # PATCH /calendars/:calendar_id/posts/:post_id/perspectives/:id/update_copy
+  def update_copy
+    @perspective.update(perspective_params_copy)
   end
 
   def download
@@ -106,7 +81,7 @@ class PerspectivesController < ApplicationController
     end
 
     def perspective_params
-      params.require(:perspective).permit(:copy, :socialplatform_id)
+      params.require(:perspective).permit(:socialplatform_id, :copy)
     end
 
     def check_organization!
@@ -119,5 +94,9 @@ class PerspectivesController < ApplicationController
 
     def post_params_status
       params.require(:post).permit(:status)
+    end
+
+    def perspective_params_copy
+      params.require(:perspective).permit(:copy)
     end
 end
