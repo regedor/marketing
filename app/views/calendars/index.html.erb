@@ -1,10 +1,8 @@
 <div id="calendars_page" class="p-4 flex">
+  <%= link_to "+", selector_calendars_path, class: "Btn-primary fixed bottom-4 right-4 z-50 rounded-full shadow-md  w-12 h-12 justify-center text-lg" %>
   <div class="w-1/4 p-4 bg-gray-100 rounded-lg shadow-md flex flex-col">
-    <div class="mb-4">
-      <%= link_to "Create New Post", selector_calendars_path, class: "Btn-primary w-full text-center" %>
-    </div>
-    <%= render "form", calendar: @calendar %>
-    <div>
+    <div class="mt-4">
+      <%= render "form", calendar: @calendar %>
       <h2 class="text-lg font-bold mb-4">Calendars</h2>
       <%= form_with url: calendars_path, method: :get, local: true, id: "calendar_filter_form" do %>
         <div class="overflow-x-auto">
@@ -26,7 +24,7 @@
                     <%= label_tag "calendar_ids_#{calendar.id}", calendar.name, class: "flex-grow" %>
                   </td>
                   <td class="TableEntry border-r border-gray-200 text-center">
-                    <%= link_to "Edit", edit_calendar_path(calendar), class: "text-blue-500 hover:underline mr-2" %>
+                    <%= link_to "Edit", edit_calendar_path(calendar), class: "text-yellow-600 hover:text-yellow-500 hover:underline" %>
                     <%= link_to "Delete", calendar_path(calendar), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "text-red-500 hover:underline" %>
                   </td>
                 </tr>
@@ -57,9 +55,7 @@
         </div>
         <div class="posts-container overflow-y-auto">
           <% posts.each do |post| %>
-            <div class="post mt-2 bg-blue-100 p-1 rounded text-xs text-blue-700">
-              <%= link_to post.title, calendar_post_path(post.calendar, post), class: "hover:underline" %>
-            </div>
+            <%= link_to post.title, calendar_post_path(post.calendar, post), class: "Btn-primary mt-2 bg-blue-500" %>
           <% end %>
         </div>
       </div>
@@ -76,7 +72,10 @@
   }
   .calendar-box {
     height: 150px; /* Set a fixed height */
-    width: 110px; /* Ensure it takes the full width of the container */
+    width: 100%; /* Ensure it takes the full width of the container */
     box-sizing: border-box; /* Include padding and border in the element's total width and height */
+  }
+  .table {
+    table-layout: fixed;
   }
 </style>
