@@ -14,7 +14,14 @@
             <% @perspectives.each do |p| %>
               <tr class="<% if @perspective.id == p.id %> bg-gray-200 <% else %> hover:bg-gray-100 <% end %>">
                 <td class="text-center">
-                  <input type="checkbox" class="socialplatformcb" data-social-id="<%= p.socialplatform.present? ? p.socialplatform.id : "null" %>" <% if p.socialplatform.nil? || @publishplatform.include?(p.socialplatform) %> checked <% end %>>
+                  <div class="relative inline-block">
+                    <input 
+                      type="checkbox" 
+                      class="socialplatformcb <% if p.socialplatform.nil? %> default-checkbox pointer-events-none opacity-50 <% end %>" 
+                      data-social-id="<%= p.socialplatform.present? ? p.socialplatform.id : "null" %>" 
+                      <% if p.socialplatform.nil? || @publishplatform.include?(p.socialplatform) %> checked <% end %>
+                    >
+                  </div>
                 </td>
                 <td class="TableEntry border-r text-sm">
                   <strong>
