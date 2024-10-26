@@ -12,7 +12,7 @@
     </div>
     <div class="w-full md:w-2/3">
       <label class="GenericFormLabel flex">Design Idea: <p id="savedDI" class ="ml-auto"></p></label>
-      <div class="TextArea h-60 bg-white p-4 rounded-md overflow-y-auto relative">
+      <div class="TextArea h-60 bg-white p-4 rounded-md overflow-y-auto">
         <div id="design_idea" contenteditable="true" class="border-none outline-none focus:outline-none">
           <% post.design_idea.split("\n").each do |newline| %>
             <p><%= newline %></p>
@@ -54,9 +54,10 @@
     let will_update_di = false
     
     $('#design_idea').on('input', function() {
-      $("#savedDI").text("saving...");
-      if(will_update_di) 
+      if(!will_update_di) {
         setTimeout(update_design_idea, 3000);
+        $("#savedDI").text("saving...");
+      }
       will_update_di = true
     })
 
@@ -76,9 +77,6 @@
           console.log("success design idea")
           original_design_idea = design_idea_data
           $("#savedDI").text("(saved)");
-          setTimeout(function() {
-            $('#savedDI').text("");
-          }, 3000);
           count = 1;
         })
         .catch((error) => {
@@ -89,6 +87,9 @@
       }
       else if(design_idea_data.length == 0)
         $("#savedDI").text("Design Idea can not be blanked");
+      else
+        $("#savedDI").text("Same Design Idea");
+      
       will_update_di = false
     }
   });
