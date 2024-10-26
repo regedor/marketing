@@ -1,11 +1,8 @@
 class Dashboard::UsersController < ApplicationController
   before_action :authenticate_user!
   before_action :authorize_leader!
-  before_action :set_user, only: [ :show, :edit, :update, :destroy ]
-
-  def show
-    @user = User.find(params[:id])
-  end
+  before_action :set_user, only: [ :edit, :update, :destroy ]
+  before_action :check_organization!, only: [ :edit, :update, :destroy ]
 
   def new
     @user = User.new
@@ -16,19 +13,14 @@ class Dashboard::UsersController < ApplicationController
     @user.organization = current_user.organization
     @user.password = Devise.friendly_token.first(8)
 
-    respond_to do |format|
-      if  @user.save
-        @user.send_reset_password_instructions
-        format.html { redirect_to dashboard_user_path(@user), notice: "User was successfully created." }
-        format.json { render :show, status: :created, location: @user }
-        
-        LogEntry.create_log("User #{@user.email} has been created by #{current_user.email}. [#{user_params}]")
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @user.errors, status: :unprocessable_entity }
-
-        LogEntry.create_log("#{current_user.email} attempted to create a user but failed (inprocessable_entity). [#{user_params}]")
-      end
+    if @user.update(user_params)
+      @user.send_reset_password_instructions
+      redirect_to dashboard_path, notice: "User was successfully created."
+      LogEntry.create_log("User #{@user.email} has been created by #{current_user.email}. [#{user_params}]")
+    else
+      error_messages = @user.errors.full_messages.join(", ")
+      redirect_to new_dashboard_user_path,  alert: "Failed to create user: #{error_messages}"
+      LogEntry.create_log("#{current_user.email} attempted to create a user but failed (inprocessable_entity). [#{user_params}]")
     end
   end
 
@@ -36,18 +28,13 @@ class Dashboard::UsersController < ApplicationController
   end
 
   def update
-    respond_to do |format|
-      if @user.update(user_params)
-        format.html { redirect_to dashboard_user_path(@user), notice: "User was successfully updated." }
-        format.json { render :show, status: :created, location: @user }
-
-        LogEntry.create_log("User #{@user.email} has been updated by #{current_user.email}. [#{user_params}\]")
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @user.errors, status: :unprocessable_entity }
-
-        LogEntry.create_log("#{current_user.email} attempted to update a user but failed (inprocessable_entity).[#{user_params}]")
-      end
+    if @user.update(user_params)
+      redirect_to dashboard_path, notice: "User was successfully updated."
+      LogEntry.create_log("User #{@user.email} has been updated by #{current_user.email}. [#{user_params}\]")
+    else
+      error_messages = @user.errors.full_messages.join(", ")
+      redirect_to edit_dashboard_user_path(@user),  alert: "Failed to create user: #{error_messages}"
+      LogEntry.create_log("#{current_user.email} attempted to update a user but failed (inprocessable_entity).[#{user_params}]")
     end
   end
 
@@ -73,7 +60,7 @@ class Dashboard::UsersController < ApplicationController
       @user = User.find(params[:id])
     end
 
-    def have_access(user)
-      user.organization == current_user.organization
+    def check_organization!
+      redirect_to root_path, alert: "Access Denied" unless current_user.organization_id == @user.organization_id
     end
 end

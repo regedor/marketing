@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  resources :consultations
   resources :calendars, only: [ :index, :create, :edit, :update, :destroy ] do
     collection do
       get :selector
@@ -7,27 +6,20 @@ Rails.application.routes.draw do
     end
     resources :posts, only: [ :show, :new, :create, :edit, :update, :destroy ] do
       member do
-        patch :approved
-        patch :in_analysis
-        patch :rejected
+        patch :update_design_idea
       end
 
-      resources :perspectives, only: [ :show, :new, :create, :edit, :update, :destroy ] do
+      resources :perspectives, only: [ :show, :create, :destroy ] do
         member do
           get :download
-          patch :approved
-          patch :in_analysis
-          patch :rejected
           patch :update_status
           patch :update_status_post
+          patch :update_copy
         end
 
-        resources :attachments, only: [:show, :create, :edit, :update, :destroy ] do
+        resources :attachments, only: [ :show, :create, :edit, :update, :destroy ] do
           member do
             get :download
-            patch :approved
-            patch :in_analysis
-            patch :rejected
             patch :like
             patch :dislike
             patch :update_status
@@ -36,6 +28,7 @@ Rails.application.routes.draw do
       end
 
       resources :comments, only: [ :create, :edit, :update, :destroy ]
+      resources :publishplatforms, only: [ :create, :destroy ]
     end
   end
 
@@ -51,7 +44,7 @@ Rails.application.routes.draw do
   get "dashboard", to: "dashboard#index"
 
   namespace :dashboard do
-    resources :users, only: [ :new, :create, :edit, :update, :destroy, :show ]
+    resources :users, only: [ :new, :create, :edit, :update, :destroy ]
   end
 
   get "up" => "rails/health#show", as: :rails_health_check

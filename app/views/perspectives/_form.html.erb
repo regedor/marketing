@@ -1,12 +1,11 @@
 <%= form_with(model: [calendar, post, perspective], local: true) do |form| %>
   <% if perspective.errors.any? %>
-    <div class="text-red-500">
-      <h2><%= pluralize(perspective.errors.count, "error") %> prohibited this perspective from being saved:</h2>
-      <ul>
-        <% perspective.errors.full_messages.each do |msg| %>
-          <li><%= msg %></li>
+    <div class="text-red-500 mb-1">
+      <ol class="list-decimal list-inside">
+        <% perspective.errors.each do |error| %>
+          <li><%= error.full_message %></li>
         <% end %>
-      </ul>
+      </ol>
     </div>
   <% end %>
   <div class="mb-4">

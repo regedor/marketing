@@ -2,7 +2,7 @@
   <div class="flex flex-col md:flex-row gap-4 mt-4 mb-4">
     <div class="w-full md:w-1/3">
       <label class="GenericFormLabel">Categories:</label>
-      <div class="TextArea bg-white p-4 rounded-md overflow-y-auto h-40">
+      <div class="TextArea bg-white p-4 rounded-md overflow-y-auto h-60">
         <ul class="list-disc pl-5">
           <% post.categories.each do |category| %>
             <li><%= category %></li>
@@ -11,9 +11,13 @@
       </div>
     </div>
     <div class="w-full md:w-2/3">
-      <label class="GenericFormLabel">Design Idea:</label>
-      <div class="TextArea h-40 bg-white p-4 rounded-md overflow-y-auto relative">
-        <%= post.design_idea %>
+      <label class="GenericFormLabel flex">Design Idea: <p id="savedDI" class ="ml-auto"></p></label>
+      <div class="TextArea h-60 bg-white p-4 rounded-md overflow-y-auto">
+        <div id="design_idea" contenteditable="true" class="border-none outline-none focus:outline-none">
+          <% post.design_idea.split("\n").each do |newline| %>
+            <p><%= newline %></p>
+          <% end %>
+        </div>
         <div class="absolute top-2 right-2 flex items-center">
           <button id="design-copy-button" class="relative p-2 hover:bg-gray-100 rounded transition-all duration-200 ease-in-out" data-copy-text="<%= post.design_idea %>">
             <img src="<%= asset_path('copy.svg') %>" alt="Copy" class="w-4 h-4"/>
@@ -29,6 +33,7 @@
 
 <script>
   $(document).ready(function() {
+
     $('#design-copy-button').on('click', function() {
       var copyText = $(this).data('copy-text');
       
@@ -43,5 +48,49 @@
         $('#design-copy-message').addClass('invisible');
       }, 1000);
     });
+    
+    var count = 1;
+    let original_design_idea = "<%= j(post.design_idea) %>";
+    let will_update_di = false
+    
+    $('#design_idea').on('input', function() {
+      if(!will_update_di) {
+        setTimeout(update_design_idea, 3000);
+        $("#savedDI").text("saving...");
+      }
+      will_update_di = true
+    })
+
+    function build_axios() {
+      axios.defaults.withCredentials = true;
+      const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+      axios.defaults.headers.common['X-CSRF-Token'] = csrfToken;
+    }
+    
+    function update_design_idea() {
+      let design_idea_data = $('#design_idea p').map(function() { return $(this).text(); }).get().join('\n');
+      if(design_idea_data != original_design_idea && design_idea_data.length > 0) {
+        let url = "<%= update_design_idea_calendar_post_path(@calendar,post)%>"
+        build_axios()
+        axios.patch(url, {post : {design_idea : design_idea_data}})
+        .then((response) => {
+          console.log("success design idea")
+          original_design_idea = design_idea_data
+          $("#savedDI").text("(saved)");
+          count = 1;
+        })
+        .catch((error) => {
+          console.log("error design idea")
+          $("#savedDI").text("(failed " + count + " times, retrying...)");
+          count++;
+        })
+      }
+      else if(design_idea_data.length == 0)
+        $("#savedDI").text("Design Idea can not be blanked");
+      else
+        $("#savedDI").text("Same Design Idea");
+      
+      will_update_di = false
+    }
   });
 </script>

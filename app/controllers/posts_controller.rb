@@ -2,8 +2,8 @@ class PostsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_calendar
   before_action :check_organization!
-  before_action :set_post, only: [ :show, :edit, :update, :destroy, :approved, :in_analysis, :rejected ]
-  before_action :check_author!, only: [ :edit, :update, :destroy ]
+  before_action :set_post, only: [ :show, :edit, :update, :destroy, :update_design_idea ]
+  before_action :check_author!, only: [ :edit, :update, :destroy, :update_design_idea ]
   before_action :sanitize_categories, only: [ :create, :update ]
 
   # GET /calendars/:calendar_id/posts/:id
@@ -63,28 +63,10 @@ class PostsController < ApplicationController
     LogEntry.create_log("Post has been destroyed by #{current_user.email}. [#{post_params}]")
   end
 
-  # PATCH /calendars/:calendar_id/posts/:id/approved
-  def approved
-    @post.update(status: "approved")
-    redirect_to calendar_post_path(@calendar, @post), notice: "Post status updated to Approved."
-
-    LogEntry.create_log("Post has been approved by #{current_user.email}. [#{post_params}]")
-  end
-
-  # PATCH /calendars/:calendar_id/posts/:id/in_analysis
-  def in_analysis
-    @post.update(status: "in_analysis")
-    redirect_to calendar_post_path(@calendar, @post), notice: "Post status updated to In Analysis."
-
-    LogEntry.create_log("Post has been updated to In Analysis by #{current_user.email}. [#{post_params}]")
-  end
-
-  # PATCH /calendars/:calendar_id/posts/:id/rejected
-  def rejected
-    @post.update(status: "rejected")
-    redirect_to calendar_post_path(@calendar, @post), notice: "Post status updated to Rejected."
-
-    LogEntry.create_log("Post has been rejected by #{current_user.email}. [#{post_params}]")
+  # PATCH /calendars/:calendar_id/posts/:id/update_design_idea
+  def update_design_idea
+    @post.update(perspective_params_design_idea)
+    LogEntry.create_log("Post design idea has been updated to In Analysis by #{current_user.email}. [#{perspective_params_design_idea}]")
   end
 
   private
@@ -121,5 +103,9 @@ class PostsController < ApplicationController
       if params[:post][:categories].present?
         params[:post][:categories] = params[:post][:categories].split(",").map(&:strip).reject(&:blank?)
       end
+    end
+
+    def perspective_params_design_idea
+      params.require(:post).permit(:design_idea)
     end
 end

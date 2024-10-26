@@ -7,12 +7,12 @@ class CalendarsController < ApplicationController
   # GET /calendars
   def index
     @calendar = Calendar.new
-    @consultations = Consultation.where(
-      start_time: Time.now.beginning_of_month.beginning_of_week..Time.now.end_of_month.end_of_week
+    @start_date = params[:start_date] ? Date.parse(params[:start_date]) : Date.today
+    selected_calendar_ids = params[:calendar_ids] || @calendars.pluck(:id)
+    @posts = Post.where(calendar_id: selected_calendar_ids).where(
+      publish_date: @start_date.beginning_of_month.beginning_of_week..@start_date.end_of_month.end_of_week
     )
-    @posts = Post.where(calendar: @calendars).where(
-      publish_date: Time.now.beginning_of_month.beginning_of_week..Time.now.end_of_month.end_of_week
-    )
+    @permitted_params = permitted_params
   end
 
   # POST /calendars
@@ -69,20 +69,24 @@ class CalendarsController < ApplicationController
   end
 
   private
-    def set_calendars
-      @calendars = Calendar.where(organization: current_user.organization)
-    end
-    # Find the calendar for actions like show, edit, update, destroy
-    def set_calendar
-      @calendar = Calendar.find(params[:id])
-    end
 
-    # Strong parameters: Only allow the trusted parameters for calendar
-    def calendar_params
-      params.require(:calendar).permit(:name)
-    end
+  def set_calendars
+    @calendars = Calendar.where(organization: current_user.organization)
+  end
 
-    def check_organization!
-      redirect_to root_path, alert: "Access Denied" unless current_user.organization_id == @calendar.organization_id
-    end
+  def set_calendar
+    @calendar = Calendar.find(params[:id])
+  end
+
+  def calendar_params
+    params.require(:calendar).permit(:name)
+  end
+
+  def check_organization!
+    redirect_to root_path, alert: "Access Denied" unless current_user.organization_id == @calendar.organization_id
+  end
+
+  def permitted_params
+    params.permit(:start_date, calendar_ids: [])
+  end
 end

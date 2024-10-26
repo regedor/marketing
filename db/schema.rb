@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_10_24_132239) do
+ActiveRecord::Schema[7.2].define(version: 2024_10_23_141020) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -126,6 +126,15 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_24_132239) do
     t.index ["user_id"], name: "index_posts_on_user_id"
   end
 
+  create_table "publishplatforms", primary_key: ["socialplatform_id", "post_id"], force: :cascade do |t|
+    t.bigint "socialplatform_id", null: false
+    t.bigint "post_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["post_id"], name: "index_publishplatforms_on_post_id"
+    t.index ["socialplatform_id"], name: "index_publishplatforms_on_socialplatform_id"
+  end
+
   create_table "socialplatforms", force: :cascade do |t|
     t.string "name"
     t.string "link"
@@ -158,4 +167,6 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_24_132239) do
   add_foreign_key "perspectives", "socialplatforms"
   add_foreign_key "posts", "calendars"
   add_foreign_key "posts", "users"
+  add_foreign_key "publishplatforms", "posts"
+  add_foreign_key "publishplatforms", "socialplatforms"
 end
