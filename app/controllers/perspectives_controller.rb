@@ -4,7 +4,7 @@ class PerspectivesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_data
   before_action :check_organization!
-  before_action :set_perspective, only: [ :show, :destroy, :download, :update_status, :update_status_post, :update_copy ]
+  before_action :set_perspective, only: [ :show, :destroy, :update_status, :update_status_post, :update_copy ]
 
   # GET /calendars/:calendar_id/posts/:post_id/perspectives/:id
   def show
@@ -55,19 +55,6 @@ class PerspectivesController < ApplicationController
   # PATCH /calendars/:calendar_id/posts/:post_id/perspectives/:id/update_copy
   def update_copy
     @perspective.update(perspective_params_copy)
-  end
-
-  def download
-    attachments = @perspective.attachments.where(status: "approved").where.not(type_content: "cloud")
-    zip_filename = "#{@perspective.id}_attachments.zip"
-    zip_data = Zip::OutputStream.write_buffer do |zip|
-      attachments.each do |attachment|
-        zip.put_next_entry(attachment.filename)
-        zip.print attachment.content
-      end
-    end
-    zip_data.rewind
-    send_data zip_data.read, filename: zip_filename, type: "application/zip", disposition: "attachment"
   end
 
   private

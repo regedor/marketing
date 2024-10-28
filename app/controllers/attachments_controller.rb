@@ -10,7 +10,7 @@ class AttachmentsController < ApplicationController
 
     if params[:attachment][:content].present?
       @attachment.content = params[:attachment][:content].read
-      @attachment.filename = params[:attachment][:content].original_filename
+      @attachment.filename = generate_unique_filename(params[:attachment][:content].original_filename)
       @attachment.type_content = params[:attachment][:content].content_type
     else
       @attachment.type_content = "cloud"
@@ -115,5 +115,18 @@ class AttachmentsController < ApplicationController
     end
     def attachment_params_status
       params.require(:attachment).permit(:status)
+    end
+
+    def generate_unique_filename(filename)
+      base_name = File.basename(filename, ".*")
+      extension = File.extname(filename)
+      counter = 1
+      unique_filename = filename
+      attachments_post = @post.perspectives.map { |p| p.attachments }.flatten.map { |a| a.filename }
+      while attachments_post.include?(unique_filename)
+        unique_filename = "#{base_name} (#{counter})#{extension}"
+        counter += 1
+      end
+      unique_filename
     end
 end

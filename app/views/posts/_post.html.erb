@@ -56,8 +56,8 @@
     $('#design_idea').on('input', function() {
       if(!will_update_di) {
         setTimeout(update_design_idea, 3000);
-        $("#savedDI").text("saving...");
       }
+      $("#savedDI").text("saving...");
       will_update_di = true
     })
 

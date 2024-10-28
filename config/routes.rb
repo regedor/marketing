@@ -6,12 +6,12 @@ Rails.application.routes.draw do
     end
     resources :posts, only: [ :show, :new, :create, :edit, :update, :destroy ] do
       member do
+        get :download
         patch :update_design_idea
       end
 
       resources :perspectives, only: [ :show, :create, :destroy ] do
         member do
-          get :download
           patch :update_status
           patch :update_status_post
           patch :update_copy
