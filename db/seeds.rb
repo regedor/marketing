@@ -23,7 +23,7 @@ if Rails.env.development?
             ver-te lá na frente
             la la la la la la la ...."
 
-  video_links = ["https://www.youtube.com/watch?v=6Dh-RL__uN4","https://www.youtube.com/watch?v=yYDGOdP1IJw"]
+  video_links = [ "https://www.youtube.com/watch?v=6Dh-RL__uN4", "https://www.youtube.com/watch?v=yYDGOdP1IJw" ]
 
   emails = {
     1 => [ "abhimanyu.chat@gmail.com", "andre.filipe.araujo.freitas@gmail.com" ],
@@ -32,9 +32,9 @@ if Rails.env.development?
     4 => [ "tiagoadriano.feixamoreira@gmail.com", "user1_4@gmail.com" ]
   }
 
-  redes_sociais = ["X", "telegram", "intagram", "facebook", "linkdin"]
-  links = ["https://x.com/","https://web.telegram.org/k/","https://www.instagram.com/","https://pt-pt.facebook.com/","https://www.linkedin.com/"]
-  link_forms = ["https://x.com/i/flow/login","https://web.telegram.org/k/","https://www.instagram.com/", "https://pt-pt.facebook.com/","https://www.linkedin.com/"]
+  redes_sociais = [ "X", "Telegram", "Instagram", "Facebook", "Linkedin" ]
+  links = [ "https://x.com/", "https://web.telegram.org/k/", "https://www.instagram.com/", "https://pt-pt.facebook.com/", "https://www.linkedin.com/" ]
+  link_forms = [ "https://x.com/", "https://web.telegram.org/k/", "https://www.instagram.com/", "https://pt-pt.facebook.com/", "https://www.linkedin.com/" ]
   # Add the paths for your images
   image_files = [
     Rails.root.join('db', 'images', 'sample1.jpg'),
@@ -47,7 +47,7 @@ if Rails.env.development?
   print "Creating Social Platforms:"
   1.upto(5) do |sp|
     print " #{sp}"
-    Socialplatform.find_or_create_by!(name: redes_sociais[sp-1], link:links[sp-1] , link_form:link_forms[sp-1])
+    Socialplatform.find_or_create_by!(name: redes_sociais[sp-1], link: links[sp-1], link_form: link_forms[sp-1])
   end
   puts " done;"
 
@@ -55,9 +55,9 @@ if Rails.env.development?
   1.upto(4) do |o|
     puts "Creating Org #{o}:"
     organization = Organization.find_or_create_by!(name: "Org #{o}")
-    
+
     all_users_from_organization = []
-    
+
     # Create 5 users for each org, 2 leaders, 3 normal users
     print "- Leaders: "
     1.upto(2) do |n|
@@ -90,13 +90,13 @@ if Rails.env.development?
           user: User.find_by(email: uemail),
           design_idea: design_idea,
           calendar: calendar,
-          publish_date: Time.zone.parse('2027-07-11 21:00'),
+          publish_date: Time.zone.now + rand(1..30).days,
           status: "in_analysis",
           categories: categories
         )
 
         # Create 5 comments for each post
-        print " - Creating Comments"
+        print "     - Creating Comments"
         1.upto(5) do |u|
           print " #{u}"
           usertemp = User.find_by(email: all_users_from_organization[u-1])
@@ -104,16 +104,16 @@ if Rails.env.development?
         end
         puts " done;"
 
-        #Create the publishplatforms for every post
-        print "- Creating  Publish Platforms"
-        1.upto(5) do |publishplatform_num|
-          socialplatform = Socialplatform.find_by(name: redes_sociais[publishplatform_num-1], link:links[publishplatform_num-1] , link_form:link_forms[publishplatform_num-1])
-          Publishplatform.create!(socialplatform:socialplatform, post: post)
+        # Create the publishplatforms for every post
+        print "     - Creating Publish Platforms"
+        1.upto(3) do |publishplatform_num|
+          socialplatform = Socialplatform.find_by(name: redes_sociais[publishplatform_num-1], link: links[publishplatform_num-1], link_form: link_forms[publishplatform_num-1])
+          Publishplatform.create!(socialplatform: socialplatform, post: post)
         end
         puts " done;"
 
         # Create 5 perspectives for each post
-        0.upto(5) do |perspective_num|
+        0.upto(3) do |perspective_num|
           print "     - Creating Perspective #{perspective_num}"
           if perspective_num == 0
             perspective = Perspective.create!(copy: copy, post: post)
@@ -121,20 +121,19 @@ if Rails.env.development?
             socialplatform = Socialplatform.find_by(name: redes_sociais[perspective_num-1])
             perspective = Perspective.create!(copy: copy, post: post, socialplatform_id: socialplatform.id)
           end
-          
+
           # Create 5 attachments for each perspective with real image content
-          1.upto(5) do |attachment_num|
+          1.upto(3) do |attachment_num|
             print " #{attachment_num}"
             image_file_path = image_files[attachment_num % image_files.size]  # Cycle through the image files
             image_binary = read_image_as_binary(image_file_path)
 
             Attachment.create!(filename: File.basename(image_file_path), content: image_binary, perspective: perspective, type_content: "image/jpeg")
           end
-          puts " done;"
-          
+
           # Create 2 attachments for each perspective with cloud links
           1.upto(2) do |attachment_num_v|
-            print " #{attachment_num_v}"
+            print " #{attachment_num_v+3}"
             Attachment.create!(filename: video_links[attachment_num_v-1], perspective: perspective, type_content: "cloud")
           end
           puts " done;"
