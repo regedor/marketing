@@ -2,7 +2,7 @@ class AttachmentsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_data
   before_action :check_organization!
-  before_action :set_attachment, only: [ :show, :update, :destroy, :download, :like, :dislike, :update_status ]
+  before_action :set_attachment, only: [ :show, :edit, :update, :destroy, :download, :like, :dislike, :update_status ]
 
   # POST /calendars/:calendar_id/posts/:post_id/perspectives/:perspective_id/attachments
   def create
@@ -31,12 +31,13 @@ class AttachmentsController < ApplicationController
 
   # GET /calendars/:calendar_id/posts/:post_id/perspectives/:perspective_id/attachments/:id/edit
   def edit
-    @attachment = @perspective.attachments.find(params[:id])
   end
 
   # PATCH/PUT /calendars/:calendar_id/posts/:post_id/perspectives/:perspective_id/attachments/:id
   def update
-    if @attachment.update(attachment_params)
+    data = attachment_params
+    data["filename"] = generate_unique_filename(data["filename"])
+    if @attachment.update(data)
       redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Attachment was successfully updated."
     else
       render :edit, status: :unprocessable_entity
@@ -122,7 +123,7 @@ class AttachmentsController < ApplicationController
       extension = File.extname(filename)
       counter = 1
       unique_filename = filename
-      attachments_post = @post.perspectives.map { |p| p.attachments }.flatten.map { |a| a.filename }
+      attachments_post = @post.perspectives.map { |p| p.attachments }.flatten.reject { |a| @attachment.present? ? a.id == @attachment.id : false }.map { |a| a.filename }
       while attachments_post.include?(unique_filename)
         unique_filename = "#{base_name} (#{counter})#{extension}"
         counter += 1
