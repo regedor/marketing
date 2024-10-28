@@ -13,6 +13,10 @@ class AttachmentsController < ApplicationController
       @attachment.filename = generate_unique_filename(params[:attachment][:content].original_filename)
       @attachment.type_content = params[:attachment][:content].content_type
     else
+      if !url?(params[:attachment][:filename])
+        redirect_to calendar_post_perspective_path(@calendar, @post, @perspective),  alert: "Not a valid URL"
+        return
+      end
       @attachment.type_content = "cloud"
     end
 
@@ -36,7 +40,14 @@ class AttachmentsController < ApplicationController
   # PATCH/PUT /calendars/:calendar_id/posts/:post_id/perspectives/:perspective_id/attachments/:id
   def update
     data = attachment_params
-    data["filename"] = generate_unique_filename(data["filename"])
+    if @attachment.type_content == "cloud"
+      if !url?(params[:attachment][:filename])
+        redirect_to edit_calendar_post_perspective_attachment_path(@calendar, @post, @perspective, @attachment), alert: "Not valid URL."
+        return
+      end
+    else
+      data["filename"] = generate_unique_filename(data["filename"])
+    end
     if @attachment.update(data)
       redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Attachment was successfully updated."
     else
@@ -129,5 +140,12 @@ class AttachmentsController < ApplicationController
         counter += 1
       end
       unique_filename
+    end
+
+    def url?(string)
+      uri = URI.parse(string)
+      uri.is_a?(URI::HTTP) || uri.is_a?(URI::HTTPS)
+    rescue URI::InvalidURIError
+      false
     end
 end
