@@ -4,5 +4,9 @@
     <p class="flex-grow"></p> 
     <p class="SmallText text-right pr-4"><%= time_ago_in_words(comment.created_at) %> ago</p>
   </div>
-  <p class="Comment"><%= comment.content %></p>
+  <div class="Comment">
+    <% comment.content.split("\n").each do |line| %>
+      <p><%= line %></p>
+    <% end %>
+  </div>
 </div>

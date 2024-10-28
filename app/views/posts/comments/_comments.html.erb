@@ -3,7 +3,7 @@
 
   <%= render "comments/form", calendar: calendar, post: post, comment: @comment %>
   <div id="comments_info">
-    <% @post.comments.each do |comment| %>
+    <% @post.comments.order(created_at: :asc).each do |comment| %>
       <% if comment.id.present? %>
         <div id='<%= dom_id(comment) %>_info' class="comment">
           <%= render comment %>
