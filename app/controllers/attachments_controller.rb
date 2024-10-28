@@ -2,7 +2,7 @@ class AttachmentsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_data
   before_action :check_organization!
-  before_action :set_attachment, only: [ :show, :update, :destroy, :download, :like, :dislike, :update_status ]
+  before_action :set_attachment, only: [ :show, :edit, :update, :destroy, :download, :like, :dislike, :update_status ]
 
   # POST /calendars/:calendar_id/posts/:post_id/perspectives/:perspective_id/attachments
   def create
@@ -10,9 +10,13 @@ class AttachmentsController < ApplicationController
 
     if params[:attachment][:content].present?
       @attachment.content = params[:attachment][:content].read
-      @attachment.filename = params[:attachment][:content].original_filename
+      @attachment.filename = generate_unique_filename(params[:attachment][:content].original_filename)
       @attachment.type_content = params[:attachment][:content].content_type
     else
+      if !url?(params[:attachment][:filename])
+        redirect_to calendar_post_perspective_path(@calendar, @post, @perspective),  alert: "Not a valid URL"
+        return
+      end
       @attachment.type_content = "cloud"
     end
 
@@ -35,12 +39,20 @@ class AttachmentsController < ApplicationController
 
   # GET /calendars/:calendar_id/posts/:post_id/perspectives/:perspective_id/attachments/:id/edit
   def edit
-    @attachment = @perspective.attachments.find(params[:id])
   end
 
   # PATCH/PUT /calendars/:calendar_id/posts/:post_id/perspectives/:perspective_id/attachments/:id
   def update
-    if @attachment.update(attachment_params)
+    data = attachment_params
+    if @attachment.type_content == "cloud"
+      if !url?(params[:attachment][:filename])
+        redirect_to edit_calendar_post_perspective_attachment_path(@calendar, @post, @perspective, @attachment), alert: "Not valid URL."
+        return
+      end
+    else
+      data["filename"] = generate_unique_filename(data["filename"])
+    end
+    if @attachment.update(data)
       redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Attachment was successfully updated."
       
       LogEntry.create_log("Attachment has been updated by #{current_user.email}. [#{attachment_params}]")
@@ -131,5 +143,25 @@ class AttachmentsController < ApplicationController
     end
     def attachment_params_status
       params.require(:attachment).permit(:status)
+    end
+
+    def generate_unique_filename(filename)
+      base_name = File.basename(filename, ".*")
+      extension = File.extname(filename)
+      counter = 1
+      unique_filename = filename
+      attachments_post = @post.perspectives.map { |p| p.attachments }.flatten.reject { |a| @attachment.present? ? a.id == @attachment.id : false }.map { |a| a.filename }
+      while attachments_post.include?(unique_filename)
+        unique_filename = "#{base_name} (#{counter})#{extension}"
+        counter += 1
+      end
+      unique_filename
+    end
+
+    def url?(string)
+      uri = URI.parse(string)
+      uri.is_a?(URI::HTTP) || uri.is_a?(URI::HTTPS)
+    rescue URI::InvalidURIError
+      false
     end
 end

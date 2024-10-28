@@ -34,11 +34,11 @@ class PublishplatformsController < ApplicationController
     end
 
     def check_organization!
-      redirect_to root_path, alert: "Access Denied" unless current_user.organization_id == @calendar.organization.id
+      render json: { error: "You are not part of this organization"  }, status: :forbidden, alert: "Access Denied" unless current_user.organization_id == @calendar.organization.id
     end
 
     def check_author!
-      redirect_to root_path, alert: "Access Denied" unless current_user == @post.user
+      render json: { error: "You are not the author" }, status: :forbidden, alert: "Access Denied" unless current_user == @post.user
     end
 
     def set_publishplatform

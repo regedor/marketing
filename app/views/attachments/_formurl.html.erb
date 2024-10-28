@@ -2,7 +2,7 @@
   <h3 class="GenericFormLabel">To add a new attachment from the web, provide an URL.</h3>
   <%= form_with(model: [calendar, post, perspective, @attachment], local: true, html: { id: 'filename_form' }) do |form| %>
     <div class="field mb-2">
-      <%= form.text_field :filename, class: "InputField", placeholder: "URL" %>
+      <%= form.text_field :filename, class: "InputField", placeholder: "URL", type: "url" %>
     </div>
 
     <div class="Bottom-right">

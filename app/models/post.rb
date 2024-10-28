@@ -4,10 +4,10 @@ class Post < ApplicationRecord
   before_save :set_default_title
 
   has_many :publishplatforms, dependent: :destroy
-  
+
   has_many :comments, dependent: :destroy
   accepts_nested_attributes_for :comments, allow_destroy: true
-  
+
   has_many :perspectives, dependent: :destroy
   accepts_nested_attributes_for :perspectives, allow_destroy: true
 
@@ -18,7 +18,7 @@ class Post < ApplicationRecord
   private
     def set_default_title
       if title.blank? && publish_date.present?
-        self.title = publish_date.to_s
+        self.title = publish_date.strftime("%H:%M")
       end
     end
 end

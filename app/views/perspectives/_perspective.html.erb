@@ -56,7 +56,7 @@
     </div>
     <div class="flex flex-col w-full md:w-2/3 min-h-full">
       <label class="GenericFormLabel flex">Copy: <p id="savedCopy" class ="ml-auto"></p></label>
-      <div class="TextArea bg-white overflow-y-auto h-60 p-4 rounded-md flex-grow">
+      <div class="TextArea bg-white overflow-y-auto h-60 p-4 rounded-md flex-grow relative">
         <div id="copy" contenteditable="true" class="border-none outline-none focus:outline-none">
           <% perspective.copy.split("\n").each do |newline| %>
             <p><%= newline %></p>
@@ -126,8 +126,8 @@
     $('#copy').on('input', function() {
       if(!will_update_copy){
         setTimeout(update_copy, 3000);
-        $("#savedCopy").text("saving...");
       }
+      $("#savedCopy").text("saving...");
       will_update_copy = true
     })
 

@@ -12,7 +12,7 @@
     </div>
     <div class="w-full md:w-2/3">
       <label class="GenericFormLabel flex">Design Idea: <p id="savedDI" class ="ml-auto"></p></label>
-      <div class="TextArea h-60 bg-white p-4 rounded-md overflow-y-auto">
+      <div class="TextArea h-60 bg-white p-4 rounded-md overflow-y-auto relative">
         <div id="design_idea" contenteditable="true" class="border-none outline-none focus:outline-none">
           <% post.design_idea.split("\n").each do |newline| %>
             <p><%= newline %></p>
@@ -56,8 +56,8 @@
     $('#design_idea').on('input', function() {
       if(!will_update_di) {
         setTimeout(update_design_idea, 3000);
-        $("#savedDI").text("saving...");
       }
+      $("#savedDI").text("saving...");
       will_update_di = true
     })
 

@@ -1,7 +1,7 @@
-<div id="calendar_form">
-  <%= form_with(model: calendar) do |form| %>
+<div id="attachment_form">
+  <%= form_with(model: [calendar, post, perspective, attachment], local: true) do |form| %>
     <div class="mb-4">
-      <%= form.text_field :name, class: "InputField", placeholder: "New Calendar Name"  %>
+      <%= form.text_field :filename, class: "InputField", placeholder: "New Calendar Name"  %>
     </div>
     <div class="Bottom-right mb-4">
       <%= link_to "Cancel", 'javascript:history.back()', class: "Btn-secondary" %>

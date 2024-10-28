@@ -19,10 +19,13 @@
         <% @perspective.attachments.sort_by { |attachment| attachment.filename.to_s.downcase }.each do |attachment| %>
           <% if attachment.id.present? %>
             <tr class="hover:bg-gray-100">
-              <td class="TableEntry border-r border-gray-200">
-                <strong>
+              <td class="TableEntry border-r border-gray-200 relative">
+                 <strong class="pr-6">
                   <%= link_to attachment.type_content == "cloud" ? "Link id: " + attachment.id.to_s : attachment.filename, attachment.type_content == "cloud" ? attachment.filename : calendar_post_perspective_attachment_path(@calendar, @post, @perspective, attachment), class: "hover:underline", target: :_blank  %>
                 </strong>
+                <%= link_to edit_calendar_post_perspective_attachment_path(@calendar, @post, @perspective, attachment), class: "absolute mr-2 right-0 top-1/2 transform -translate-y-1/2" do %>
+                  <%= image_tag('pencil.svg', alt: 'Edit', class: 'h-5 w-5') %>
+                <% end %>
               </td>
               <td class="TableEntry border-r border-gray-200">
                 <%= form_with url: update_status_calendar_post_perspective_attachment_path(@calendar, @post, @perspective, attachment), method: :patch, local: true, id: "status-form-#{dom_id(attachment)}" do %>
