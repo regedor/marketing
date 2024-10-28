@@ -10,7 +10,21 @@ def read_image_as_binary(file_path)
 end
 
 if Rails.env.development?
-  text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. #PI #MEI #UMINHO"
+  design_idea = " Quero um trabalho geral, muito geral, totalmente geral a falar porque é que o S.C Braga é a melhor equipa do mundo #LigaPortugesa #BamboraAoPorder #SCBraga"
+  copy = "Indisculivelmente o Braga é a melhor equipa do mundo, e quem acha o contrário claramente não comeu suicinhos quando era pequeno logo ficou fraco."
+  comment = "Quando tu entras em campo
+            De vermelho e branco
+            o estádio vais ver
+            sente o nosso amor
+            pois este sector
+            por ti vai cantar
+            Força Mágico Braga
+            dá um gosto à tua gente
+            ver-te lá na frente
+            la la la la la la la ...."
+
+  video_links = ["https://www.youtube.com/watch?v=6Dh-RL__uN4","https://www.youtube.com/watch?v=yYDGOdP1IJw"]
+
   emails = {
     1 => [ "abhimanyu.chat@gmail.com", "andre.filipe.araujo.freitas@gmail.com" ],
     2 => [ "jmbarbosa2002@gmail.com", "zebragapt@gmail.com" ],
@@ -18,6 +32,9 @@ if Rails.env.development?
     4 => [ "tiagoadriano.feixamoreira@gmail.com", "user1_4@gmail.com" ]
   }
 
+  redes_sociais = ["X", "telegram", "intagram", "facebook", "linkdin"]
+  links = ["https://x.com/","https://web.telegram.org/k/","https://www.instagram.com/","https://pt-pt.facebook.com/","https://www.linkedin.com/"]
+  link_forms = ["https://x.com/i/flow/login","https://web.telegram.org/k/","https://www.instagram.com/", "https://pt-pt.facebook.com/","https://www.linkedin.com/"]
   # Add the paths for your images
   image_files = [
     Rails.root.join('db', 'images', 'sample1.jpg'),
@@ -30,7 +47,7 @@ if Rails.env.development?
   print "Creating Social Platforms:"
   1.upto(5) do |sp|
     print " #{sp}"
-    Socialplatform.find_or_create_by!(name: "Yap#{sp}", link: "https://Yap/#{sp}.pt/", link_form: "https://Yap/form/#{sp}.pt/")
+    Socialplatform.find_or_create_by!(name: redes_sociais[sp-1], link:links[sp-1] , link_form:link_forms[sp-1])
   end
   puts " done;"
 
@@ -38,18 +55,24 @@ if Rails.env.development?
   1.upto(4) do |o|
     puts "Creating Org #{o}:"
     organization = Organization.find_or_create_by!(name: "Org #{o}")
-
+    
+    all_users_from_organization = []
+    
     # Create 5 users for each org, 2 leaders, 3 normal users
-    print "- Users: "
+    print "- Leaders: "
     1.upto(2) do |n|
       print " #{emails[o][n-1]}"
+      all_users_from_organization.push(emails[o][n-1])
       User.create!(email: emails[o][n-1], password: "1234567", password_confirmation: "1234567", isLeader: true, organization_id: organization.id)
     end
+    puts " done;"
+
+    print "- Users: "
     3.upto(5) do |n|
       print " #{n}"
+      all_users_from_organization.push("user#{n}_#{o}@ww.com")
       User.create!(email: "user#{n}_#{o}@ww.com", password: "1234567", password_confirmation: "1234567", isLeader: false, organization_id: organization.id)
     end
-
     puts " done;"
 
     # Create 5 calendars for each org
@@ -65,7 +88,7 @@ if Rails.env.development?
         post = Post.create!(
           title: "Post #{p}",
           user: User.find_by(email: uemail),
-          design_idea: text,
+          design_idea: design_idea,
           calendar: calendar,
           publish_date: Time.zone.parse('2027-07-11 21:00'),
           status: "in_analysis",
@@ -73,22 +96,32 @@ if Rails.env.development?
         )
 
         # Create 5 comments for each post
-        print "     - Creating Comments"
+        print " - Creating Comments"
         1.upto(5) do |u|
           print " #{u}"
-          Comment.create!(content: text, post: post, user_id: u)
+          usertemp = User.find_by(email: all_users_from_organization[u-1])
+          Comment.create!(content: comment, post: post, user_id: usertemp.id)
+        end
+        puts " done;"
+
+        #Create the publishplatforms for every post
+        print "- Creating  Publish Platforms"
+        1.upto(5) do |publishplatform_num|
+          socialplatform = Socialplatform.find_by(name: redes_sociais[publishplatform_num-1], link:links[publishplatform_num-1] , link_form:link_forms[publishplatform_num-1])
+          Publishplatform.create!(socialplatform:socialplatform, post: post)
         end
         puts " done;"
 
         # Create 5 perspectives for each post
-        1.upto(5) do |perspective_num|
+        0.upto(5) do |perspective_num|
           print "     - Creating Perspective #{perspective_num}"
-          if perspective_num == 1
-            perspective = Perspective.create!(copy: "Perspective #{perspective_num} for post #{p}", post: post)
+          if perspective_num == 0
+            perspective = Perspective.create!(copy: copy, post: post)
           else
-            perspective = Perspective.create!(copy: "Perspective #{perspective_num} for post #{p}", post: post, socialplatform_id: Socialplatform.first.id)
+            socialplatform = Socialplatform.find_by(name: redes_sociais[perspective_num-1])
+            perspective = Perspective.create!(copy: copy, post: post, socialplatform_id: socialplatform.id)
           end
-
+          
           # Create 5 attachments for each perspective with real image content
           1.upto(5) do |attachment_num|
             print " #{attachment_num}"
@@ -96,6 +129,13 @@ if Rails.env.development?
             image_binary = read_image_as_binary(image_file_path)
 
             Attachment.create!(filename: File.basename(image_file_path), content: image_binary, perspective: perspective, type_content: "image/jpeg")
+          end
+          puts " done;"
+          
+          # Create 2 attachments for each perspective with cloud links
+          1.upto(2) do |attachment_num_v|
+            print " #{attachment_num_v}"
+            Attachment.create!(filename: video_links[attachment_num_v-1], perspective: perspective, type_content: "cloud")
           end
           puts " done;"
         end
