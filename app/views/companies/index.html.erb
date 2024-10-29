@@ -1,0 +1,36 @@
+<div class="w-full">
+
+  <% content_for :title, "Companies" %>
+
+  <div class="flex justify-between items-center">
+    <h1 class="font-bold text-4xl">Companies</h1>
+    <%= link_to "New company", new_company_path, class: "rounded-lg py-3 px-5 bg-blue-600 text-white block font-medium" %>
+  </div>
+
+  <div id="companies" class="min-w-full">
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Max</th>
+          <th>Min</th>
+          <th>Phone Number</th>
+          <th>Site</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @companies.each do |company| %>
+          <tr>
+            <td><%= company.name %></td>
+            <td><%= company.employers_max %></td>
+            <td><%= company.employers_min %></td>
+            <td><%= company.phone_number %></td>
+            <td><%= company.url_site %></td>
+            <td><%= link_to "Show this company", company, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

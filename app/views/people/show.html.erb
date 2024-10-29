@@ -8,6 +8,31 @@
     <div class="inline-block ml-2">
       <%= button_to "Destroy this person", @person, method: :delete, class: "mt-2 rounded-lg py-3 px-5 bg-gray-100 font-medium" %>
     </div>
+
+    <div id="companies">
+      <%= render "personcompanies/formperson", person: @person, personcompany: @new_worker %>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Is Working</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @person.personcompanies.select{ |pc| pc.company.present? }.each do |pc| %>
+            <tr>
+              <td><%= pc.company.name %></td>
+              <td><%= pc.is_working %></td>
+              <td>
+                <%= link_to "Delete", destroy_by_person_personcompanies_path(@person,pc.company), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
     <div id="emails">
       <%= render "emails/form", person: @person, email: @new_email %>
       <table>

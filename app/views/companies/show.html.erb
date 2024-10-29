@@ -1,0 +1,61 @@
+<div class="mx-auto md:w-2/3 w-full flex">
+  <div class="mx-auto">
+
+    <%= render @company %>
+
+    <%= link_to "Edit this company", edit_company_path(@company), class: "mt-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
+    <%= link_to "Back to companies", companies_path, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
+    <div class="inline-block ml-2">
+      <%= button_to "Destroy this company", @company, method: :delete, class: "mt-2 rounded-lg py-3 px-5 bg-gray-100 font-medium" %>
+    </div>
+
+    <div id="workers">
+      <%= render "personcompanies/formcompany", company: @company, personcompany: @new_worker %>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Is Working</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @company.personcompanies.select{ |pc| pc.person.present? }.each do |pc| %>
+            <tr>
+              <td><%= pc.person.name %></td>
+              <td><%= pc.is_working %></td>
+              <td>
+                <%= link_to "Delete", destroy_by_company_personcompanies_path(@company,pc.person), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="notes">
+      <%= render "companynotes/form", company: @company, companynote: @new_company_note %>
+      <table>
+        <thead>
+          <tr>
+            <th>Note</th>
+            <th>Author</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @company.companynotes.select{ |note| note.id.present? }.each do |note| %>
+            <tr>
+              <td><%= note.note %></td>
+              <td><%= note.user.email %></td>
+              <td>
+                <%= link_to "Edit", edit_company_companynote_path(@company,note) %>
+                <%= link_to "Delete", company_companynote_path(@company,note), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

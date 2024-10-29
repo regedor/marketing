@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_10_29_093609) do
+ActiveRecord::Schema[7.2].define(version: 2024_10_29_105559) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -80,6 +80,28 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_29_093609) do
     t.index ["user_id"], name: "index_comments_on_user_id"
   end
 
+  create_table "companies", force: :cascade do |t|
+    t.string "name"
+    t.integer "employers_min", default: 0
+    t.integer "employers_max", default: 0
+    t.string "phone_number"
+    t.string "url_site"
+    t.bigint "organization_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["organization_id"], name: "index_companies_on_organization_id"
+  end
+
+  create_table "companynotes", force: :cascade do |t|
+    t.text "note"
+    t.bigint "user_id", null: false
+    t.bigint "company_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["company_id"], name: "index_companynotes_on_company_id"
+    t.index ["user_id"], name: "index_companynotes_on_user_id"
+  end
+
   create_table "emails", force: :cascade do |t|
     t.string "email"
     t.boolean "current"
@@ -106,6 +128,16 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_29_093609) do
     t.datetime "updated_at", null: false
     t.index ["organization_id"], name: "index_people_on_organization_id"
     t.index ["user_id"], name: "index_people_on_user_id"
+  end
+
+  create_table "personcompanies", primary_key: ["person_id", "company_id"], force: :cascade do |t|
+    t.boolean "is_working"
+    t.bigint "person_id", null: false
+    t.bigint "company_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["company_id"], name: "index_personcompanies_on_company_id"
+    t.index ["person_id"], name: "index_personcompanies_on_person_id"
   end
 
   create_table "personnotes", force: :cascade do |t|
@@ -190,9 +222,14 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_29_093609) do
   add_foreign_key "calendars", "organizations"
   add_foreign_key "comments", "posts"
   add_foreign_key "comments", "users"
+  add_foreign_key "companies", "organizations"
+  add_foreign_key "companynotes", "companies"
+  add_foreign_key "companynotes", "users"
   add_foreign_key "emails", "people"
   add_foreign_key "people", "organizations"
   add_foreign_key "people", "users"
+  add_foreign_key "personcompanies", "companies"
+  add_foreign_key "personcompanies", "people"
   add_foreign_key "personnotes", "people"
   add_foreign_key "personnotes", "users"
   add_foreign_key "perspectives", "posts"

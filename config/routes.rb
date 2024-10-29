@@ -1,8 +1,19 @@
 Rails.application.routes.draw do
+  resources :companies do
+    resources :companynotes
+  end
+
   resources :people do
     resources :emails
     resources :phonenumbers
     resources :personnotes
+  end
+
+  resources :personcompanies do
+    post "person/:person_id", to: "personcompanies#create_by_person", as: :create_by_person, on: :collection
+    post "company/:company_id", to: "personcompanies#create_by_company", as: :create_by_company, on: :collection
+    delete "person/:person_id/:company_id", to: "personcompanies#destroy_by_person", as: :destroy_by_person, on: :collection
+    delete "company/:company_id/:person_id", to: "personcompanies#destroy_by_company", as: :destroy_by_company, on: :collection
   end
 
   resources :calendars, only: [ :index, :create, :edit, :update, :destroy ] do
