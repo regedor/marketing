@@ -2,6 +2,7 @@ class Organization < ApplicationRecord
   has_many :users, dependent: :destroy
   has_many :calendars, dependent: :destroy
   validates :name, presence: true
+  has_many :people, dependent: :destroy
 
   def self.recent(limit)
       order(created_at: :desc).limit(limit)

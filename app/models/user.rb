@@ -5,6 +5,9 @@ class User < ApplicationRecord
 
   belongs_to :organization, optional: true
 
+  has_many :personnotes, dependent: :destroy
+  has_many :people, dependent: :destroy
+
   def self.recent(limit)
     order(created_at: :desc).limit(limit)
   end

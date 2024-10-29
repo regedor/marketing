@@ -1,0 +1,35 @@
+<div class="w-full">
+  <% if notice.present? %>
+    <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-lg inline-block" id="notice"><%= notice %></p>
+  <% end %>
+
+  <% content_for :title, "People" %>
+
+  <div class="flex justify-between items-center">
+    <h1 class="font-bold text-4xl">People</h1>
+    <%= link_to "New person", new_person_path, class: "rounded-lg py-3 px-5 bg-blue-600 text-white block font-medium" %>
+  </div>
+
+  <div id="people" class="min-w-full">
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Birthday</th>
+          <th>Private</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @people.each do |person| %>
+          <tr>
+            <td><%= person.name %></td>
+            <td><%= person.birthday %></td>
+            <td><%= person.is_private %></td>
+            <td><%= link_to "Show this person", person, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,4 +1,10 @@
 Rails.application.routes.draw do
+  resources :people do
+    resources :emails
+    resources :phonenumbers
+    resources :personnotes
+  end
+
   resources :calendars, only: [ :index, :create, :edit, :update, :destroy ] do
     collection do
       get :selector

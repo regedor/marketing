@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_10_23_141020) do
+ActiveRecord::Schema[7.2].define(version: 2024_10_29_093609) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -80,10 +80,42 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_23_141020) do
     t.index ["user_id"], name: "index_comments_on_user_id"
   end
 
+  create_table "emails", force: :cascade do |t|
+    t.string "email"
+    t.boolean "current"
+    t.boolean "is_active"
+    t.bigint "person_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["person_id"], name: "index_emails_on_person_id"
+  end
+
   create_table "organizations", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "people", force: :cascade do |t|
+    t.string "name"
+    t.date "birthday"
+    t.boolean "is_private"
+    t.bigint "user_id", null: false
+    t.bigint "organization_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["organization_id"], name: "index_people_on_organization_id"
+    t.index ["user_id"], name: "index_people_on_user_id"
+  end
+
+  create_table "personnotes", force: :cascade do |t|
+    t.text "note"
+    t.bigint "person_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["person_id"], name: "index_personnotes_on_person_id"
+    t.index ["user_id"], name: "index_personnotes_on_user_id"
   end
 
   create_table "perspectives", force: :cascade do |t|
@@ -95,6 +127,16 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_23_141020) do
     t.datetime "updated_at", null: false
     t.index ["post_id"], name: "index_perspectives_on_post_id"
     t.index ["socialplatform_id"], name: "index_perspectives_on_socialplatform_id"
+  end
+
+  create_table "phonenumbers", force: :cascade do |t|
+    t.string "number"
+    t.boolean "current"
+    t.boolean "is_active"
+    t.bigint "person_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["person_id"], name: "index_phonenumbers_on_person_id"
   end
 
   create_table "posts", force: :cascade do |t|
@@ -148,8 +190,14 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_23_141020) do
   add_foreign_key "calendars", "organizations"
   add_foreign_key "comments", "posts"
   add_foreign_key "comments", "users"
+  add_foreign_key "emails", "people"
+  add_foreign_key "people", "organizations"
+  add_foreign_key "people", "users"
+  add_foreign_key "personnotes", "people"
+  add_foreign_key "personnotes", "users"
   add_foreign_key "perspectives", "posts"
   add_foreign_key "perspectives", "socialplatforms"
+  add_foreign_key "phonenumbers", "people"
   add_foreign_key "posts", "calendars"
   add_foreign_key "posts", "users"
   add_foreign_key "publishplatforms", "posts"
