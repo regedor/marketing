@@ -1,0 +1,86 @@
+<div class="mx-auto md:w-2/3 w-full flex">
+  <div class="mx-auto">
+
+    <!-- Lead Attributes -->
+    <%= render @lead %>
+
+    <!-- Action Links -->
+    <%= link_to "Edit this lead", edit_pipeline_lead_path(@pipeline, @lead), class: "mt-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
+    <%= link_to "Back to pipelines", pipelines_path, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
+    <%= link_to "Delete", pipeline_lead_path(@pipeline, @lead), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
+
+    <!-- Lead-specific Notes Section -->
+    <div id="notes">
+      <%= render "leadnotes/form", pipeline: @pipeline, lead: @lead, leadnote: @new_lead_note %>
+      <table>
+        <thead>
+          <tr>
+            <th>Note</th>
+            <th>Author</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @lead.leadnotes.select { |note| note.id.present? }.each do |note| %>
+            <tr>
+              <td><%= note.note %></td>
+              <td><%= note.user.email %></td>
+              <td>
+                <%= link_to "Edit", edit_pipeline_lead_leadnote_path(@pipeline, @lead, note) %>
+                <%= link_to "Delete", pipeline_lead_leadnote_path(@pipeline, @lead, note), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Company Notes Section -->
+    <div id="company_notes">
+      <h3>Notes for Company: <%= @lead.company.name %></h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Note</th>
+            <th>Author</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @lead.company.companynotes.each do |note| %>
+            <tr>
+              <td><%= note.note %></td>
+              <td><%= note.user.email %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Workers' Notes Section -->
+    <div id="workers_notes">
+      <h3>Notes from Workers of <%= @lead.company.name %></h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Note</th>
+            <th>Worker</th>
+            <th>Author</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @lead.company.personcompanies.each do |personcompany| %>
+            <% personcompany.person.personnotes.each do |note| %>
+              <tr>
+                <td><%= note.note %></td>
+                <td><%= personcompany.person.name %></td>
+                <td><%= note.user.email %></td>
+              </tr>
+            <% end %>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+    
+  </div>
+</div>
+

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_10_29_105559) do
+ActiveRecord::Schema[7.2].define(version: 2024_10_29_151255) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -112,6 +112,29 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_29_105559) do
     t.index ["person_id"], name: "index_emails_on_person_id"
   end
 
+  create_table "leadnotes", force: :cascade do |t|
+    t.text "note"
+    t.bigint "lead_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["lead_id"], name: "index_leadnotes_on_lead_id"
+    t.index ["user_id"], name: "index_leadnotes_on_user_id"
+  end
+
+  create_table "leads", force: :cascade do |t|
+    t.string "name"
+    t.jsonb "content"
+    t.date "start_date"
+    t.date "end_date"
+    t.bigint "pipeline_id", null: false
+    t.bigint "company_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["company_id"], name: "index_leads_on_company_id"
+    t.index ["pipeline_id"], name: "index_leads_on_pipeline_id"
+  end
+
   create_table "organizations", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", null: false
@@ -171,6 +194,14 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_29_105559) do
     t.index ["person_id"], name: "index_phonenumbers_on_person_id"
   end
 
+  create_table "pipelines", force: :cascade do |t|
+    t.string "name"
+    t.bigint "organization_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["organization_id"], name: "index_pipelines_on_organization_id"
+  end
+
   create_table "posts", force: :cascade do |t|
     t.string "title"
     t.text "design_idea"
@@ -226,6 +257,10 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_29_105559) do
   add_foreign_key "companynotes", "companies"
   add_foreign_key "companynotes", "users"
   add_foreign_key "emails", "people"
+  add_foreign_key "leadnotes", "leads"
+  add_foreign_key "leadnotes", "users"
+  add_foreign_key "leads", "companies"
+  add_foreign_key "leads", "pipelines"
   add_foreign_key "people", "organizations"
   add_foreign_key "people", "users"
   add_foreign_key "personcompanies", "companies"
@@ -235,6 +270,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_29_105559) do
   add_foreign_key "perspectives", "posts"
   add_foreign_key "perspectives", "socialplatforms"
   add_foreign_key "phonenumbers", "people"
+  add_foreign_key "pipelines", "organizations"
   add_foreign_key "posts", "calendars"
   add_foreign_key "posts", "users"
   add_foreign_key "publishplatforms", "posts"

@@ -5,9 +5,7 @@
 
     <%= link_to "Edit this company", edit_company_path(@company), class: "mt-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
     <%= link_to "Back to companies", companies_path, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
-    <div class="inline-block ml-2">
-      <%= button_to "Destroy this company", @company, method: :delete, class: "mt-2 rounded-lg py-3 px-5 bg-gray-100 font-medium" %>
-    </div>
+    <%= link_to "Delete", @company, data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
 
     <div id="workers">
       <%= render "personcompanies/formcompany", company: @company, personcompany: @new_worker %>
@@ -20,18 +18,48 @@
           </tr>
         </thead>
         <tbody>
-          <% @company.personcompanies.select{ |pc| pc.person.present? }.each do |pc| %>
+          <% @company.personcompanies.select { |pc| pc.person.present? }.each do |pc| %>
             <tr>
               <td><%= pc.person.name %></td>
-              <td><%= pc.is_working %></td>
+              <td><%= pc.is_working ? "Yes" : "No" %></td>
               <td>
-                <%= link_to "Delete", destroy_by_company_personcompanies_path(@company,pc.person), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
-                <%= link_to "Update", update_is_working_by_company_personcompanies_path(@company,pc.person), data: { turbo_method: :patch } %>
+                <%= link_to "Delete", destroy_by_company_personcompanies_path(@company, pc.person), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
+                <%= link_to "Update", update_is_working_by_company_personcompanies_path(@company, pc.person), data: { turbo_method: :patch } %>
               </td>
             </tr>
           <% end %>
         </tbody>
       </table>
+    </div>
+
+    <!-- New Section: Notes for Each Person Currently Working -->
+    <div id="worker_notes">
+      <% @company.personcompanies.each do |pc| %>
+        <% if pc.person %>
+          <h3>Notes for <%= pc.person.name %>:</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Note</th>
+                <th>Author</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% pc.person.personnotes.each do |note| %>
+                <tr>
+                  <td><%= note.note %></td>
+                  <td><%= note.user.email %></td>
+                  <td>
+                    <%= link_to "Edit", edit_person_personnote_path(pc.person, note) %>
+                    <%= link_to "Delete", person_personnote_path(pc.person, note), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        <% end %>
+      <% end %>
     </div>
 
     <div id="notes">
@@ -45,13 +73,13 @@
           </tr>
         </thead>
         <tbody>
-          <% @company.companynotes.select{ |note| note.id.present? }.each do |note| %>
+          <% @company.companynotes.select { |note| note.id.present? }.each do |note| %>
             <tr>
               <td><%= note.note %></td>
               <td><%= note.user.email %></td>
               <td>
-                <%= link_to "Edit", edit_company_companynote_path(@company,note) %>
-                <%= link_to "Delete", company_companynote_path(@company,note), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
+                <%= link_to "Edit", edit_company_companynote_path(@company, note) %>
+                <%= link_to "Delete", company_companynote_path(@company, note), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
               </td>
             </tr>
           <% end %>

@@ -1,4 +1,13 @@
 Rails.application.routes.draw do
+  resources :pipelines do
+    collection do
+      get :selector
+      post :select_pipeline
+    end
+    resources :leads do
+      resources :leadnotes
+    end
+  end
   resources :companies, only: [ :show, :new, :create, :edit, :upadte, :destroy, :index ] do
     resources :companynotes
   end

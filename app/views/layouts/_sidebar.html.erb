@@ -35,6 +35,12 @@
             <span class="ml-2">Companies</span>
           <% end %>
         </li>
+        <li class="mb-2 <%= 'bg-yellow-400' if current_page?(calendars_path) %>">
+          <%= link_to pipelines_path, class: "SidebarLink flex items-center" do %>
+            <%= image_tag 'posts-icon.svg', class: 'SidebarIcon' %>
+            <span class="ml-2">Pipelines</span>
+          <% end %>
+        </li>
       <% else %>
         <li class="mt-8 mb-2 <%= 'bg-yellow-400' if current_page?(new_user_session_path) %>">
           <%= link_to new_user_session_path, class: "SidebarLink flex items-center" do %>
