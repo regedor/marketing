@@ -6,7 +6,37 @@
 
   <p class="my-5">
     <strong class="block font-medium mb-1">Content:</strong>
-    <%= lead.content %>
+    <table>
+      <thead>
+        <tr>
+          <th>Key</th>
+          <th>Value</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% lead.content.each do |key, value| %>
+          <tr>
+            <td><%= key %></td>
+            <td><%= value %></td>
+            <td>
+              <%= link_to "Delete", destroy_content_pipeline_lead_path(pipeline, lead, key: key), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <%= form_with url: create_content_pipeline_lead_path(pipeline, lead), method: :post do |form| %>
+      <div class="my-5">
+        <%= form.label :key %>
+        <%= form.text_field :key, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
+      </div>
+      <div class="my-5">
+        <%= form.label :value %>
+        <%= form.text_field :value, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
+      </div>
+      <%= form.submit "Create Content" %>
+    <% end %>
   </p>
 
   <p class="my-5">

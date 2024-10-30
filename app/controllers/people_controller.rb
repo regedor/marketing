@@ -3,6 +3,7 @@ class PeopleController < ApplicationController
   before_action :set_people, only: [ :index ]
   before_action :set_person, only: [ :show, :edit, :update, :destroy ]
   before_action :check_organization!, only: [ :show, :edit, :update, :destroy ]
+  before_action :check_author!, only: [ :show, :edit, :update, :destroy ]
 
   # GET /people
   def index
@@ -66,9 +67,15 @@ class PeopleController < ApplicationController
 
     def set_people
       @people = Person.where(organization: current_user.organization)
+                      .where("is_private = ? OR user_id = ?", false, current_user.id)
     end
+
 
     def check_organization!
       redirect_to root_path, alert: "Access Denied" unless current_user.organization_id == @person.organization_id
+    end
+
+    def check_author!
+      redirect_to root_path, alert: "Access Denied" unless @person.is_private == false || @person.user == current_user
     end
 end

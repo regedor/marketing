@@ -124,7 +124,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_29_151255) do
 
   create_table "leads", force: :cascade do |t|
     t.string "name"
-    t.jsonb "content"
+    t.jsonb "content", default: {}
     t.date "start_date"
     t.date "end_date"
     t.bigint "pipeline_id", null: false

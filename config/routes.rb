@@ -5,6 +5,10 @@ Rails.application.routes.draw do
       post :select_pipeline
     end
     resources :leads do
+      member do
+        post :create_content
+        delete :destroy_content
+      end
       resources :leadnotes
     end
   end

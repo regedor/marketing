@@ -32,6 +32,31 @@
       </table>
     </div>
 
+    <div id="notes">
+      <%= render "companynotes/form", company: @company, companynote: @new_company_note %>
+      <table>
+        <thead>
+          <tr>
+            <th>Note</th>
+            <th>Author</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @company.companynotes.select { |note| note.id.present? }.each do |note| %>
+            <tr>
+              <td><%= note.note %></td>
+              <td><%= note.user.email %></td>
+              <td>
+                <%= link_to "Edit", edit_company_companynote_path(@company, note) %>
+                <%= link_to "Delete", company_companynote_path(@company, note), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
     <!-- New Section: Notes for Each Person Currently Working -->
     <div id="worker_notes">
       <% @company.personcompanies.each do |pc| %>
@@ -60,31 +85,6 @@
           </table>
         <% end %>
       <% end %>
-    </div>
-
-    <div id="notes">
-      <%= render "companynotes/form", company: @company, companynote: @new_company_note %>
-      <table>
-        <thead>
-          <tr>
-            <th>Note</th>
-            <th>Author</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @company.companynotes.select { |note| note.id.present? }.each do |note| %>
-            <tr>
-              <td><%= note.note %></td>
-              <td><%= note.user.email %></td>
-              <td>
-                <%= link_to "Edit", edit_company_companynote_path(@company, note) %>
-                <%= link_to "Delete", company_companynote_path(@company, note), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
-              </td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
     </div>
   </div>
 </div>

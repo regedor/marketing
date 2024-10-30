@@ -2,7 +2,7 @@
   <div class="mx-auto">
 
     <!-- Lead Attributes -->
-    <%= render @lead %>
+    <%= render @lead, pipeline:@pipeline %>
 
     <!-- Action Links -->
     <%= link_to "Edit this lead", edit_pipeline_lead_path(@pipeline, @lead), class: "mt-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>

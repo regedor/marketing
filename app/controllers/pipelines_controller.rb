@@ -1,6 +1,7 @@
 class PipelinesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_pipelines
+  before_action :check_organization!, only: %i[ edit update destroy ]
   before_action :set_pipeline, only: %i[ edit update destroy ]
 
   # GET /pipelines or /pipelines.json
@@ -67,5 +68,9 @@ class PipelinesController < ApplicationController
 
     def set_pipelines
       @pipelines = Pipeline.where(organization: current_user.organization)
+    end
+
+    def check_organization!
+      redirect_to root_path, alert: "Access Denied" unless current_user.organization_id == @pipeline.organization_id
     end
 end
