@@ -13,14 +13,14 @@
           <li class="mb-2 <%= 'bg-yellow-400' if current_page?(dashboard_path) %>">
             <%= link_to dashboard_path, class: "SidebarLink flex items-center" do %>
               <%= image_tag 'dashboard-icon.svg', class: 'SidebarIcon' %>
-              <span class="ml-2">Dashboard</span>
+              <span class="ml-2">Settings</span>
             <% end %>
           </li>
         <% end %>
         <li class="mb-2 <%= 'bg-yellow-400' if current_page?(calendars_path) %>">
           <%= link_to calendars_path, class: "SidebarLink flex items-center" do %>
             <%= image_tag 'posts-icon.svg', class: 'SidebarIcon' %>
-            <span class="ml-2">Posts</span>
+            <span class="ml-2">Calendar</span>
           <% end %>
         </li>
       <% else %>

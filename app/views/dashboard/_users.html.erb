@@ -1,0 +1,35 @@
+<div class="overflow-x-auto">
+  <div class="flex justify-center">
+  <table class="min-w-full bg-white shadow-md rounded-lg border border-gray-200">
+    <thead>
+    <tr>
+      <th class="TableHeader border-r border-gray-200">Email</th>
+      <th class="TableHeader border-r border-gray-200">User type</th>
+      <th class="TableHeader">Actions</th>
+    </tr>
+    </thead>
+    <tbody class="bg-white divide-y divide-gray-200">
+    <% @users.each do |user| %>
+      <tr class="hover:bg-gray-100">
+      <td class="TableEntry border-r border-gray-200"><strong><%= user.email %></strong></td>
+      <td class="TableEntry border-r border-gray-200">
+        <% if user.isLeader %>
+        <span class="text-green-600">Leader</span>
+        <% else %>
+        <span class="text-red-600">Regular</span>
+        <% end %>
+      </td>
+      <td class="TableEntry flex space-x-2">
+        <%= link_to 'Edit', edit_dashboard_user_path(user), class: "text-yellow-600 hover:text-yellow-500 hover:underline" %>
+        <%= button_to "Delete", dashboard_user_path(user), method: :delete, data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to delete the user " + user.email + "?" }, class: "text-red-600 hover:text-red-500 hover:underline" %>
+      </td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<div class="mt-8 text-center">
+  <%= link_to 'Create New User', new_dashboard_user_path, class: "Btn-primary" %>
+</div>
