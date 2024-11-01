@@ -5,6 +5,7 @@ class Person < ApplicationRecord
   has_many :emails, dependent: :destroy
   has_many :phonenumbers, dependent: :destroy
   has_many :personnotes, dependent: :destroy
+  has_many :personlinks, dependent: :destroy
   has_many :personcompanies, dependent: :destroy
 
   validates :birthday, presence: true

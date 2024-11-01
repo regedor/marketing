@@ -47,11 +47,11 @@ class PersoncompaniesController < ApplicationController
     end
 
     def personcompany_params_by_person
-      params.require(:personcompany).permit(:is_working, :company_id)
+      params.require(:personcompany).permit(:is_working, :is_my_contact, :company_id, )
     end
 
     def personcompany_params_by_company
-      params.require(:personcompany).permit(:is_working, :person_id)
+      params.require(:personcompany).permit(:is_working, :is_my_contact, :person_id, )
     end
 
     def set_personcompany

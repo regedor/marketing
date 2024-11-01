@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_10_29_151255) do
+ActiveRecord::Schema[7.2].define(version: 2024_11_01_101150) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -144,7 +144,9 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_29_151255) do
   create_table "people", force: :cascade do |t|
     t.string "name"
     t.date "birthday"
+    t.text "descripcion"
     t.boolean "is_private"
+    t.string "linkedin_link"
     t.bigint "user_id", null: false
     t.bigint "organization_id", null: false
     t.datetime "created_at", null: false
@@ -155,12 +157,21 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_29_151255) do
 
   create_table "personcompanies", primary_key: ["person_id", "company_id"], force: :cascade do |t|
     t.boolean "is_working"
+    t.boolean "is_my_contact"
     t.bigint "person_id", null: false
     t.bigint "company_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["company_id"], name: "index_personcompanies_on_company_id"
     t.index ["person_id"], name: "index_personcompanies_on_person_id"
+  end
+
+  create_table "personlinks", force: :cascade do |t|
+    t.jsonb "content", default: {}
+    t.bigint "person_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["person_id"], name: "index_personlinks_on_person_id"
   end
 
   create_table "personnotes", force: :cascade do |t|
@@ -265,6 +276,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_29_151255) do
   add_foreign_key "people", "users"
   add_foreign_key "personcompanies", "companies"
   add_foreign_key "personcompanies", "people"
+  add_foreign_key "personlinks", "people"
   add_foreign_key "personnotes", "people"
   add_foreign_key "personnotes", "users"
   add_foreign_key "perspectives", "posts"

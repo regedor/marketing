@@ -1,12 +1,50 @@
 <div class="mx-auto md:w-2/3 w-full flex">
   <div class="mx-auto">
-
     <%= render @person %>
 
     <%= link_to "Edit this person", edit_person_path(@person), class: "mt-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
     <%= link_to "Back to people", people_path, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
     <%= link_to "Delete", @person, data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
 
+    <!-- Personlinks Section -->
+    <div id="<%= dom_id(@new_person_link) %>">
+      <%= form_with url: create_content_person_personlink_path(@person, @new_person_link), method: :post do |form| %>
+        <div class="my-5">
+          <%= form.label :key %>
+          <%= form.text_field :key, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
+        </div>
+        <div class="my-5">
+          <%= form.label :value %>
+          <%= form.text_field :value, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
+        </div>
+        <%= form.submit "Create Links", class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
+      <% end %>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Key</th>
+            <th>Value</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @person.personlinks.each do |personlink| %>
+            <% personlink.content.each do |key, value| %>
+              <tr>
+                <td><%= key %></td>
+                <td><%= value %></td>
+                <td>
+                 <%= button_to "Delete link", destroy_content_person_personlink_path(@person, personlink, key: key), method: :delete, data: { confirm: "Are you sure?" } %>
+                </td>
+              </tr>
+            <% end %>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Personcompanies Section -->
     <div id="companies">
       <%= render "personcompanies/formperson", person: @person, personcompany: @new_worker %>
       <table>
@@ -14,6 +52,7 @@
           <tr>
             <th>Name</th>
             <th>Is Working</th>
+            <th>Is My Company contact</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -22,10 +61,10 @@
             <tr>
               <td><%= pc.company.name %></td>
               <td><%= pc.is_working %></td>
+              <td><%= pc.is_my_contact %></td>
               <td>
-                <%= link_to "Delete", destroy_by_person_personcompanies_path(@person,pc.company), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
-                <%= link_to "Update", update_is_working_by_person_personcompanies_path(@person,pc.company), data: { turbo_method: :patch } %>
-
+                <%= link_to "Delete", destroy_by_person_personcompanies_path(@person, pc.company), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
+                <%= link_to "Update", update_is_working_by_person_personcompanies_path(@person, pc.company), data: { turbo_method: :patch } %>
               </td>
             </tr>
           <% end %>
@@ -33,6 +72,7 @@
       </table>
     </div>
 
+    <!-- Emails Section -->
     <div id="emails">
       <%= render "emails/form", person: @person, email: @new_email %>
       <table>
@@ -51,14 +91,16 @@
               <td><%= email.is_active %></td>
               <td><%= email.current %></td>
               <td>
-                <%= link_to "Edit", edit_person_email_path(@person,email) %>
-                <%= link_to "Delete", person_email_path(@person,email), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
+                <%= link_to "Edit", edit_person_email_path(@person, email) %>
+                <%= link_to "Delete", person_email_path(@person, email), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
               </td>
             </tr>
           <% end %>
         </tbody>
       </table>
     </div>
+
+    <!-- Phone Numbers Section -->
     <div id="numbers">
       <%= render "phonenumbers/form", person: @person, phonenumber: @new_phone_number %>
       <table>
@@ -77,14 +119,16 @@
               <td><%= pn.is_active %></td>
               <td><%= pn.current %></td>
               <td>
-                <%= link_to "Edit", edit_person_phonenumber_path(@person,pn) %>
-                <%= link_to "Delete", person_phonenumber_path(@person,pn), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
+                <%= link_to "Edit", edit_person_phonenumber_path(@person, pn) %>
+                <%= link_to "Delete", person_phonenumber_path(@person, pn), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
               </td>
             </tr>
           <% end %>
         </tbody>
       </table>
     </div>
+
+    <!-- Notes Section -->
     <div id="notes">
       <%= render "personnotes/form", person: @person, personnote: @new_person_note %>
       <table>
@@ -101,8 +145,8 @@
               <td><%= note.note %></td>
               <td><%= note.user.email %></td>
               <td>
-                <%= link_to "Edit", edit_person_personnote_path(@person,note) %>
-                <%= link_to "Delete", person_personnote_path(@person,note), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
+                <%= link_to "Edit", edit_person_personnote_path(@person, note) %>
+                <%= link_to "Delete", person_personnote_path(@person, note), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
               </td>
             </tr>
           <% end %>

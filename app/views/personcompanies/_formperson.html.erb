@@ -16,10 +16,14 @@
       <%= form.select :company_id, options_for_select(@new_workers.map { |w| [w[:name], w[:id]] }), { prompt: 'Company' } %>
     </div>
   
-  
     <div class="my-5">
       <%= form.label :is_working %>
       <%= form.check_box :is_working, class: "block mt-2 h-5 w-5" %>
+    </div>
+
+    <div class="my-5">
+      <%= form.label :is_my_contact %>
+      <%= form.check_box :is_my_contact, class: "block mt-2 h-5 w-5" %>
     </div>
   
     <div class="inline">

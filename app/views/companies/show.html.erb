@@ -14,6 +14,7 @@
           <tr>
             <th>Name</th>
             <th>Is Working</th>
+            <th>Is My Company contact</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -22,6 +23,8 @@
             <tr>
               <td><%= pc.person.name %></td>
               <td><%= pc.is_working ? "Yes" : "No" %></td>
+              <td><%= pc.is_my_contact ? "Yes" : "No" %></td>
+              
               <td>
                 <%= link_to "Delete", destroy_by_company_personcompanies_path(@company, pc.person), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
                 <%= link_to "Update", update_is_working_by_company_personcompanies_path(@company, pc.person), data: { turbo_method: :patch } %>

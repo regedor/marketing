@@ -1,9 +1,9 @@
 class PeopleController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_people, only: [ :index ]
-  before_action :set_person, only: [ :show, :edit, :update, :destroy ]
-  before_action :check_organization!, only: [ :show, :edit, :update, :destroy ]
-  before_action :check_author!, only: [ :show, :edit, :update, :destroy ]
+  before_action :set_people, only: [:index]
+  before_action :set_person, only: [:show, :edit, :update, :destroy]
+  before_action :check_organization!, only: [:show, :edit, :update, :destroy]
+  before_action :check_author!, only: [:show, :edit, :update, :destroy]
 
   # GET /people
   def index
@@ -17,8 +17,10 @@ class PeopleController < ApplicationController
   def show
     @new_email = @person.emails.new
     @new_phone_number = @person.phonenumbers.new
+    @new_person_link = @person.personlinks.find_or_create_by(content: {})
     @new_person_note = @person.personnotes.new
     @new_worker = @person.personcompanies.new
+
     workers = @person.personcompanies.map { |pc| pc.company }
     @new_workers = Company.where(organization: current_user.organization).reject { |p| workers.include?(p) }
   end
@@ -58,7 +60,7 @@ class PeopleController < ApplicationController
   private
 
     def person_params
-      params.require(:person).permit(:name, :birthday, :is_private)
+      params.require(:person).permit(:name, :birthday, :descripcion, :is_private, :linkedin_link)
     end
 
     def set_person
@@ -69,7 +71,6 @@ class PeopleController < ApplicationController
       @people = Person.where(organization: current_user.organization)
                       .where("is_private = ? OR user_id = ?", false, current_user.id)
     end
-
 
     def check_organization!
       redirect_to root_path, alert: "Access Denied" unless current_user.organization_id == @person.organization_id

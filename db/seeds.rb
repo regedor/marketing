@@ -88,7 +88,7 @@ def create_people(o, organization, all_users_from_organization)
     tempbool = peoplen.even? ? true : false
     userid = User.find_by(email: all_users_from_organization[peoplen-1])
 
-    person = Person.create!(name: "user#{peoplen}_#{o}", birthday: Time.zone.now + rand(1..30).days, is_private: tempbool, user: userid, organization: organization)
+    person = Person.create!(name: "user#{peoplen}_#{o}", birthday: Time.zone.now + rand(1..30).days, descripcion:"Ok tudo otimo", is_private: tempbool, linkedin_link: "eu@linkdin.pt", user: userid, organization: organization)
     people_from_organization.push(person)
 
     1.upto(2) do |emailsp|
@@ -195,7 +195,7 @@ def create_person_companies(people_from_organization, companies_from_organizatio
   1.upto(5) do |company|
     1.upto(5) do |person|
       pcbool = person == company
-      Personcompany.create!(person: people_from_organization[person-1], company: companies_from_organization[company-1], is_working: pcbool)
+      Personcompany.create!(person: people_from_organization[person-1], company: companies_from_organization[company-1], is_working: pcbool, is_my_contact: pcbool)
     end
   end
 end

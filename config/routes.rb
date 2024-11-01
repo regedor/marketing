@@ -12,14 +12,21 @@ Rails.application.routes.draw do
       resources :leadnotes
     end
   end
-  resources :companies, only: [ :show, :new, :create, :edit, :upadte, :destroy, :index ] do
+
+  resources :companies, only: [:show, :new, :create, :edit, :update, :destroy, :index] do
     resources :companynotes
   end
 
-  resources :people, only: [ :show, :new, :create, :edit, :upadte, :destroy, :index ] do
+  resources :people, only: [:show, :new, :create, :edit, :update, :destroy, :index] do
     resources :emails
     resources :phonenumbers
     resources :personnotes
+    resources :personlinks do
+      member do
+        post :create_content
+        delete :destroy_content
+      end
+    end
   end
 
   resources :personcompanies do
@@ -31,25 +38,25 @@ Rails.application.routes.draw do
     delete "company/:company_id/:person_id", to: "personcompanies#destroy_by_company", as: :destroy_by_company, on: :collection
   end
 
-  resources :calendars, only: [ :index, :create, :edit, :update, :destroy ] do
+  resources :calendars, only: [:index, :create, :edit, :update, :destroy] do
     collection do
       get :selector
       post :select_calendar
     end
-    resources :posts, only: [ :show, :new, :create, :edit, :update, :destroy ] do
+    resources :posts, only: [:show, :new, :create, :edit, :update, :destroy] do
       member do
         get :download
         patch :update_design_idea
       end
 
-      resources :perspectives, only: [ :show, :create, :destroy ] do
+      resources :perspectives, only: [:show, :create, :destroy] do
         member do
           patch :update_status
           patch :update_status_post
           patch :update_copy
         end
 
-        resources :attachments, only: [ :show, :create, :edit, :update, :destroy ] do
+        resources :attachments, only: [:show, :create, :edit, :update, :destroy] do
           member do
             get :download
             patch :like
@@ -59,8 +66,8 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :comments, only: [ :create, :edit, :update, :destroy ]
-      resources :publishplatforms, only: [ :create, :destroy ]
+      resources :comments, only: [:create, :edit, :update, :destroy]
+      resources :publishplatforms, only: [:create, :destroy]
     end
   end
 
@@ -76,7 +83,7 @@ Rails.application.routes.draw do
   get "dashboard", to: "dashboard#index"
 
   namespace :dashboard do
-    resources :users, only: [ :new, :create, :edit, :update, :destroy ]
+    resources :users, only: [:new, :create, :edit, :update, :destroy]
   end
 
   get "up" => "rails/health#show", as: :rails_health_check
