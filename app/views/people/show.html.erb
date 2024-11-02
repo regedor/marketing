@@ -8,37 +8,25 @@
 
     <!-- Personlinks Section -->
     <div id="<%= dom_id(@new_person_link) %>">
-      <%= form_with url: create_content_person_personlink_path(@person, @new_person_link), method: :post do |form| %>
-        <div class="my-5">
-          <%= form.label :key %>
-          <%= form.text_field :key, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
-        </div>
-        <div class="my-5">
-          <%= form.label :value %>
-          <%= form.text_field :value, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
-        </div>
-        <%= form.submit "Create Links", class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
-      <% end %>
+      <%= render "personlinks/form", person:@person, person_link: @new_person_link%>
 
       <table>
         <thead>
           <tr>
-            <th>Key</th>
-            <th>Value</th>
+            <th>Name</th>
+            <th>Link</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          <% @person.personlinks.each do |personlink| %>
-            <% personlink.content.each do |key, value| %>
-              <tr>
-                <td><%= key %></td>
-                <td><%= value %></td>
-                <td>
-                 <%= button_to "Delete link", destroy_content_person_personlink_path(@person, personlink, key: key), method: :delete, data: { confirm: "Are you sure?" } %>
-                </td>
-              </tr>
-            <% end %>
+          <% @person.personlinks.select{ |pl| pl.name.present? }.each do |personlink| %>
+            <tr>
+              <td><%= personlink.name %></td>
+              <td><%= personlink.link %></td>
+              <td>
+               <%= button_to "Delete link", destroy_content_person_personlink_path(@person, personlink, name: personlink.name), method: :delete, data: { confirm: "Are you sure?" } %>
+              </td>
+            </tr>
           <% end %>
         </tbody>
       </table>

@@ -166,8 +166,9 @@ ActiveRecord::Schema[7.2].define(version: 2024_11_01_101150) do
     t.index ["person_id"], name: "index_personcompanies_on_person_id"
   end
 
-  create_table "personlinks", force: :cascade do |t|
-    t.jsonb "content", default: {}
+  create_table "personlinks", primary_key: ["person_id", "name"], force: :cascade do |t|
+    t.string "name", null: false
+    t.string "link"
     t.bigint "person_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

@@ -1,9 +1,9 @@
 class PeopleController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_people, only: [:index]
-  before_action :set_person, only: [:show, :edit, :update, :destroy]
-  before_action :check_organization!, only: [:show, :edit, :update, :destroy]
-  before_action :check_author!, only: [:show, :edit, :update, :destroy]
+  before_action :set_people, only: [ :index ]
+  before_action :set_person, only: [ :show, :edit, :update, :destroy ]
+  before_action :check_organization!, only: [ :show, :edit, :update, :destroy ]
+  before_action :check_author!, only: [ :show, :edit, :update, :destroy ]
 
   # GET /people
   def index
@@ -17,7 +17,7 @@ class PeopleController < ApplicationController
   def show
     @new_email = @person.emails.new
     @new_phone_number = @person.phonenumbers.new
-    @new_person_link = @person.personlinks.find_or_create_by(content: {})
+    @new_person_link = @person.personlinks.new
     @new_person_note = @person.personnotes.new
     @new_worker = @person.personcompanies.new
 
