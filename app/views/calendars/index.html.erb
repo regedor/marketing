@@ -2,7 +2,6 @@
   <%= link_to "+", selector_calendars_path, class: "Btn-primary fixed bottom-4 right-4 z-50 rounded-full shadow-md  w-12 h-12 justify-center text-lg" %>
   <div class="w-1/4 p-4 bg-gray-100 rounded-lg shadow-md flex flex-col">
     <div class="mt-4">
-      <%= render "form", calendar: @calendar %>
       <h2 class="text-lg font-bold mb-4">Calendars</h2>
       <%= form_with url: calendars_path, method: :get, local: true, id: "calendar_filter_form" do %>
         <div class="overflow-x-auto">

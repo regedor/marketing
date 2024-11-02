@@ -6,13 +6,16 @@ class CalendarsController < ApplicationController
 
   # GET /calendars
   def index
-    @calendar = Calendar.new
     @start_date = params[:start_date] ? Date.parse(params[:start_date]) : Date.today
     selected_calendar_ids = params[:calendar_ids] || @calendars.pluck(:id)
     @posts = Post.where(calendar_id: selected_calendar_ids).where(
       publish_date: @start_date.beginning_of_month.beginning_of_week..@start_date.end_of_month.end_of_week
     )
     @permitted_params = permitted_params
+  end
+
+  def new
+    @calendar = current_user.organization.calendars.new
   end
 
   # POST /calendars

@@ -1,5 +1,4 @@
 <div class="overflow-x-auto">
-  <%= render "calendars/form", calendar: @new_calendar %>
   <div class="flex justify-center">
     <table class="min-w-full bg-white shadow-md rounded-lg border border-gray-200">
       <thead>
@@ -21,4 +20,8 @@
       </tbody>
     </table>
   </div>
+</div>
+
+<div class="mt-8 text-center">
+  <%= link_to 'Create New Calendar', new_calendar_path, class: "Btn-primary" %>
 </div>
