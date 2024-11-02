@@ -1,32 +1,21 @@
-<%= form_with(url: create_by_person_personcompanies_path(person),model: personcompany, class: "contents") do |form| %>
-    <% if personcompany.errors.any? %>
-      <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-lg mt-3">
-        <h2><%= pluralize(personcompany.errors.count, "error") %> prohibited this personcompany from being saved:</h2>
-  
-        <ul>
-          <% personcompany.errors.each do |error| %>
-            <li><%= error.full_message %></li>
-          <% end %>
-        </ul>
-      </div>
-    <% end %>
-  
+<% if @companies.any? %>
+  <%= form_with(url: create_by_person_personcompanies_path(person),model: personcompany, class: "contents") do |form| %>
     <div class="my-5">
       <%= form.label :company_id %>
-      <%= form.select :company_id, options_for_select(@new_workers.map { |w| [w[:name], w[:id]] }), { prompt: 'Company' } %>
+      <%= form.select :company_id, options_for_select(@companies.map { |c| [c[:name], c[:id]] }), { prompt: 'Company' } %>
     </div>
-  
+
     <div class="my-5">
       <%= form.label :is_working %>
       <%= form.check_box :is_working, class: "block mt-2 h-5 w-5" %>
     </div>
-
     <div class="my-5">
       <%= form.label :is_my_contact %>
       <%= form.check_box :is_my_contact, class: "block mt-2 h-5 w-5" %>
     </div>
-  
+
     <div class="inline">
       <%= form.submit class: "rounded-lg py-3 px-5 bg-blue-600 text-white inline-block font-medium cursor-pointer" %>
     </div>
   <% end %>
+<% end %>

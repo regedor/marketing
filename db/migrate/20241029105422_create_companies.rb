@@ -6,6 +6,8 @@ class CreateCompanies < ActiveRecord::Migration[7.2]
       t.integer :employers_max, default: 0
       t.string :phone_number
       t.string :url_site
+      t.string :linkedin_link
+      t.text :description
       t.references :organization, null: false, foreign_key: true
 
       t.timestamps

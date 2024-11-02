@@ -34,7 +34,7 @@
 
     <!-- Personcompanies Section -->
     <div id="companies">
-      <%= render "personcompanies/formperson", person: @person, personcompany: @new_worker %>
+      <%= render "personcompanies/formperson", person: @person, personcompany: @new_person_company %>
       <table>
         <thead>
           <tr>
@@ -47,12 +47,13 @@
         <tbody>
           <% @person.personcompanies.select{ |pc| pc.company.present? }.each do |pc| %>
             <tr>
-              <td><%= pc.company.name %></td>
+              <td><%= link_to pc.company.name, company_path(pc.company) %></td>
               <td><%= pc.is_working %></td>
               <td><%= pc.is_my_contact %></td>
               <td>
                 <%= link_to "Delete", destroy_by_person_personcompanies_path(@person, pc.company), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
-                <%= link_to "Update", update_is_working_by_person_personcompanies_path(@person, pc.company), data: { turbo_method: :patch } %>
+                <%= link_to "Update Is Working", update_is_working_by_person_personcompanies_path(@person, pc.company), data: { turbo_method: :patch } %>
+                <%= link_to "Update Main Contact", update_is_my_contact_by_person_personcompanies_path(@person, pc.company), data: { turbo_method: :patch } %>
               </td>
             </tr>
           <% end %>

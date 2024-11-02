@@ -17,13 +17,8 @@
   </div>
 
   <div class="my-5">
-    <%= form.label :employers_min %>
-    <%= form.number_field :employers_min, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
-  </div>
-
-  <div class="my-5">
-    <%= form.label :employers_max %>
-    <%= form.number_field :employers_max, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
+    <%= form.label :employer_range, "Number of Employers" %>
+    <%= form.select :employer_range, options_for_select([["0-10", "0-10"], ["10-50", "10-50"], ["50-250", "50-250"], ["250-1000", "250-1000"], ["1000-2500", "1000-2500"], ["2500-5000", "2500-5000"], ["5000-10000", "5000-10000"]], company.employers_min.to_s + "-" + company.employers_max.to_s), { prompt: "Select a range" }, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
   </div>
 
   <div class="my-5">
@@ -34,6 +29,16 @@
   <div class="my-5">
     <%= form.label :url_site %>
     <%= form.text_field :url_site, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
+  </div>
+
+  <div class="mb-5">
+    <%= form.label :description%>
+    <%= form.text_area :description,  class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full"%>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :linkedin_link %>
+    <%= form.text_field :linkedin_link, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
   </div>
 
   <div class="inline">

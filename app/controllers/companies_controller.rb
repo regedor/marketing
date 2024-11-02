@@ -16,17 +16,19 @@ class CompaniesController < ApplicationController
   def show
     workers = @company.personcompanies.map { |pc| pc.person }
     @new_company_note = @company.companynotes.new
-    @new_worker = @company.personcompanies.new
-    @new_workers = Person.where(organization: current_user.organization).reject { |p| workers.include?(p) }
+    @new_person_company = @company.personcompanies.new
+    @new_company_link = @company.companylinks.new
+    @people = Person.where(organization: current_user.organization).reject { |p| workers.include?(p) }
   end
 
   # POST /company
   def create
     @company = Company.new(company_params)
+    update_min_max_employers
     @company.organization = current_user.organization
 
     if @company.save
-      redirect_to company_path(@company), notice: "Person was successfully created."
+      redirect_to company_path(@company), notice: "Company was successfully created."
     else
       render :new, status: :unprocessable_entity
     end
@@ -38,10 +40,11 @@ class CompaniesController < ApplicationController
 
   # PATCH/company/:id
   def update
+    update_min_max_employers
     if @company.update(company_params)
       redirect_to company_path(@company), notice: "Company was successfully updated."
     else
-      render :new, status: :unprocessable_entity
+      render :edit, status: :unprocessable_entity
     end
   end
 
@@ -58,7 +61,7 @@ class CompaniesController < ApplicationController
     end
 
     def company_params
-      params.require(:company).permit(:name, :employers_min, :employers_max, :phone_number, :url_site)
+      params.require(:company).permit(:name, :phone_number, :url_site, :linkedin_link, :description)
     end
 
     def set_companies
@@ -67,5 +70,13 @@ class CompaniesController < ApplicationController
 
     def set_company
       @company = Company.find(params[:id])
+    end
+
+    def update_min_max_employers
+      if params[:company][:employer_range].present?
+        min, max = params[:company][:employer_range].split("-").map(&:to_i)
+        @company.employers_min = min
+        @company.employers_max = max
+      end
     end
 end

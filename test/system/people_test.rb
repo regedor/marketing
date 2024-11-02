@@ -14,7 +14,7 @@ class PeopleTest < ApplicationSystemTestCase
     visit people_url
     click_on "New person"
 
-    fill_in "Birthday", with: @person.birthday
+    fill_in "birthdate", with: @person.birthdate
     check "Is private" if @person.is_private
     fill_in "Name", with: @person.name
     fill_in "Organization", with: @person.organization_id
@@ -29,7 +29,7 @@ class PeopleTest < ApplicationSystemTestCase
     visit person_url(@person)
     click_on "Edit this person", match: :first
 
-    fill_in "Birthday", with: @person.birthday
+    fill_in "birthdate", with: @person.birthdate
     check "Is private" if @person.is_private
     fill_in "Name", with: @person.name
     fill_in "Organization", with: @person.organization_id

@@ -2,14 +2,14 @@
 
 one:
   name: MyString
-  birthday: 2024-10-29
+  birthdate: 2024-10-29
   is_private: false
   user: one
   organization: one
 
 two:
   name: MyString
-  birthday: 2024-10-29
+  birthdate: 2024-10-29
   is_private: false
   user: two
   organization: two

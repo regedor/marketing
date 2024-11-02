@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_11_01_101150) do
+ActiveRecord::Schema[7.2].define(version: 2024_11_02_101705) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -86,10 +86,21 @@ ActiveRecord::Schema[7.2].define(version: 2024_11_01_101150) do
     t.integer "employers_max", default: 0
     t.string "phone_number"
     t.string "url_site"
+    t.string "linkedin_link"
+    t.text "description"
     t.bigint "organization_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["organization_id"], name: "index_companies_on_organization_id"
+  end
+
+  create_table "companylinks", primary_key: ["company_id", "name"], force: :cascade do |t|
+    t.string "name", null: false
+    t.string "link"
+    t.bigint "company_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["company_id"], name: "index_companylinks_on_company_id"
   end
 
   create_table "companynotes", force: :cascade do |t|
@@ -143,8 +154,8 @@ ActiveRecord::Schema[7.2].define(version: 2024_11_01_101150) do
 
   create_table "people", force: :cascade do |t|
     t.string "name"
-    t.date "birthday"
-    t.text "descripcion"
+    t.date "birthdate"
+    t.text "description"
     t.boolean "is_private"
     t.string "linkedin_link"
     t.bigint "user_id", null: false
@@ -266,6 +277,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_11_01_101150) do
   add_foreign_key "comments", "posts"
   add_foreign_key "comments", "users"
   add_foreign_key "companies", "organizations"
+  add_foreign_key "companylinks", "companies"
   add_foreign_key "companynotes", "companies"
   add_foreign_key "companynotes", "users"
   add_foreign_key "emails", "people"

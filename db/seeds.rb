@@ -16,7 +16,8 @@ $comment = "Quando tu entras em campo
             dá um gosto à tua gente
             ver-te lá na frente
             la la la la la la la ...."
-
+$lorem = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+$lorem = $lorem + $lorem
 $video_links = [ "https://www.youtube.com/watch?v=6Dh-RL__uN4", "https://www.youtube.com/watch?v=yYDGOdP1IJw" ]
 $emails = {
     1 => [ "abhimanyu.chat@gmail.com", "andre.filipe.araujo.freitas@gmail.com" ],
@@ -88,7 +89,7 @@ def create_people(o, organization, all_users_from_organization)
     tempbool = peoplen.even? ? true : false
     userid = User.find_by(email: all_users_from_organization[peoplen-1])
 
-    person = Person.create!(name: "user#{peoplen}_#{o}", birthday: Time.zone.now + rand(1..30).days, descripcion:"Ok tudo otimo", is_private: tempbool, linkedin_link: "eu@linkdin.pt", user: userid, organization: organization)
+    person = Person.create!(name: "user#{peoplen}_#{o}", birthdate: Time.zone.now + rand(1..30).days, description: "Ok tudo otimo", is_private: tempbool, linkedin_link: "eu@linkdin.pt", user: userid, organization: organization)
     people_from_organization.push(person)
 
     1.upto(2) do |emailsp|
@@ -175,17 +176,24 @@ def create_calendar(o, organization, all_users_from_organization)
 end
 
 def create_company(organization, all_users_from_organization)
+  ranges = [ "0-10", "10-50", "50-250", "250-1000", "1000-2500", "2500-5000", "5000-10000" ]
+  numeric_ranges = ranges.map do |range|
+    range.split("-").map(&:to_i)
+  end
   companies_from_organization = []
   puts "  - Creating Companies and related data"
   1.upto(5) do |c|
     print "    - Creating company #{c}"
-    company = Company.create!(name: "Company #{c}", employers_min: rand(10...50), employers_max: rand(100...200), phone_number: "123456789", url_site: "https://www.wellbeing-warrior.com/welcome", organization: organization)
+    random_range = numeric_ranges.sample
+    company = Company.create!(name: "Company #{c}", employers_min: random_range[0], employers_max: random_range[1], phone_number: "123456789", url_site: "https://www.wellbeing-warrior.com/welcome", organization: organization, description: $lorem, linkedin_link: "https://www.linkedin.com/company/wellbeing-warrior/?viewAsMember=true")
     companies_from_organization.push(company)
     1.upto(5) do |cn|
       print " #{cn}"
       userid = User.find_by(email: all_users_from_organization[cn-1])
       Companynote.create!(note: $comment, company: company, user: userid)
     end
+    Companylink.create!(name: "Instagram", link: "https://www.instagram.com/_wellbeing_warrior_/", company: company)
+    Companylink.create!(name: "Facebook", link: "https://www.facebook.com/wellbeingw", company: company)
     puts " done;"
   end
   companies_from_organization
@@ -193,7 +201,7 @@ end
 
 def create_person_companies(people_from_organization, companies_from_organization)
   1.upto(5) do |company|
-    1.upto(5) do |person|
+    1.upto(3) do |person|
       pcbool = person == company
       Personcompany.create!(person: people_from_organization[person-1], company: companies_from_organization[company-1], is_working: pcbool, is_my_contact: pcbool)
     end

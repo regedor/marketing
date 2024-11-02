@@ -19,10 +19,10 @@ class PeopleController < ApplicationController
     @new_phone_number = @person.phonenumbers.new
     @new_person_link = @person.personlinks.new
     @new_person_note = @person.personnotes.new
-    @new_worker = @person.personcompanies.new
+    @new_person_company = @person.personcompanies.new
 
     workers = @person.personcompanies.map { |pc| pc.company }
-    @new_workers = Company.where(organization: current_user.organization).reject { |p| workers.include?(p) }
+    @companies = Company.where(organization: current_user.organization).reject { |p| workers.include?(p) }
   end
 
   # POST /people
@@ -60,7 +60,7 @@ class PeopleController < ApplicationController
   private
 
     def person_params
-      params.require(:person).permit(:name, :birthday, :descripcion, :is_private, :linkedin_link)
+      params.require(:person).permit(:name, :birthdate, :description, :is_private, :linkedin_link)
     end
 
     def set_person

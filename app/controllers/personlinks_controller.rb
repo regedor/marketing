@@ -7,10 +7,14 @@ class PersonlinksController < ApplicationController
   # POST /people/:person_id/personlinks/:id/create_content
   def create
     @personlink = @person.personlinks.new(personlinks_params)
-    if @personlink.save
-      redirect_to person_path(@person), notice: "Entry was successfully updated."
-    else
-      redirect_to person_path(@person), alert: "Failed to add entry."
+    begin
+      if @personlink.save
+        redirect_to person_path(@person), notice: "Entry was successfully updated."
+      else
+        redirect_to person_path(@person), alert: "Failed to add entry."
+      end
+    rescue ActiveRecord::RecordNotUnique
+      redirect_to person_path(@person), alert: "Entry already exists for this person."
     end
   end
 

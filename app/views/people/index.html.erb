@@ -15,7 +15,7 @@
       <thead>
         <tr>
           <th>Name</th>
-          <th>Birthday</th>
+          <th>Birthdate</th>
           <th>Private</th>
           <th>Action</th>
         </tr>
@@ -24,7 +24,7 @@
         <% @people.each do |person| %>
           <tr>
             <td><%= person.name %></td>
-            <td><%= person.birthday %></td>
+            <td><%= person.birthdate %></td>
             <td><%= person.is_private %></td>
             <td><%= link_to "Show this person", person, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %></td>
           </tr>
