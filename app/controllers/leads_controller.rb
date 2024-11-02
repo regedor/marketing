@@ -87,6 +87,6 @@ class LeadsController < ApplicationController
     end
 
     def check_organization!
-      redirect_to root_path, alert: "Access Denied" unless current_user.organization_id == @pipeline.organization_id
+      redirect_to request.referrer || root_path, alert: "Access Denied" unless current_user.organization_id == @pipeline.organization_id
     end
 end

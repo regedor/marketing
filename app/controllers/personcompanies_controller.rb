@@ -57,7 +57,7 @@ class PersoncompaniesController < ApplicationController
   private
 
     def check_organization!
-      redirect_to root_path, alert: "Access Denied" unless current_user.organization_id == @company.organization.id
+      redirect_to request.referrer || root_path, alert: "Access Denied" unless current_user.organization_id == @company.organization.id
     end
 
     def personcompany_params_by_person
@@ -81,11 +81,11 @@ class PersoncompaniesController < ApplicationController
     end
 
     def check_organization_by_company!
-      redirect_to root_path, alert: "Access Denied" unless current_user.organization_id == @company.organization_id
+      redirect_to request.referrer || root_path, alert: "Access Denied" unless current_user.organization_id == @company.organization_id
     end
 
     def check_organization_by_person!
-      redirect_to root_path, alert: "Access Denied" unless current_user.organization_id == @person.organization_id
+      redirect_to request.referrer || root_path, alert: "Access Denied" unless current_user.organization_id == @person.organization_id
     end
 
     def destroy(path)

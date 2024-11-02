@@ -34,7 +34,7 @@ class EmailsController < ApplicationController
 
   private
     def check_organization!
-      redirect_to root_path, alert: "Access Denied" unless current_user.organization_id == @person.organization.id
+      redirect_to request.referrer || root_path, alert: "Access Denied" unless current_user.organization_id == @person.organization.id
     end
 
     def email_params

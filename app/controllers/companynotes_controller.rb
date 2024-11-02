@@ -3,7 +3,8 @@ class CompanynotesController < ApplicationController
   before_action :set_data
   before_action :check_organization!
   before_action :set_note, only: [ :edit, :update, :destroy ]
-  before_action :check_author!, only: [ :edit, :update, :destroy ]
+  before_action :check_leader!, only: [ :destroy ]
+  before_action :check_author!, only: [ :edit, :update ]
 
   # POST /company/:company_id/companynotes
   def create
@@ -51,10 +52,14 @@ class CompanynotesController < ApplicationController
     end
 
     def check_organization!
-      redirect_to root_path, alert: "Access Denied" unless current_user.organization_id == @company.organization.id
+      redirect_to request.referrer || root_path, alert: "Access Denied" unless current_user.organization_id == @company.organization.id
     end
 
     def check_author!
-      redirect_to root_path, alert: "Access Denied" unless current_user == @note.user
+      redirect_to request.referrer || root_path, alert: "Access Denied" unless current_user == @note.user
+    end
+
+    def check_leader!
+      check_author! unless @current_user.isLeader
     end
 end
