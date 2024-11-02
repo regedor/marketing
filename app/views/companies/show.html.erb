@@ -66,52 +66,32 @@
           <tr>
             <th>Note</th>
             <th>Author</th>
+            <th>Type</th>
+            <th>To</th>
             <th>Actions</th>
+            <th>Date</th>
           </tr>
         </thead>
         <tbody>
-          <% @company.companynotes.select { |note| note.id.present? }.each do |note| %>
+          <% @notes.each do |note| %>
             <tr>
-              <td><%= note.note %></td>
-              <td><%= note.user.email %></td>
+              <td><%= note[:note] %></td>
+              <td><%= note[:author] %></td>
+              <td><%= note[:type] %></td>
+              <td><%= note[:to] %></td>
               <td>
-                <%= link_to "Edit", edit_company_companynote_path(@company, note) %>
-                <%= link_to "Delete", company_companynote_path(@company, note), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
+                <% if note[:type] == "company" %>
+                  <%= link_to "Edit", edit_company_companynote_path(@company, note[:id]) %>
+                  <%= link_to "Delete", company_companynote_path(@company, note[:id]), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
+                <% else %>
+                  -
+                <% end %>
               </td>
+              <td><%= note[:datetime]%></td>
             </tr>
           <% end %>
         </tbody>
       </table>
-    </div>
-
-    <!-- New Section: Notes for Each Person Currently Working -->
-    <div id="people_notes">
-      <% @company.personcompanies.each do |pc| %>
-        <% if pc.person %>
-          <h3>Notes for <%= pc.person.name %>:</h3>
-          <table>
-            <thead>
-              <tr>
-                <th>Note</th>
-                <th>Author</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <% pc.person.personnotes.each do |note| %>
-                <tr>
-                  <td><%= note.note %></td>
-                  <td><%= note.user.email %></td>
-                  <td>
-                    <%= link_to "Edit", edit_person_personnote_path(pc.person, note) %>
-                    <%= link_to "Delete", person_personnote_path(pc.person, note), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
-                  </td>
-                </tr>
-              <% end %>
-            </tbody>
-          </table>
-        <% end %>
-      <% end %>
     </div>
   </div>
 </div>

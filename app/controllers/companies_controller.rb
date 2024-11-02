@@ -14,6 +14,9 @@ class CompaniesController < ApplicationController
 
   # GET /company/:id
   def show
+    company_notes = @company.companynotes.map { |cn| { id: cn.id, note: cn.note, type: "company", author: cn.user.email, to: @company.name, datetime: cn.created_at } }
+    person_company_notes =  @company.personcompanies.map { |pc| pc.person.personnotes }.flatten.map { |pn| { id: pn.id, note: pn.note, type: "person", to: pn.person.name, author: pn.user.email,  datetime: pn.created_at } }
+    @notes = (company_notes + person_company_notes).sort { |a, b| b[:datetime] <=> a[:datetime] }
     workers = @company.personcompanies.map { |pc| pc.person }
     @new_company_note = @company.companynotes.new
     @new_person_company = @company.personcompanies.new
