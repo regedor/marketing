@@ -6,6 +6,6 @@
     <h3 class="HeaderContainer text-gray-700 text-xl text-center mb-6"><%= @users.first.organization&.name + '\'s' || '' %> Users</h3>
     
     <%= render "users" %>
-   <!-- <%= render "calendar", calendars: @calendars %> -->
+    <%= render "calendar", calendars: @calendars %>
   </div>
 </div>

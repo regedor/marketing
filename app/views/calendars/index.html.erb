@@ -11,7 +11,6 @@
               <tr>
                 <th class="TableHeader border-r border-gray-200">Select</th>
                 <th class="TableHeader border-r border-gray-200">Calendar Name</th>
-                <th class="TableHeader border-r border-gray-200">Actions</th>
               </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
@@ -22,10 +21,6 @@
                   </td>
                   <td class="TableEntry border-r border-gray-200">
                     <%= label_tag "calendar_ids_#{calendar.id}", calendar.name, class: "flex-grow" %>
-                  </td>
-                  <td class="TableEntry border-r border-gray-200 text-center">
-                    <%= link_to "Edit", edit_calendar_path(calendar), class: "text-yellow-600 hover:text-yellow-500 hover:underline" %>
-                    <%= link_to "Delete", calendar_path(calendar), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "text-red-500 hover:underline" %>
                   </td>
                 </tr>
               <% end %>

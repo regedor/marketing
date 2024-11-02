@@ -21,7 +21,7 @@ class CalendarsController < ApplicationController
     @calendar.organization = current_user.organization
 
     if @calendar.save
-      redirect_to "/calendars", notice: "Calendar was successfully created."
+      redirect_to dashboard_path, notice: "Calendar was successfully created."
     else
       render :index, status: :unprocessable_entity
     end
@@ -35,7 +35,7 @@ class CalendarsController < ApplicationController
   def update
     @calendar.organization = current_user.organization
     if @calendar.update(calendar_params)
-      redirect_to "/calendars", notice: "Calendar was successfully updated."
+      redirect_to dashboard_path, notice: "Calendar was successfully updated."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -44,7 +44,7 @@ class CalendarsController < ApplicationController
   # DELETE /calendars/:id
   def destroy
     @calendar.destroy
-    redirect_to calendars_url, notice: "Calendar was successfully destroyed."
+    redirect_to dashboard_path, notice: "Calendar was successfully destroyed."
   end
 
   def selector
