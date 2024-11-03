@@ -118,10 +118,6 @@ class LeadsController < ApplicationController
       if @pipeline.to_people
         redirect_to request.referrer, alert: "Not a valid person" unless @people.map { |p| p.id }.include? params[:lead][:person_id].to_i
       else
-        puts "==========="
-        puts @companies.map { |c| c.id }
-        puts params[:lead][:company_id]
-        puts @companies.map { |c| c.id }.include? params[:lead][:company_id]
         redirect_to request.referrer, alert: "Not a valid company" unless @companies.map { |c| c.id }.include? params[:lead][:company_id].to_i
       end
     end
