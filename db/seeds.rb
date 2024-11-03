@@ -208,19 +208,40 @@ def create_person_companies(people_from_organization, companies_from_organizatio
   end
 end
 
-def create_pipelines(organization, companies_from_organization, all_users_from_organization)
+def create_pipelines(organization, people_from_organization, companies_from_organization, all_users_from_organization)
   puts "  - Creating Pipelines and related data"
   1.upto(4) do |pipe|
     puts "    - Creating Pipeline #{pipe}"
-    pipeline = Pipeline.create!(name: $pipelines[pipe-1], organization: organization)
+    to_people = pipe % 2 == 0
+    pipeline = Pipeline.create!(name: $pipelines[pipe-1], organization: organization, to_people: to_people)
+    stages = [
+      Stage.create!(name: "First", is_final: false, pipeline: pipeline, index: 0),
+      Stage.create!(name: "Second", is_final: false, pipeline: pipeline, index: 1),
+      Stage.create!(name: "Third", is_final: false, pipeline: pipeline, index: 2),
+      Stage.create!(name: "Fourth", is_final: true, pipeline: pipeline, index: 3)
+    ]
+    pipeattributes = [
+      Pipeattribute.create!(name: "First", pipeline: pipeline),
+      Pipeattribute.create!(name: "Second", pipeline: pipeline),
+      Pipeattribute.create!(name: "Third", pipeline: pipeline),
+      Pipeattribute.create!(name: "Fourth", pipeline: pipeline)
+    ]
     nl = rand(0...3)
     1.upto(nl) do |lead|
       print "      - Creating Lead #{nl}"
-      lead_obj = Lead.create!(name: "UMinho#{nl}_#{pipe}", content: {}, start_date: Time.zone.now + rand(1..15).days, end_date: Time.zone.now + rand(15..30).days, pipeline: pipeline, company: companies_from_organization[pipe-1])
+      st = stages.sample
+      if to_people
+        lead_obj = Lead.create!(name: "UMinho#{nl}_#{pipe}", start_date: Time.zone.now + rand(1..15).days, end_date: Time.zone.now + rand(15..30).days, pipeline: pipeline, person: people_from_organization[pipe-1], description: $lorem, stage: st)
+      else
+        lead_obj = Lead.create!(name: "UMinho#{nl}_#{pipe}", start_date: Time.zone.now + rand(1..15).days, end_date: Time.zone.now + rand(15..30).days, pipeline: pipeline, company: companies_from_organization[pipe-1], description: $lorem, stage: st)
+      end
       1.upto(5) do |cn|
         print " #{cn}"
         userid = User.find_by(email: all_users_from_organization[cn-1])
         Leadnote.create!(note: $comment, lead: lead_obj, user: userid)
+      end
+      1.upto(4) do |lc|
+        Leadcontent.create!(value: "Something", lead: lead_obj, pipeattribute: pipeattributes[lc-1])
       end
       puts "done;"
     end
@@ -240,7 +261,7 @@ if Rails.env.development?
     people_from_organization = create_people(o, organization, all_users_from_organization)
     companies_from_organization = create_company(organization, all_users_from_organization)
     create_person_companies(people_from_organization, companies_from_organization)
-    create_pipelines(organization, companies_from_organization, all_users_from_organization)
+    create_pipelines(organization, people_from_organization, companies_from_organization, all_users_from_organization)
   end
   puts "Seeding complete."
 

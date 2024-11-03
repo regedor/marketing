@@ -1,11 +1,16 @@
 class PipelinesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_pipelines
+  before_action :set_pipeline, only: %i[show edit update destroy ]
   before_action :check_organization!, only: %i[ edit update destroy ]
-  before_action :set_pipeline, only: %i[ edit update destroy ]
 
   # GET /pipelines or /pipelines.json
   def index
+  end
+
+  def show
+    @new_pipeattribute = @pipeline.pipeattributes.new
+    @new_stage = @pipeline.stages.new
   end
 
   # GET /pipelines/new
@@ -23,7 +28,7 @@ class PipelinesController < ApplicationController
     @pipeline.organization = current_user.organization
 
     if @pipeline.save
-      redirect_to pipelines_path, notice: "Pipeline was successfully created."
+      redirect_to pipeline_path(@pipeline), notice: "Pipeline was successfully created."
     else
       render :new, status: :unprocessable_entity
     end
@@ -32,7 +37,7 @@ class PipelinesController < ApplicationController
   # PATCH/PUT /pipelines/1 or /pipelines/1.json
   def update
     if @pipeline.update(pipeline_params)
-      redirect_to pipelines_path, notice: "Pipeline was successfully updated."
+      redirect_to pipeline_path(@pipeline), notice: "Pipeline was successfully updated."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -63,7 +68,7 @@ class PipelinesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def pipeline_params
-      params.require(:pipeline).permit(:name)
+      params.require(:pipeline).permit(:name, :to_people)
     end
 
     def set_pipelines

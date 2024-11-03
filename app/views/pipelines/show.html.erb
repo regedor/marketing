@@ -1,0 +1,85 @@
+<div class="mx-auto md:w-2/3 w-full flex">
+  <div class="mx-auto">
+    <%= render @pipeline %>
+
+
+    <%= link_to "New Lead", new_pipeline_lead_path(@pipeline), class: "rounded-lg py-3 px-5 bg-blue-600 text-white block font-medium" %>
+    <%= link_to "Edit this pipeline", edit_pipeline_path(@pipeline), class: "mt-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
+    <%= link_to "Back to pipelines", pipelines_path, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
+    <%= link_to "Delete", @pipeline, data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
+
+    <!-- Stages Section -->
+    <div id="stages">
+      <%= render "stages/form", pipeline: @pipeline, stage:@new_stage  %>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Is Final</th>
+            <th>Index</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @pipeline.stages.select{ |stage| stage.id.present? }.each do |stage| %>
+            <tr>
+              <td><%= stage.name %></td>
+              <td><%= stage.is_final %></td>
+              <td><%= stage.index %></td>
+              <td>
+                 <%= link_to "Edit", edit_pipeline_stage_path(@pipeline, stage) %>
+                <%= link_to "Delete", pipeline_stage_path(@pipeline, stage), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pipeattributes Section -->
+    <div id="pipeattributes">
+      <%= render "pipeattributes/form", pipeline: @pipeline, pipeattribute: @new_pipeattribute %>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @pipeline.pipeattributes.select{ |pa| pa.id.present? }.each do |pipeattribute| %>
+            <tr>
+              <td><%= pipeattribute.name %></td>
+              <td>
+                <%= link_to "Edit", edit_pipeline_pipeattribute_path(@pipeline, pipeattribute) %>
+                <%= link_to "Delete", pipeline_pipeattribute_path(@pipeline, pipeattribute), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+    <div id="leads" class="min-w-full">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @pipeline.leads.each do |lead| %>
+            <tr>
+              <td><%= lead.name %> </td>
+              <td><%= lead.start_date %> </td>
+              <td><%= lead.end_date %> </td>
+              <td><%= link_to "Show this lead", pipeline_lead_path(@pipeline,lead), class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

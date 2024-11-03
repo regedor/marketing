@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_11_02_101705) do
+ActiveRecord::Schema[7.2].define(version: 2024_11_03_155239) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -123,6 +123,16 @@ ActiveRecord::Schema[7.2].define(version: 2024_11_02_101705) do
     t.index ["person_id"], name: "index_emails_on_person_id"
   end
 
+  create_table "leadcontents", force: :cascade do |t|
+    t.string "value"
+    t.bigint "lead_id", null: false
+    t.bigint "pipeattribute_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["lead_id"], name: "index_leadcontents_on_lead_id"
+    t.index ["pipeattribute_id"], name: "index_leadcontents_on_pipeattribute_id"
+  end
+
   create_table "leadnotes", force: :cascade do |t|
     t.text "note"
     t.bigint "lead_id", null: false
@@ -135,15 +145,19 @@ ActiveRecord::Schema[7.2].define(version: 2024_11_02_101705) do
 
   create_table "leads", force: :cascade do |t|
     t.string "name"
-    t.jsonb "content", default: {}
     t.date "start_date"
     t.date "end_date"
     t.bigint "pipeline_id", null: false
-    t.bigint "company_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "company_id"
+    t.bigint "person_id"
+    t.bigint "stage_id", null: false
+    t.text "description"
     t.index ["company_id"], name: "index_leads_on_company_id"
+    t.index ["person_id"], name: "index_leads_on_person_id"
     t.index ["pipeline_id"], name: "index_leads_on_pipeline_id"
+    t.index ["stage_id"], name: "index_leads_on_stage_id"
   end
 
   create_table "organizations", force: :cascade do |t|
@@ -217,8 +231,17 @@ ActiveRecord::Schema[7.2].define(version: 2024_11_02_101705) do
     t.index ["person_id"], name: "index_phonenumbers_on_person_id"
   end
 
+  create_table "pipeattributes", force: :cascade do |t|
+    t.string "name"
+    t.bigint "pipeline_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["pipeline_id"], name: "index_pipeattributes_on_pipeline_id"
+  end
+
   create_table "pipelines", force: :cascade do |t|
     t.string "name"
+    t.boolean "to_people"
     t.bigint "organization_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -256,6 +279,16 @@ ActiveRecord::Schema[7.2].define(version: 2024_11_02_101705) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "stages", force: :cascade do |t|
+    t.string "name"
+    t.boolean "is_final", default: false
+    t.integer "index"
+    t.bigint "pipeline_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["pipeline_id"], name: "index_stages_on_pipeline_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -281,10 +314,14 @@ ActiveRecord::Schema[7.2].define(version: 2024_11_02_101705) do
   add_foreign_key "companynotes", "companies"
   add_foreign_key "companynotes", "users"
   add_foreign_key "emails", "people"
+  add_foreign_key "leadcontents", "leads"
+  add_foreign_key "leadcontents", "pipeattributes"
   add_foreign_key "leadnotes", "leads"
   add_foreign_key "leadnotes", "users"
   add_foreign_key "leads", "companies"
+  add_foreign_key "leads", "people"
   add_foreign_key "leads", "pipelines"
+  add_foreign_key "leads", "stages"
   add_foreign_key "people", "organizations"
   add_foreign_key "people", "users"
   add_foreign_key "personcompanies", "companies"
@@ -295,9 +332,11 @@ ActiveRecord::Schema[7.2].define(version: 2024_11_02_101705) do
   add_foreign_key "perspectives", "posts"
   add_foreign_key "perspectives", "socialplatforms"
   add_foreign_key "phonenumbers", "people"
+  add_foreign_key "pipeattributes", "pipelines"
   add_foreign_key "pipelines", "organizations"
   add_foreign_key "posts", "calendars"
   add_foreign_key "posts", "users"
   add_foreign_key "publishplatforms", "posts"
   add_foreign_key "publishplatforms", "socialplatforms"
+  add_foreign_key "stages", "pipelines"
 end

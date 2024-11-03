@@ -1,14 +1,16 @@
 Rails.application.routes.draw do
-  resources :pipelines, only: [ :show, :create, :edit, :update, :destroy, :index ] do
+  resources :pipelines, only: [ :new, :show, :create, :edit, :update, :destroy, :index ] do
     collection do
       get :selector
       post :select_pipeline
     end
+    resources :pipeattributes, only: [ :create, :edit, :update, :destroy ]
+    resources :stages, only: [ :create, :edit, :update, :destroy ]
     resources :leads, only: [ :show, :new, :create, :edit, :update, :destroy, :index ] do
       member do
-        post :create_content
-        delete :destroy_content
+        patch :update_stage
       end
+      resources :leadcontents
       resources :leadnotes, only: [ :create, :edit, :update, :destroy ]
     end
   end

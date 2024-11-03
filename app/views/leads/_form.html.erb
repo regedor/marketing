@@ -26,10 +26,23 @@
     <%= form.date_field :end_date, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
   </div>
 
-  <div class="my-5">
-    <%= form.label :company_id %>
-    <%= form.select :company_id, options_for_select(@companies.map { |w| [w[:name], w[:id]] }), { prompt: 'Company' } %>
+  <div class="mb-5">
+    <%= form.label :description%>
+    <%= form.text_area :description,  class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full"%>
   </div>
+
+  <% if pipeline.to_people %>
+    <div class="my-5">
+      <%= form.label :person_id %>
+      <%= form.select :person_id, options_for_select(@people.map { |w| [w[:name], w[:id]] }), { prompt: 'People' } %>
+    </div>
+    
+  <% else %>
+    <div class="my-5">
+      <%= form.label :company_id %>
+      <%= form.select :company_id, options_for_select(@companies.map { |w| [w[:name], w[:id]] }), { prompt: 'Company' } %>
+    </div>
+  <% end %>
 
   <div class="inline">
     <%= form.submit class: "rounded-lg py-3 px-5 bg-blue-600 text-white inline-block font-medium cursor-pointer" %>

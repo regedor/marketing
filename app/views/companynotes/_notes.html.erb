@@ -1,0 +1,34 @@
+<div id="notes">
+  <%= render "companynotes/form", company: @company, companynote: @new_company_note %>
+  <table>
+    <thead>
+      <tr>
+        <th>Note</th>
+        <th>Author</th>
+        <th>Type</th>
+        <th>To</th>
+        <th>Actions</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @notes.each do |note| %>
+        <tr>
+          <td><%= note[:note] %></td>
+          <td><%= note[:author] %></td>
+          <td><%= note[:type] %></td>
+          <td><%= note[:to] %></td>
+          <td>
+            <% if note[:type] == "company" %>
+              <%= link_to "Edit", edit_company_companynote_path(@company, note[:id]) %>
+              <%= link_to "Delete", company_companynote_path(@company, note[:id]), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
+            <% else %>
+              -
+            <% end %>
+          </td>
+          <td><%= note[:datetime]%></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

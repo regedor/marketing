@@ -4,83 +4,21 @@
     <!-- Lead Attributes -->
     <%= render @lead, pipeline:@pipeline %>
 
-    <!-- Action Links -->
+    <%= form_with url: update_stage_pipeline_lead_path(@pipeline, @lead), method: :patch, local: true, id: "stage-form-#{dom_id(@lead)}" do %>
+      <label class="font-medium text-sm">Lead Stage:</label>
+      <select name="lead[stage_id]" id="selector_<%= dom_id(@lead) %>" class="InputField text-sm" onchange="this.form.submit()">
+        <% @pipeline.stages.each do |stage| %>
+          <option value="<%= stage.id%>" <% if @lead.stage == stage %> selected <% end %>><%= stage.name %></option>
+        <% end %>
+      </select>
+    <% end %>
+
     <%= link_to "Edit this lead", edit_pipeline_lead_path(@pipeline, @lead), class: "mt-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
-    <%= link_to "Back to pipelines", pipelines_path, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
+    <%= link_to "Back to pipeline", pipeline_path(@pipeline), class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
     <%= link_to "Delete", pipeline_lead_path(@pipeline, @lead), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
 
-    <!-- Lead-specific Notes Section -->
-    <div id="notes">
-      <%= render "leadnotes/form", pipeline: @pipeline, lead: @lead, leadnote: @new_lead_note %>
-      <table>
-        <thead>
-          <tr>
-            <th>Note</th>
-            <th>Author</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @lead.leadnotes.select { |note| note.id.present? }.each do |note| %>
-            <tr>
-              <td><%= note.note %></td>
-              <td><%= note.user.email %></td>
-              <td>
-                <%= link_to "Edit", edit_pipeline_lead_leadnote_path(@pipeline, @lead, note) %>
-                <%= link_to "Delete", pipeline_lead_leadnote_path(@pipeline, @lead, note), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
-              </td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Company Notes Section -->
-    <div id="company_notes">
-      <h3>Notes for Company: <%= @lead.company.name %></h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Note</th>
-            <th>Author</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @lead.company.companynotes.each do |note| %>
-            <tr>
-              <td><%= note.note %></td>
-              <td><%= note.user.email %></td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Workers' Notes Section -->
-    <div id="workers_notes">
-      <h3>Notes from Workers of <%= @lead.company.name %></h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Note</th>
-            <th>Worker</th>
-            <th>Author</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @lead.company.personcompanies.each do |personcompany| %>
-            <% personcompany.person.personnotes.each do |note| %>
-              <tr>
-                <td><%= note.note %></td>
-                <td><%= personcompany.person.name %></td>
-                <td><%= note.user.email %></td>
-              </tr>
-            <% end %>
-          <% end %>
-        </tbody>
-      </table>
-    </div>
-    
+    <%= render "leadcontents/leadcontents", lead:@lead%>
+    <%= render "leadnotes/notes" %>
   </div>
 </div>
 
