@@ -26,7 +26,7 @@
             <td><%= company.employers_max %> - <%= company.employers_min %></td>
             <td><%= company.phone_number %></td>
             <td><%= company.url_site %></td>
-            <td><%= company.personcompanies.select { |pc| (pc.is_my_contact && !pc.person.is_private) || (pc.person.user == current_user && pc.is_my_contact) }.map { |pc| pc.person.name } %></td>
+            <td><%= company.personcompanies.select { |pc| pc.is_my_contact && (!pc.person.is_private || pc.person.user == current_user) }.map { |pc| pc.person.name } %></td>
             <td><%= link_to "Show this company", company, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %></td>
           </tr>
         <% end %>
