@@ -1,4 +1,3 @@
-# entrypoint.sh
 #!/bin/bash
 
 # Exit on error
