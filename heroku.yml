@@ -1,6 +1,6 @@
 build:
   docker:
-    web: Dockerfile  # This specifies that Heroku should use the Dockerfile for building the `web` process
+    web: Dockerfile
 
 run:
-  web: /rails/run.sh  # This specifies that Heroku should use `run.sh` as the startup command
+  web: /rails/run.sh

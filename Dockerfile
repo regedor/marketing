@@ -14,9 +14,8 @@ ENV RAILS_ENV="production" \
 
 FROM base AS build
 
-# Install packages needed to build gems
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y build-essential git libpq-dev pkg-config && \
+    apt-get install --no-install-recommends -y build-essential git libpq-dev pkg-config nodejs && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 COPY Gemfile Gemfile.lock ./
@@ -36,7 +35,6 @@ COPY --from=build "${BUNDLE_PATH}" "${BUNDLE_PATH}"
 COPY --from=build /rails /rails
 
 COPY setup.sh run.sh /rails/
-
 RUN chmod +x /rails/setup.sh /rails/run.sh
 
 RUN groupadd --system --gid 1000 rails && \
