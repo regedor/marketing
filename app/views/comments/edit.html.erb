@@ -1,9 +1,10 @@
 <div id="edit<%= dom_id(@comment)%>">
-  <% content_for :title, "Editing comment" %>
-  <h1>Editing comment</h1>
-  <%= render "form", comment: @comment, calendar: @calendar, post: @post %>
-  <br>
-  <div>
-    <%= link_to "Back to post", calendar_post_path(@calendar,@post) %>
+  <div id="form_post" class="Container w-full mx-auto mt-16">
+    <div class="HeaderContainer mb-8">
+      <h2 class="ContainerHeaderText">Edit Comment</h2>
+    </div>
+    <div class="space-y-6 mt-8;">
+      <%= render "formedit", comment: @comment, calendar: @calendar, post: @post %>
+    </div>
   </div>
-</div>
+</div> 

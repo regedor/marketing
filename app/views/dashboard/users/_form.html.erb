@@ -1,28 +1,17 @@
 <%= form_with(model: [:dashboard, user]) do |form| %>
-  <% if user.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(user.errors.count, "error") %> prohibited this organization from being saved:</h2>
-
-      <ul>
-        <% user.errors.each do |error| %>
-          <li><%= error.full_message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
-  
-  <div>
-    <%= form.label :email %>
-    <%= form.email_field :email %>
+  <div class="mb-4">
+    <%= form.label :email,"Email", class: "GenericFormLabel" %>
+    <%= form.email_field :email, class:"InputField" %>
   </div>
 
-  <div>
-    <%= form.label :isLeader, "Leader" %>
-    <%= form.check_box :isLeader %>
+  <div class="mb-4 flex items-center">
+    <%= form.label :isLeader, "Is a Leader?", class: "GenericFormLabel mr-2" %>
+    <%= form.check_box :isLeader, class: "CheckboxField" %>
   </div>
   
 
-  <div>
-    <%= form.submit %>
+  <div class="Bottom-right">
+    <%= link_to 'Cancel', 'javascript:history.back()', class: "Btn-secondary" %>
+    <%= form.submit "Save", class: "Btn-primary ml-2" %>
   </div>
 <% end %>

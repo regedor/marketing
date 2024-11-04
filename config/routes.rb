@@ -6,32 +6,29 @@ Rails.application.routes.draw do
     end
     resources :posts, only: [ :show, :new, :create, :edit, :update, :destroy ] do
       member do
-        patch :approved
-        patch :in_analysis
-        patch :rejected
+        get :download
+        patch :update_design_idea
       end
 
-      resources :perspectives, only: [ :show, :new, :create, :edit, :update, :destroy ] do
+      resources :perspectives, only: [ :show, :create, :destroy ] do
         member do
-          get :download
-          patch :approved
-          patch :in_analysis
-          patch :rejected
+          patch :update_status
+          patch :update_status_post
+          patch :update_copy
         end
 
-        resources :attachments, only: [ :create, :edit, :update, :destroy ] do
+        resources :attachments, only: [ :show, :create, :edit, :update, :destroy ] do
           member do
             get :download
-            patch :approved
-            patch :in_analysis
-            patch :rejected
             patch :like
             patch :dislike
+            patch :update_status
           end
         end
       end
 
       resources :comments, only: [ :create, :edit, :update, :destroy ]
+      resources :publishplatforms, only: [ :create, :destroy ]
     end
   end
 
@@ -39,14 +36,15 @@ Rails.application.routes.draw do
   ActiveAdmin.routes(self)
 
   devise_for :users, controllers: {
-    sessions: "users/sessions"
+    sessions: "users/sessions",
+    omniauth_callbacks: "users/omniauth_callbacks"
   }
 
   root "home#index"
   get "dashboard", to: "dashboard#index"
 
   namespace :dashboard do
-    resources :users, only: [ :new, :create, :edit, :update, :destroy, :show ]
+    resources :users, only: [ :new, :create, :edit, :update, :destroy ]
   end
 
   get "up" => "rails/health#show", as: :rails_health_check

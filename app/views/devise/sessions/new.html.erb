@@ -1,26 +1,62 @@
-<h2>Log in</h2>
-
-<%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
-  </div>
-
-  <div class="field">
-    <%= f.label :password %><br />
-    <%= f.password_field :password, autocomplete: "current-password" %>
-  </div>
-
-  <% if devise_mapping.rememberable? %>
-    <div class="field">
-      <%= f.check_box :remember_me %>
-      <%= f.label :remember_me %>
+<div class="LoginSection">
+  <div class="Container max-w-md w-full">
+    <div class="HeaderContainer">
+      <h2 class="ContainerHeaderText">Sign into your account</h2>
     </div>
-  <% end %>
+    <div class="LoginFormContainer">
+      <%= form_for(resource, as: resource_name, url: session_path(resource_name), class: "space-y-6") do |f| %>
+        <div>
+          <%= f.label :email, "Email", class: "LoginFormLabel" %>
+          <div class="mt-2 mb-5">
+            <%= f.email_field :email, autofocus: true, autocomplete: "email", required: true, class: "InputField" %>
+          </div>
+        </div>
+        <div>
+          <div class="ForgotPasswordContainer">
+            <%= f.label :password, "Password", class: "LoginFormLabel" %>
+            <div class="text-sm">
+              <%= link_to "Forgot password?", new_password_path(resource_name), class: "ForgotPasswordLink" %>
+            </div>
+          </div>
+          <div class="relative mt-2">
+            <%= f.password_field :password, autocomplete: "current-password", required: true, id: "password-field", class: "InputField pr-10" %>
+            <span id="toggle-password" class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer" onclick="togglePassword()">
+              <img src="<%= asset_path('eye-icon.svg') %>" alt="Show/Hide Password" class="h-5 w-5" id="eye-icon" />
+            </span>
+          </div>
+        </div>
 
-  <div class="actions">
-    <%= f.submit "Log in" %>
+        <% if devise_mapping.rememberable? %>
+          <div class="flex items-center mt-5 mb-5">
+            <%= f.check_box :remember_me, class: "RememberMeCheckBox" %>
+            <%= f.label :remember_me, "Remember me", class: "RememberMeLabel" %>
+          </div>
+        <% end %>
+
+        <div>
+          <%= f.submit "Sign in", class: "Btn-primary w-full" %>
+        </div>
+      <% end %>
+
+      <div class="mt-4">
+        <%= render "devise/shared/links" %>
+        <p class="SignupText">Wellbeing Warrior</p>
+      </div>
+    </div>
   </div>
-<% end %>
+</div>
 
-<%= render "devise/shared/links" %>
+<script>
+  function togglePassword() {
+    const passwordField = $('#password-field');
+    const eyeIcon = $('#eye-icon');
+
+    if (passwordField.attr('type') === 'password') {
+      passwordField.attr('type', 'text');
+      eyeIcon.attr('src', '<%= asset_path('eye-cut.svg') %>');
+    } else {
+      passwordField.attr('type', 'password');
+      eyeIcon.attr('src', '<%= asset_path('eye-icon.svg') %>');
+    }
+  }
+</script>

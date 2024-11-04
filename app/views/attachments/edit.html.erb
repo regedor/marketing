@@ -1,0 +1,10 @@
+<div id="edit_<%= dom_id(@attachment)%>">
+  <div id="form_attachment" class="Container w-full mx-auto mt-16">
+    <div class="HeaderContainer mb-8">
+      <h2 class="ContainerHeaderText">Edit Attachment</h2>
+    </div>
+    <div class="space-y-6 mt-8;">
+      <%= render "form", calendar: @calendar, post: @post, perspective: @perspective,  attachment: @attachment %>
+    </div>
+  </div>
+</div> 

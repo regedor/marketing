@@ -1,0 +1,21 @@
+<div id="form_attachment">
+  <h3 class="GenericFormLabel">To add a new attachment from the web, provide an URL.</h3>
+  <%= form_with(model: [calendar, post, perspective, @attachment], local: true, html: { id: 'filename_form' }) do |form| %>
+    <div class="field mb-2">
+      <%= form.text_field :filename, class: "InputField", placeholder: "URL", type: "url" %>
+    </div>
+
+    <div class="Bottom-right">
+      <%= link_to 'Cancel', 'javascript:void(0)', class: "Btn-secondary", id: "cancel_link_filename" %>
+      <%= form.submit "Save", class: "Btn-primary ml-2" %>
+    </div>
+  <% end %>
+</div>
+
+<script>
+  $(document).ready(function() {
+    $('#cancel_link_filename').on('click', function() {
+      $('#filename_form')[0].reset();
+    });
+  });
+</script>

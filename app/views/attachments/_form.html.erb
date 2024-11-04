@@ -1,19 +1,11 @@
-<div id="form_attachment">
-  <h3>Form Attachement</h3>
-  <%= form_with(model: [calendar, post, perspective, @attachment], local: true, html: { multipart: true }) do |form| %>
-    <div class="field">
-      <%= form.label :filename %>
-      <%= form.text_field :filename %>
+<div id="attachment_form">
+  <%= form_with(model: [calendar, post, perspective, attachment], local: true) do |form| %>
+    <div class="mb-4">
+      <%= form.text_field :filename, class: "InputField", placeholder: "New Calendar Name"  %>
     </div>
-
-    <div class="field">
-      <%= form.label :content %>
-      <%= form.file_field :content %>
-    </div>
-
-    <div class="actions">
-      <%= form.submit %>
+    <div class="Bottom-right mb-4">
+      <%= link_to "Cancel", 'javascript:history.back()', class: "Btn-secondary" %>
+      <%= form.submit "Submit", class: "Btn-primary ml-2" %>
     </div>
   <% end %>
 </div>
-

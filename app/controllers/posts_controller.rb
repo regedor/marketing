@@ -2,8 +2,8 @@ class PostsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_calendar
   before_action :check_organization!
-  before_action :set_post, only: [ :show, :edit, :update, :destroy, :approved, :in_analysis, :rejected ]
-  before_action :check_author!, only: [ :edit, :update, :destroy ]
+  before_action :set_post, only: [ :show, :edit, :update, :destroy, :update_design_idea, :download ]
+  before_action :check_author!, only: [ :edit, :update, :destroy, :update_design_idea ]
   before_action :sanitize_categories, only: [ :create, :update ]
 
   # GET /calendars/:calendar_id/posts/:id
@@ -29,8 +29,12 @@ class PostsController < ApplicationController
 
     if @post.save
       redirect_to calendar_post_path(@calendar, @post), notice: "Post was successfully created."
+
+      LogEntry.create_log("Post has been created by #{current_user.email}. [#{post_params}]")
     else
       render :new, status: :unprocessable_entity
+
+      LogEntry.create_log("#{current_user.email} attempted to create post but failed (unprocessable_entity). [#{post_params}]")
     end
   end
 
@@ -42,8 +46,12 @@ class PostsController < ApplicationController
   def update
     if @post.update(post_params)
       redirect_to calendar_post_path(@calendar, @post), notice: "Post was successfully updated."
+
+      LogEntry.create_log("Post has been updated by #{current_user.email}. [#{post_params}]")
     else
       render :edit, status: :unprocessable_entity
+
+      LogEntry.create_log("#{current_user.email} attempted to update post but failed (unprocessable_entity). [#{post_params}]")
     end
   end
 
@@ -51,24 +59,28 @@ class PostsController < ApplicationController
   def destroy
     @post.destroy
     redirect_to calendars_path(), notice: "Post was successfully deleted."
+
+    LogEntry.create_log("Post has been destroyed by #{current_user.email}. [#{post_params}]")
   end
 
-  # PATCH /calendars/:calendar_id/posts/:id/approved
-  def approved
-    @post.update(status: "approved")
-    redirect_to calendar_post_path(@calendar, @post), notice: "Post status updated to Approved."
+  # PATCH /calendars/:calendar_id/posts/:id/update_design_idea
+  def update_design_idea
+    @post.update(perspective_params_design_idea)
+    LogEntry.create_log("Post design idea has been updated to In Analysis by #{current_user.email}. [#{perspective_params_design_idea}]")
   end
 
-  # PATCH /calendars/:calendar_id/posts/:id/in_analysis
-  def in_analysis
-    @post.update(status: "in_analysis")
-    redirect_to calendar_post_path(@calendar, @post), notice: "Post status updated to In Analysis."
-  end
-
-  # PATCH /calendars/:calendar_id/posts/:id/rejected
-  def rejected
-    @post.update(status: "rejected")
-    redirect_to calendar_post_path(@calendar, @post), notice: "Post status updated to Rejected."
+  # GET /calendars/:calendar_id/posts/:id/download
+  def download
+    attachments = @post.perspectives.map { |p| p.attachments }.flatten.select { |a| a.status == "approved" }.reject { |a| a.type_content == "cloud" }
+    zip_filename = "#{@post.id}_attachments.zip"
+    zip_data = Zip::OutputStream.write_buffer do |zip|
+      attachments.each do |attachment|
+        zip.put_next_entry(attachment.filename)
+        zip.print attachment.content
+      end
+    end
+    zip_data.rewind
+    send_data zip_data.read, filename: zip_filename, type: "application/zip", disposition: "attachment"
   end
 
   private
@@ -105,5 +117,9 @@ class PostsController < ApplicationController
       if params[:post][:categories].present?
         params[:post][:categories] = params[:post][:categories].split(",").map(&:strip).reject(&:blank?)
       end
+    end
+
+    def perspective_params_design_idea
+      params.require(:post).permit(:design_idea)
     end
 end
