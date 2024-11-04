@@ -79,7 +79,13 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_23_141020) do
     t.index ["post_id"], name: "index_comments_on_post_id"
     t.index ["user_id"], name: "index_comments_on_user_id"
   end
-
+  
+  create_table "log_entries", force: :cascade do |t|
+    t.string "controller_name"
+    t.text "info"
+    t.datetime "created_at", null: false
+  end
+  
   create_table "organizations", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", null: false
