@@ -6,7 +6,7 @@ class LeadsController < ApplicationController
   before_action :set_lead, only: %i[ show edit update destroy update_stage]
   before_action :check_company_people!, only: [ :create, :update ]
 
-  # GET /leads/1 or /leads/1.json
+  # GET /leads/
   def show
     lead_notes = @lead.leadnotes.map { |ln| { id: ln.id, note: ln.note, type: "lead", author: ln.user.email, to: @lead.id, datetime: ln.created_at } }
     if @pipeline.to_people
@@ -22,16 +22,16 @@ class LeadsController < ApplicationController
     @new_lead_note = @lead.leadnotes.new
   end
 
-  # GET /leads/new
+  # GET /pipeline/:pipeline_id/leads/new
   def new
     @lead = Lead.new
   end
 
-  # GET /leads/1/edit
+  # GET /pipeline/:pipeline_id/leads/edit
   def edit
   end
 
-  # POST /leads or /leads.json
+  # GET /pipeline/:pipeline_id/leads/
   def create
     if @pipeline.to_people
       @lead = @pipeline.leads.new(lead_person_params)
@@ -50,7 +50,7 @@ class LeadsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /leads/1 or /leads/1.json
+  # PATCH /pipeline/:pipeline_id/leads/lead_id
   def update
     if @pipeline.to_people
       b = @lead.update(lead_person_params)
@@ -64,7 +64,7 @@ class LeadsController < ApplicationController
     end
   end
 
-  # DELETE /leads/1 or /leads/1.json
+  # DELETE /pipeline/:pipeline_id/leads/lead_id
   def destroy
     @lead.destroy!
     redirect_to pipelines_path, notice: "Lead was successfully destroyed."

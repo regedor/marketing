@@ -4,10 +4,11 @@ class LeadcontentsController < ApplicationController
   before_action :check_organization!
   before_action :set_leadcontent, only: [ :edit, :update ]
 
+   # PATCH /pipeline/:pipeline_id/leads/lead_id/leadcontent/leadcontent_id/edit
   def edit
   end
 
-  # PATCH/PUT /leads/1 or /leads/1.json
+  # PATCH /pipeline/:pipeline_id/leads/lead_id/leadcontent/leadcontent_id
   def update
     if @leadcontent.update(leadcontent_params)
       redirect_to pipeline_lead_path(@pipeline, @lead), notice: "Stage was successfully updated."

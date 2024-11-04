@@ -4,10 +4,11 @@ class PipelinesController < ApplicationController
   before_action :set_pipeline, only: %i[show edit update destroy ]
   before_action :check_organization!, only: %i[ edit update destroy ]
 
-  # GET /pipelines or /pipelines.json
+  # GET /pipeline
   def index
   end
 
+  # GET /pipeline/:pipeline_id
   def show
     @new_pipeattribute = @pipeline.pipeattributes.new
     @new_stage = @pipeline.stages.new
@@ -19,11 +20,11 @@ class PipelinesController < ApplicationController
     @pipeline = Pipeline.new
   end
 
-  # GET /pipelines/1/edit
+  # GET /pipeline/:pipeline_id/edit
   def edit
   end
 
-  # POST /pipelines or /pipelines.json
+  # POST /pipelines
   def create
     @pipeline = Pipeline.new(pipeline_params)
     @pipeline.organization = current_user.organization
@@ -35,7 +36,7 @@ class PipelinesController < ApplicationController
     end
   end
 
-  # PATCH/PUT /pipelines/1 or /pipelines/1.json
+  # PATCH /pipeline/:pipeline_id
   def update
     if @pipeline.update(pipeline_params)
       redirect_to pipeline_path(@pipeline), notice: "Pipeline was successfully updated."
@@ -44,15 +45,17 @@ class PipelinesController < ApplicationController
     end
   end
 
-  # DELETE /pipelines/1 or /pipelines/1.json
+  # DELETE /pipeline/:pipeline_id
   def destroy
     @pipeline.destroy!
     redirect_to pipelines_path, status: :see_other, notice: "Pipeline was successfully destroyed."
   end
-
+  
+  #GET /pipelines/:pipeline_id/selector
   def selector
   end
 
+  #POST /pipelines/:pipeline_id/select_pipeline
   def select_pipeline
     if params[:pipeline][:pipeline_id].present?
       redirect_to new_pipeline_lead_path(Pipeline.find(params[:pipeline][:pipeline_id]))

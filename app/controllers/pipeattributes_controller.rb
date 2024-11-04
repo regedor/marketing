@@ -4,7 +4,7 @@ class PipeattributesController < ApplicationController
   before_action :check_organization!
   before_action :set_pipeattribute, only: [ :edit, :update, :destroy ]
 
-  # POST /leads or /leads.json
+  # POST /pipeline/:pipeline_id/pipeattribute
   def create
     @pipeattribute = @pipeline.pipeattributes.new(pipeattribute_params)
 
@@ -16,10 +16,11 @@ class PipeattributesController < ApplicationController
     end
   end
 
+  # PATCH /pipeline/:pipeline_id/pipeattribute/:pipeattribute_id/edit
   def edit
   end
 
-  # PATCH/PUT /leads/1 or /leads/1.json
+  # PATCH /pipeline/:pipeline_id/pipeattribute/:pipeattribute_id
   def update
     if @pipeattribute.update(pipeattribute_params)
       redirect_to pipeline_path(@pipeline), notice: "Pipeattribute was successfully updated."
@@ -28,7 +29,7 @@ class PipeattributesController < ApplicationController
     end
   end
 
-  # DELETE /leads/1 or /leads/1.json
+  # DELETE /pipeline/:pipeline_id/pipeattribute/:pipeattribute_id
   def destroy
     @pipeattribute.destroy!
     redirect_to pipeline_path(@pipeline), notice: "Pipeattribute was successfully destroyed."

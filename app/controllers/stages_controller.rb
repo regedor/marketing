@@ -5,7 +5,7 @@ class StagesController < ApplicationController
   before_action :check_organization!
   before_action :set_stage, only: [ :edit, :update, :destroy, :update_index_stage ]
 
-  # POST /leads or /leads.json
+  # POST /pipeline/:pipeline_id/stage
   def create
     if @last_stage
       @last_stage.update(is_final: false)
@@ -21,11 +21,12 @@ class StagesController < ApplicationController
       redirect_back(fallback_location: pipeline_path(@pipeline), alert: "Failed to create Stage: #{error_messages}")
     end
   end
-
+  
+  # PATCH /pipeline/:pipeline_id/stage/:stage_id/edit
   def edit
   end
 
-  # PATCH/PUT /leads/1 or /leads/1.json
+  # PATCH /pipeline/:pipeline_id/stage/:stage_id
   def update
     if @stage.update(stage_params)
       redirect_to pipeline_path(@pipeline), notice: "Stage was successfully updated."
@@ -33,7 +34,8 @@ class StagesController < ApplicationController
       render :edit, status: :unprocessable_entity
     end
   end
-
+  
+  # PATCH /pipeline/:pipeline_id/stage/:stage_id/update_index_stage
   def update_index_stage
     received_index = params[:stage][:index].to_i
     if received_index < @stage.index
@@ -53,7 +55,7 @@ class StagesController < ApplicationController
     end
   end
 
-  # DELETE /leads/1 or /leads/1.json
+  # DELETE /pipeline/:pipeline_id/stage/:stage_id
   def destroy
     if @last_stage == @stage && @sndlast_stage
       @sndlast_stage.update(is_final: true)
