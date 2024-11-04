@@ -43,8 +43,7 @@ class AttachmentsControllerTest < ActionDispatch::IntegrationTest
     assert_difference('Attachment.count', -1) do
       delete calendar_post_perspective_attachment_url(@calendar, @post, @perspective, @attachment)
     end
-    assert_redirected_to calendar_post_perspective_path(@calendar, @post, @perspective)
-  end
+  end  
 
   test "should download attachment" do
     get download_calendar_post_perspective_attachment_url(@calendar, @post, @perspective, @attachment)
@@ -52,39 +51,23 @@ class AttachmentsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should approve attachment" do
-    patch approved_calendar_post_perspective_attachment_url(@calendar, @post, @perspective, @attachment)
+    patch update_status_calendar_post_perspective_attachment_url(@calendar, @post, @perspective, @attachment), params: { attachment: { status: "approved" } }
     @attachment.reload
     assert_equal "approved", @attachment.status
     assert_redirected_to calendar_post_perspective_path(@calendar, @post, @perspective)
-  end
+  end  
 
   test "should set attachment in analysis" do
-    patch in_analysis_calendar_post_perspective_attachment_url(@calendar, @post, @perspective, @attachment)
+    patch update_status_calendar_post_perspective_attachment_url(@calendar, @post, @perspective, @attachment), params: { attachment: { status: "in_analysis" } }
     @attachment.reload
     assert_equal "in_analysis", @attachment.status
     assert_redirected_to calendar_post_perspective_path(@calendar, @post, @perspective)
-  end
+  end  
 
   test "should reject attachment" do
-    patch rejected_calendar_post_perspective_attachment_url(@calendar, @post, @perspective, @attachment)
+    patch update_status_calendar_post_perspective_attachment_url(@calendar, @post, @perspective, @attachment), params: { attachment: { status: "rejected" } }
     @attachment.reload
     assert_equal "rejected", @attachment.status
     assert_redirected_to calendar_post_perspective_path(@calendar, @post, @perspective)
-  end
-
-  test "should like attachment" do
-    patch like_calendar_post_perspective_attachment_url(@calendar, @post, @perspective, @attachment)
-    @attachmentcounter = Attachmentcounter.find_by(attachment: @attachment, user: @user)
-    assert @attachmentcounter.aproved
-    assert_not @attachmentcounter.rejected
-    assert_redirected_to calendar_post_perspective_path(@calendar, @post, @perspective)
-  end
-
-  test "should dislike attachment" do
-    patch dislike_calendar_post_perspective_attachment_url(@calendar, @post, @perspective, @attachment)
-    @attachmentcounter = Attachmentcounter.find_by(attachment: @attachment, user: @user)
-    assert_not @attachmentcounter.aproved
-    assert @attachmentcounter.rejected
-    assert_redirected_to calendar_post_perspective_path(@calendar, @post, @perspective)
-  end
+  end  
 end

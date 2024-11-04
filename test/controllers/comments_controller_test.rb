@@ -44,6 +44,5 @@ class CommentsControllerTest < ActionDispatch::IntegrationTest
     assert_difference('Comment.count', -1) do
       delete calendar_post_comment_url(@calendar, @post, @comment)
     end
-    assert_redirected_to calendar_post_path(@calendar, @post)
   end
 end

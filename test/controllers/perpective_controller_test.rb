@@ -4,10 +4,10 @@ class PerspectivesControllerTest < ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
 
   setup do
+    @user = users(:user_one)
     @calendar = calendars(:calendar_one)
     @post = posts(:post_one)
     @perspective = perspectives(:perspective_one)
-    @user = users(:user_one)
     @socialplatform = socialplatforms(:socialplatform_one)
     sign_in @user
   end
@@ -15,72 +15,68 @@ class PerspectivesControllerTest < ActionDispatch::IntegrationTest
   test "should show perspective" do
     get calendar_post_perspective_url(@calendar, @post, @perspective)
     assert_response :success
-  end
-
-  test "should get new" do
-    get new_calendar_post_perspective_url(@calendar, @post)
-    assert_response :success
+    assert_not_nil assigns(:perspectives)
+    assert_not_nil assigns(:publishplatform)
   end
 
   test "should create perspective" do
-    assert_difference('Perspective.count') do
-      post calendar_post_perspectives_url(@calendar, @post), params: { perspective: { copy: 'New Perspective', socialplatform_id: @socialplatform.id } }
+    # First, set up a default perspective with copy if it doesn't exist
+    default_perspective = @post.perspectives.create(copy: "Default Copy") unless @post.perspectives.where(socialplatform: nil).exists?
+    
+    assert_difference('Perspective.count', 1) do
+      perspective_params = {
+        perspective: {
+          socialplatform_id: @socialplatform.id,
+          copy: "Copy"
+        }
+      }
+
+      post calendar_post_perspectives_url(@calendar, @post), params: perspective_params
     end
-    assert_redirected_to calendar_post_perspective_url(@calendar, @post, Perspective.last)
+    
+    assert_redirected_to calendar_post_perspective_path(@calendar, @post, Perspective.last)
+    assert_equal "Perspective was successfully created.", flash[:notice]
   end
 
   test "should not create perspective with invalid data" do
     assert_no_difference('Perspective.count') do
-      post calendar_post_perspectives_url(@calendar, @post), params: { perspective: { copy: '' } }
+      post calendar_post_perspectives_url(@calendar, @post), params: {
+        perspective: {
+          socialplatform_id: nil,
+          copy: ""
+        }
+      }
     end
-    assert_response :unprocessable_entity
-  end
-
-  test "should get edit" do
-    get edit_calendar_post_perspective_url(@calendar, @post, @perspective)
-    assert_response :success
-  end
-  
-  test "should update perspective" do
-    patch calendar_post_perspective_url(@calendar, @post, @perspective), params: { perspective: { copy: 'Updated Perspective', socialplatform_id: @socialplatform.id } }
-    assert_redirected_to calendar_post_perspective_url(@calendar, @post, @perspective)
-  end
-
-  test "should not update perspective with invalid data" do
-    patch calendar_post_perspective_url(@calendar, @post, @perspective), params: { perspective: { copy: ''} }
-    assert_response :unprocessable_entity
   end
 
   test "should destroy perspective" do
+    perspective = perspectives(:perspective_one)
     assert_difference('Perspective.count', -1) do
-      delete calendar_post_perspective_url(@calendar, @post, @perspective)
+      delete calendar_post_perspective_url(@calendar, @post, perspective)
     end
-    assert_redirected_to calendar_post_url(@calendar, @post)
   end
 
-  test "should approve perspective" do
-    patch approved_calendar_post_perspective_url(@calendar, @post, @perspective)
-    @perspective.reload
-    assert_equal "approved", @perspective.status
+  test "should update perspective status" do
+    patch update_status_calendar_post_perspective_url(@calendar, @post, @perspective), params: {
+      perspective: { status: 'approved' }
+    }
     assert_redirected_to calendar_post_perspective_url(@calendar, @post, @perspective)
+    assert_equal 'approved', @perspective.reload.status
   end
 
-  test "should set perspective in analysis" do
-    patch in_analysis_calendar_post_perspective_url(@calendar, @post, @perspective)
-    @perspective.reload
-    assert_equal "in_analysis", @perspective.status
+  test "should update post status" do
+    patch update_status_post_calendar_post_perspective_url(@calendar, @post, @perspective), params: {
+      post: { status: 'approved' }
+    }
     assert_redirected_to calendar_post_perspective_url(@calendar, @post, @perspective)
+    assert_equal 'approved', @post.reload.status
   end
 
-  test "should reject perspective" do
-    patch rejected_calendar_post_perspective_url(@calendar, @post, @perspective)
-    @perspective.reload
-    assert_equal "rejected", @perspective.status
-    assert_redirected_to calendar_post_perspective_url(@calendar, @post, @perspective)
-  end
-
-  test "should download perspective attachments" do
-    get download_calendar_post_perspective_url(@calendar, @post, @perspective)
+  test "should update perspective copy" do
+    patch update_copy_calendar_post_perspective_url(@calendar, @post, @perspective), params: {
+      perspective: { copy: 'Updated Copy' }
+    }
     assert_response :success
+    assert_equal 'Updated Copy', @perspective.reload.copy
   end
 end

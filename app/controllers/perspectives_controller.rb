@@ -27,8 +27,7 @@ class PerspectivesController < ApplicationController
 
       LogEntry.create_log("Perspective has been created by #{current_user.email}. [#{perspective_params}]")
     else
-      @comment = @post.comments.new
-      redirect_to calendar_post_perspective_path(@calendar, @post), alert: "Error creating Perspective."
+      redirect_to calendar_post_path(@calendar, @post), alert: "Error creating Perspective."
       LogEntry.create_log("#{current_user.email} attempted to create perspective but failed (unprocessable_entity). [#{perspective_params}]")
     end
   end

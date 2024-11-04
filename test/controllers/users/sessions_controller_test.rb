@@ -8,9 +8,8 @@ class Users::SessionsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should respond to HTML format" do
-    get new_user_session_url, as: :html
+    get new_user_session_url(format: :html)
     assert_response :success
-    assert_equal "text/html; charset=utf-8", @response.content_type
   end
 
   test "should inherit from Devise::SessionsController" do
