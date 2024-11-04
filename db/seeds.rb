@@ -257,7 +257,7 @@ if Rails.env.development?
     organization = Organization.find_or_create_by!(name: "Org #{o}")
 
     all_users_from_organization = create_users(o, organization)
-    create_calendar(o, organization, all_users_from_organization)
+    #create_calendar(o, organization, all_users_from_organization)
     people_from_organization = create_people(o, organization, all_users_from_organization)
     companies_from_organization = create_company(organization, all_users_from_organization)
     create_person_companies(people_from_organization, companies_from_organization)

@@ -7,6 +7,12 @@ class CompanylinksController < ApplicationController
   # POST /companies/:company_id/companylinks/
   def create
     @companylink = @company.companylinks.new(companylinks_params)
+
+    if !url?(params[:companylink][:link])
+      redirect_to company_path(@company),  alert: "Not a valid URL"
+      return
+    end
+
     begin
       if @companylink.save
         redirect_to company_path(@company), notice: "Entry was successfully created."
@@ -45,4 +51,12 @@ class CompanylinksController < ApplicationController
     def companylinks_params
       params.require(:companylink).permit(:name, :link)
     end
+
+    def url?(string)
+      uri = URI.parse(string)
+      uri.is_a?(URI::HTTP) || uri.is_a?(URI::HTTPS)
+    rescue URI::InvalidURIError
+      false
+    end
+
 end

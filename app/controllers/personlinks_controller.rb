@@ -7,6 +7,12 @@ class PersonlinksController < ApplicationController
   # POST /people/:person_id/personlinks/:id/create_content
   def create
     @personlink = @person.personlinks.new(personlinks_params)
+    
+    if !url?(params[:personlink][:link])
+      redirect_to person_path(@person),  alert: "Not a valid URL"
+      return
+    end
+
     begin
       if @personlink.save
         redirect_to person_path(@person), notice: "Entry was successfully updated."
@@ -45,4 +51,12 @@ class PersonlinksController < ApplicationController
     def personlinks_params
       params.require(:personlink).permit(:name, :link)
     end
+
+    def url?(string)
+      uri = URI.parse(string)
+      uri.is_a?(URI::HTTP) || uri.is_a?(URI::HTTPS)
+    rescue URI::InvalidURIError
+      false
+    end
+
 end

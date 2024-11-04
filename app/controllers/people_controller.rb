@@ -31,7 +31,13 @@ class PeopleController < ApplicationController
     @person = Person.new(person_params)
     @person.organization = current_user.organization
     @person.user = current_user
-
+    
+    if !url?(params[:person][:linkedin_link])
+      flash[:alert] = "Not a valid URL"
+      render :new, status: :unprocessable_entity
+      return
+    end
+    
     if @person.save
       redirect_to person_path(@person), notice: "Person was successfully created."
     else
@@ -45,6 +51,12 @@ class PeopleController < ApplicationController
 
   # PATCH/people/:id
   def update
+    
+    if !url?(params[:person][:linkedin_link])
+      redirect_to edit_person_path(@person),  alert: "Not a valid URL"
+      return
+    end
+
     if @person.update(person_params)
       redirect_to person_path(@person), notice: "Person was successfully updated."
     else
@@ -83,5 +95,12 @@ class PeopleController < ApplicationController
 
     def check_leader!
       redirect_to request.referrer || root_path, alert: "Access Denied" unless @person.user == current_user || (@person.is_private == false && current_user.isLeader)
+    end
+
+    def url?(string)
+      uri = URI.parse(string)
+      uri.is_a?(URI::HTTP) || uri.is_a?(URI::HTTPS)
+    rescue URI::InvalidURIError
+      false
     end
 end
