@@ -1,9 +1,7 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+publishplatform_one:
+  post: post_one
+  socialplatform: socialplatform_one
 
-one:
-  post_id: 1
-  social_platform: 1
-
-two:
-  post_id: 1
-  social_platform: 1
+publishplatform_two:
+  post: post_two
+  socialplatform: socialplatform_two

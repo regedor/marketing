@@ -1,13 +1,13 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
+perspective_one:
   copy: MyText
-  post: one
-  socialplatform: one
-  status: MyString
+  post: post_one
+  socialplatform: socialplatform_one
+  status: in_analysis
 
-two:
+perspective_two:
   copy: MyText
-  post: two
-  socialplatform: two
-  status: MyString
+  post: post_two
+  socialplatform: socialplatform_two
+  status: in_analysis
