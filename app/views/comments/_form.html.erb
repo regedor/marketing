@@ -1,0 +1,20 @@
+<div id="form_comment">
+  <%= form_with(model: [calendar, post, @comment], local: true) do |form| %>
+    <% if @comment.errors.any? %>
+      <div class="text-red-500 mb-1">
+        <ol class="list-decimal list-inside">
+          <% @comment.errors.each do |error| %>
+            <li><%= error.full_message %></li>
+          <% end %>
+        </ol>
+      </div>
+    <% end %>
+    <div class="mb-4">
+      <%= form.text_area :content, rows: 3, class:"TextArea", placeholder: "Write a new comment..." %>
+    </div>
+    <div class="Bottom-right mb-4">
+      <%= button_tag "Cancel", type: "reset", class: "Btn-secondary" %> 
+      <%= form.submit "Submit", class:"Btn-primary ml-2" %>
+    </div>
+  <% end %>
+</div>

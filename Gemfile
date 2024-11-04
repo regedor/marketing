@@ -1,5 +1,6 @@
 source "https://rubygems.org"
 
+ruby "3.3.5"
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 7.2.1"
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
@@ -18,6 +19,8 @@ gem "stimulus-rails"
 gem "jbuilder"
 # Use Redis adapter to run Action Cable in production
 # gem "redis", ">= 4.0.1"
+gem "bootstrap", "5.3.3"
+gem "simple_calendar", "~> 2.0"
 
 # Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
 # gem "kredis"
@@ -48,14 +51,25 @@ end
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
+  gem "letter_opener"
 end
 
 group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
   gem "selenium-webdriver"
+  gem "rails-controller-testing"
+  gem "minitest"
 end
 
-gem 'devise'
-gem 'jwt'
-gem 'dotenv-rails', groups: [:development, :test] # To manage environment variables
+gem "devise"
+gem "jwt"
+gem "dotenv-rails", groups: [ :development, :test ]
+gem "cancancan", "~> 3.0"
+gem "activeadmin"
+gem "sassc-rails"
+gem "rubyzip"
+gem "omniauth-google-oauth2"
+gem "omniauth-rails_csrf_protection"
+gem "tailwindcss-rails"
+gem "foreman"

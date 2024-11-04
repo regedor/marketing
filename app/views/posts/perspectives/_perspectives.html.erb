@@ -1,0 +1,33 @@
+<div id="perspectives" class="mb-4 grid grid-cols-1 md:grid-cols-2 gap-2 text-gray-900 w-full"> 
+  <div class="mb-4 mt-2 space-x-4">
+    <%= form_with url: update_status_post_calendar_post_perspective_path(@calendar, post, perspective), method: :patch, local: true, id: "status-form-#{dom_id(post)}" do %>
+      <label class="font-medium text-sm">Post Status:</label>
+      <select name="post[status]" id="selector_<%= dom_id(post) %>" class="InputField text-sm" onchange="this.form.submit()">
+        <option value="approved" class="text-green-600" <% if post.status == "approved" %> selected <% end %>>Approved</option>
+        <option value="in_analysis" class="text-yellow-600" <% if post.status == "in_analysis" %> selected <% end %>>In Analysis</option>
+        <option value="rejected" class="text-red-600" <% if post.status == "rejected" %> selected <% end %>>Rejected</option>
+      </select>
+    <% end %>
+  </div>
+  <div class="mb-4 mt-2 space-x-4">
+    <%= form_with url: update_status_calendar_post_perspective_path(@calendar, @post, perspective), method: :patch, local: true, id: "status-form-#{dom_id(perspective)}" do %>
+      <label class="font-medium text-sm">Perspective Status:</label>
+      <select name="perspective[status]" id="selector_<%= dom_id(perspective) %>" class="InputField text-sm" onchange="this.form.submit()">
+        <option value="approved" class="text-green-600" <% if perspective.status == "approved" %> selected <% end %>>Approved</option>
+        <option value="in_analysis" class="text-yellow-600" <% if perspective.status == "in_analysis" %> selected <% end %>>In Analysis</option>
+        <option value="rejected" class="text-red-600" <% if perspective.status == "rejected" %> selected <% end %>>Rejected</option>
+      </select>
+    <% end %>
+  </div>
+</div>
+
+
+<script>
+  function navigateToPerspective(selectElement) {
+    var selectedUrl = selectElement.value;
+    
+    if (selectedUrl) {
+      window.location.href = selectedUrl;
+    }
+  }
+</script>

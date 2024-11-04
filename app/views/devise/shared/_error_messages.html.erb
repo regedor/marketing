@@ -1,0 +1,9 @@
+<% if resource.errors.any? %>
+  <div class="text-red-500 mb-1">
+    <ol class="list-decimal list-inside">
+      <% resource.errors.full_messages.each do |error| %>
+        <li><%= error %></li>
+      <% end %>
+    </ol>
+  </div>
+<% end %>

@@ -1,0 +1,21 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+post_one:
+  title: MyString
+  user: user_one
+  calendar: calendar_one
+  status: draft
+  publish_date: 2024-10-16 20:57:39.921952000 +0000
+  design_idea: MyString
+  categories:
+    - category_one
+
+post_two:
+  title: MyString
+  user: user_two
+  calendar: calendar_two
+  status: draft
+  publish_date: 2024-10-16 20:57:39.921952000 +0000
+  design_idea: MyString
+  categories:
+    - category_two

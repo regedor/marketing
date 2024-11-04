@@ -12,4 +12,20 @@
  *
  *= require_tree .
  *= require_self
+ *= stub "active_admin"
+ *= require login
+ *= require posts
+ *= require home
  */
+
+ select:has(option[value="approved"]:checked) {
+    color: #2fa458;
+  }
+  
+  select:has(option[value="in_analysis"]:checked) {
+    color: #ca8a04;
+  }
+  
+  select:has(option[value="rejected"]:checked) {
+    color: #dd2626;
+  }

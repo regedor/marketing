@@ -1,0 +1,7 @@
+publishplatform_one:
+  post: post_one
+  socialplatform: socialplatform_one
+
+publishplatform_two:
+  post: post_two
+  socialplatform: socialplatform_two

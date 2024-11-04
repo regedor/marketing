@@ -1,0 +1,29 @@
+<div class="LoginSection">
+  <div class="Container max-w-md w-full">
+    <div class="HeaderContainer">
+      <h2 class="ContainerHeaderText">Change your password</h2>
+    </div>
+
+    <div class="LoginFormContainer">
+      <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |f| %>
+        <%= render "devise/shared/error_messages", resource: resource %>
+        <%= f.hidden_field :reset_password_token %>
+
+        <div class="field">
+          <%= f.label :password, "New password " + (@minimum_password_length ? "(" + @minimum_password_length.to_s + " characters minimum)": ""), class: "LoginFormLabel" %>
+          <%= f.password_field :password, autofocus: true, autocomplete: "new-password", class: "InputField"  %>
+        </div>
+
+        <div class="field mt-4">
+          <%= f.label :password_confirmation, "Confirm new password", class: "LoginFormLabel"%>
+          <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "InputField"  %>
+        </div>
+
+        <div class="actions mt-5 mb-5">
+          <%= f.submit "Change my password", class: "Btn-primary w-full" %>
+        </div>
+        <p class="SignupText">Wellbeing Warrior</p>
+      <% end %>
+    </div>
+  </div>
+</div>

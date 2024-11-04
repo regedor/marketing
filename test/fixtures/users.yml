@@ -1,0 +1,11 @@
+user_one:
+  email: user@example.com
+  encrypted_password: <%= Devise::Encryptor.digest(User, 'password') %>
+  organization: organization_one
+  isLeader: false
+
+user_two:
+  email: leader@example.com
+  encrypted_password: <%= Devise::Encryptor.digest(User, 'password') %>
+  organization: organization_one
+  isLeader: true

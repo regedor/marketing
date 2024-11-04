@@ -1,0 +1,11 @@
+<div id="new_post">
+  <% content_for :title, "New post" %>
+  <div id="form_post" class="Container w-full mx-auto mt-16">
+    <div class="HeaderContainer mb-8">
+      <h2 class="ContainerHeaderText">New Post</h2>
+    </div>
+    <div class="space-y-6 mt-8;">
+      <%= render "form", post: @post, calendar: @calendar, is_new: true %>
+    </div>
+  </div>
+</div>

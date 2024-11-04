@@ -1,0 +1,45 @@
+<div>
+  <%= form_with(model: [calendar, post], local: true) do |form| %>
+    <% if post.errors.any? %>
+      <div class="text-red-500 mb-1">
+        <ol class="list-decimal list-inside">
+          <% post.errors.each do |error| %>
+            <li><%= error.full_message %></li>
+          <% end %>
+        </ol>
+      </div>
+    <% end %>
+
+    <div class="mb-4">
+      <%= form.label :publish_date, "Publish Date & Time", class: "GenericFormLabel" %>
+      <%= form.datetime_field :publish_date, value: Time.current.strftime('%Y-%m-%d %H:%M'), class: "InputField" %>
+      <small class="SmallText">Select a date and time for the post.</small>
+    </div>
+
+    <div class="mb-4">
+      <%= form.label :title, "Title", class: "GenericFormLabel" %>
+      <%= form.text_field :title, class: "InputField", placeholder: "Title" %>
+    </div>
+    
+    <div class="mb-4">
+      <%= form.label :design_idea, "Design Idea", class: "GenericFormLabel" %>
+      <%= form.text_area :design_idea, class: "TextArea h-40", placeholder: "Describe everything about this post here" %>
+    </div>
+
+    <% if is_new %>
+      <%= form.fields_for :perspectives do |perspective_form| %>
+        <%= render partial: "posts/perspectives/formperspective", locals: { form: perspective_form } %>
+      <% end %>
+    <% end %>
+
+    <div class="mb-4">
+      <%= form.label :categories, "Categories", class: "GenericFormLabel" %>
+      <%= form.text_area :categories, class: "TextArea h-20", placeholder: "Enter categories separated by commas...", value: post.categories.join(", ") %>
+    </div>
+
+    <div class="Bottom-right">
+      <%= link_to 'Cancel', 'javascript:history.back()', class: "Btn-secondary" %>
+      <%= form.submit "Save", class: "Btn-primary ml-2" %>
+    </div>  
+  <% end %>
+</div>

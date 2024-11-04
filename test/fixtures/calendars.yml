@@ -1,0 +1,9 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+calendar_one:
+  organization: organization_one
+  name: MyString
+
+calendar_two:
+  organization: organization_two
+  name: MyString

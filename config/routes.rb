@@ -1,14 +1,53 @@
 Rails.application.routes.draw do
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  resources :calendars, only: [ :index, :create, :edit, :update, :destroy ] do
+    collection do
+      get :selector
+      post :select_calendar
+    end
+    resources :posts, only: [ :show, :new, :create, :edit, :update, :destroy ] do
+      member do
+        get :download
+        patch :update_design_idea
+      end
 
-  # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
-  # Can be used by load balancers and uptime monitors to verify that the app is live.
+      resources :perspectives, only: [ :show, :create, :destroy ] do
+        member do
+          patch :update_status
+          patch :update_status_post
+          patch :update_copy
+        end
+
+        resources :attachments, only: [ :show, :create, :edit, :update, :destroy ] do
+          member do
+            get :download
+            patch :like
+            patch :dislike
+            patch :update_status
+          end
+        end
+      end
+
+      resources :comments, only: [ :create, :edit, :update, :destroy ]
+      resources :publishplatforms, only: [ :create, :destroy ]
+    end
+  end
+
+  devise_for :admin_users, ActiveAdmin::Devise.config
+  ActiveAdmin.routes(self)
+
+  devise_for :users, controllers: {
+    sessions: "users/sessions",
+    omniauth_callbacks: "users/omniauth_callbacks"
+  }
+
+  root "home#index"
+  get "dashboard", to: "dashboard#index"
+
+  namespace :dashboard do
+    resources :users, only: [ :new, :create, :edit, :update, :destroy ]
+  end
+
   get "up" => "rails/health#show", as: :rails_health_check
-
-  # Render dynamic PWA files from app/views/pwa/*
   get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
   get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
-
-  # Defines the root path route ("/")
-  # root "posts#index"
 end

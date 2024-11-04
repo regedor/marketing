@@ -1,0 +1,14 @@
+<div id="edit_user">
+  <% content_for :title, "Edit user" %>
+
+  <div class="Container max-w-md w-full mx-auto mt-16">
+    <div class="HeaderContainer mb-8">
+      <h2 class="ContainerHeaderText">Edit User</h2>
+    </div>
+    <div class="space-y-6 mt-8;">
+    <%= render "form", user: @user %>
+    </div>
+
+  </div>
+  <br>
+</div>

@@ -1,0 +1,24 @@
+<%= form_with(model: [calendar, post, perspective], local: true) do |form| %>
+  <% if perspective.errors.any? %>
+    <div class="text-red-500 mb-1">
+      <ol class="list-decimal list-inside">
+        <% perspective.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ol>
+    </div>
+  <% end %>
+  <div class="mb-4">
+    <%= form.label :copy, "Copy", class: "GenericFormLabel" %>
+    <%= form.text_area :copy, class: "TextArea h-40" %>
+  </div>
+  <div class="mb-4">
+    <%= form.label :socialplatform_id, "Social Platform", class: "GenericFormLabel" %>
+    <%= form.select :socialplatform_id, options_for_select(Socialplatform.all.map { |sp| [sp.name, sp.id] }), { prompt: ' ' }, class: "InputField" %>
+  </div>
+  <div class="Bottom-right">
+    <%= link_to 'Cancel', 'javascript:history.back()', class: "Btn-secondary" %>
+    <%= form.submit "Save", class: "Btn-primary ml-2" %>
+  </div>
+<% end %>
+

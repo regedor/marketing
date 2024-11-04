@@ -1,0 +1,20 @@
+<div id="calendar_selector" class="LoginSection">
+  <div class="Container w-full max-w-3xl">
+    
+    <div class="HeaderContainer">
+      <h2 class="ContainerHeaderText">Select a calendar</h2>
+    </div>
+  
+  
+    <%= form_with model: Calendar.new, url: select_calendar_calendars_path, method: :post do |form| %>
+      <div class="mb-4">
+        <%= form.select :calendar_id, options_for_select(@calendars.map { |calendar| [calendar[:name], calendar[:id]] }), { prompt: 'Calendar' }, class: "InputField" %>
+      </div>
+      <div class="Bottom-right">
+        <%= link_to 'Cancel', 'javascript:history.back()', class: "Btn-secondary ml-2" %>
+        <%= form.submit "Select", class: "Btn-primary ml-2" %>
+      </div>
+    <% end %>
+
+  </div>
+</div>

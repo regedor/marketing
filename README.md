@@ -22,17 +22,22 @@ bundle install
 3. Create a .env file in the root directory and add the following environment variables (change as your needs):
 ```bash
 SUPER_ADMIN_EMAIL=admin@example.com
+SUPER_ADMIN_PASSWORD=your_super_admin_password
 
 DATABASE_USERNAME=your_database_username
 DATABASE_PASSWORD=your_database_password
 DATABASE_HOSTNAME=localhost
 DATABASE_PORT=5432
+
+GOOGLE_OAUTH_CLIENT_ID='your_client_id'
+GOOGLE_OAUTH_CLIENT_SECRET='your_client_secret'
 ```
 
 4. Create the database
 ```bash
 rails db:create
 rails db:migrate
+rails db:seed
 ```
 
 # Usage

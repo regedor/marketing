@@ -1,0 +1,15 @@
+# test/fixtures/attachments.yml
+
+attachment_one:
+  perspective: perspective_one 
+  filename: test-default-file-one.txt
+  content: "Sample content for attachment one" 
+  status: active
+  type_content: image/jpeg
+
+attachment_two:
+  perspective: perspective_two
+  filename: test-default-file-two.txt
+  content: "Sample content for attachment two" 
+  status: inactive
+  type_content: image/jpeg
