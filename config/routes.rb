@@ -5,7 +5,9 @@ Rails.application.routes.draw do
       post :select_pipeline
     end
     resources :pipeattributes, only: [ :create, :edit, :update, :destroy ]
-    resources :stages, only: [ :create, :edit, :update, :destroy ]
+    resources :stages, only: [ :create, :edit, :update, :destroy ] do
+      patch :update_index_stage
+    end
     resources :leads, only: [ :show, :new, :create, :edit, :update, :destroy, :index ] do
       member do
         patch :update_stage

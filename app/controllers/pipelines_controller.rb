@@ -11,6 +11,7 @@ class PipelinesController < ApplicationController
   def show
     @new_pipeattribute = @pipeline.pipeattributes.new
     @new_stage = @pipeline.stages.new
+    @indexs = @pipeline.stages.order(:index).map { |s| s.index }
   end
 
   # GET /pipelines/new

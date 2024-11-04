@@ -58,5 +58,4 @@ class CompanylinksController < ApplicationController
     rescue URI::InvalidURIError
       false
     end
-
 end

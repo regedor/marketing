@@ -7,7 +7,7 @@ class PersonlinksController < ApplicationController
   # POST /people/:person_id/personlinks/:id/create_content
   def create
     @personlink = @person.personlinks.new(personlinks_params)
-    
+
     if !url?(params[:personlink][:link])
       redirect_to person_path(@person),  alert: "Not a valid URL"
       return
@@ -58,5 +58,4 @@ class PersonlinksController < ApplicationController
     rescue URI::InvalidURIError
       false
     end
-
 end

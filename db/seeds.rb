@@ -215,10 +215,10 @@ def create_pipelines(organization, people_from_organization, companies_from_orga
     to_people = pipe % 2 == 0
     pipeline = Pipeline.create!(name: $pipelines[pipe-1], organization: organization, to_people: to_people)
     stages = [
-      Stage.create!(name: "First", is_final: false, pipeline: pipeline, index: 0),
-      Stage.create!(name: "Second", is_final: false, pipeline: pipeline, index: 1),
-      Stage.create!(name: "Third", is_final: false, pipeline: pipeline, index: 2),
-      Stage.create!(name: "Fourth", is_final: true, pipeline: pipeline, index: 3)
+      Stage.create!(name: "First", is_final: false, pipeline: pipeline, index: 1),
+      Stage.create!(name: "Second", is_final: false, pipeline: pipeline, index: 2),
+      Stage.create!(name: "Third", is_final: false, pipeline: pipeline, index: 3),
+      Stage.create!(name: "Fourth", is_final: true, pipeline: pipeline, index: 4)
     ]
     pipeattributes = [
       Pipeattribute.create!(name: "First", pipeline: pipeline),
@@ -257,7 +257,7 @@ if Rails.env.development?
     organization = Organization.find_or_create_by!(name: "Org #{o}")
 
     all_users_from_organization = create_users(o, organization)
-    #create_calendar(o, organization, all_users_from_organization)
+    create_calendar(o, organization, all_users_from_organization)
     people_from_organization = create_people(o, organization, all_users_from_organization)
     companies_from_organization = create_company(organization, all_users_from_organization)
     create_person_companies(people_from_organization, companies_from_organization)

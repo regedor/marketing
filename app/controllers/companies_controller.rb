@@ -21,7 +21,7 @@ class CompaniesController < ApplicationController
     @new_company_note = @company.companynotes.new
     @new_person_company = @company.personcompanies.new
     @new_company_link = @company.companylinks.new
-    #@people = Person.where(organization: current_user.organization).reject { |p| workers.include?(p) }.reject{ |p| p.is_private && p.user != current_user }
+    # @people = Person.where(organization: current_user.organization).reject { |p| workers.include?(p) }.reject{ |p| p.is_private && p.user != current_user }
     @people = Person.where(organization: current_user.organization)
                 .where.not(id: workers.pluck(:id))
                 .where("is_private = ? OR user_id = ?", false, current_user.id)
@@ -30,7 +30,7 @@ class CompaniesController < ApplicationController
   # POST /company
   def create
     @company = Company.new(company_params)
-    
+
     if !url?(params[:company][:url_site]) || !url?(params[:company][:linkedin_link])
       flash[:alert] = "Not a valid URL"
       render :new, status: :unprocessable_entity
@@ -39,7 +39,7 @@ class CompaniesController < ApplicationController
 
     @company.organization = current_user.organization
     update_min_max_employers
-    
+
     if @company.save
       redirect_to company_path(@company), notice: "Company was successfully created."
     else
@@ -53,14 +53,13 @@ class CompaniesController < ApplicationController
 
   # PATCH/company/:id
   def update
-    
     if !url?(params[:company][:url_site]) || !url?(params[:company][:linkedin_link])
       redirect_to edit_company_path(@company),  alert: "Not a valid URL"
       return
     end
 
     update_min_max_employers
-    
+
     if @company.update(company_params)
       redirect_to company_path(@company), notice: "Company was successfully updated."
     else
@@ -106,5 +105,4 @@ class CompaniesController < ApplicationController
     rescue URI::InvalidURIError
       false
     end
-
 end
