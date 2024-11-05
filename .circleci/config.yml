@@ -3,11 +3,11 @@ version: 2.1
 executors:
   rails-executor:
     docker:
-      - image: circleci/ruby:3.3.5-slim  # Using a similar Ruby version as in your Dockerfile
+      - image: cimg/ruby:3.3.5
         environment:
           RAILS_ENV: test
           BUNDLE_PATH: /usr/local/bundle
-      - image: circleci/postgres:13.2-alpine
+      - image: cimg/postgres:17.0.0
         environment:
           POSTGRES_USER: postgres
           POSTGRES_DB: pi_ww_test
