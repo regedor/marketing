@@ -10,8 +10,8 @@ executors:
       - image: circleci/postgres:13.2-alpine
         environment:
           POSTGRES_USER: postgres
-          POSTGRES_DB: my_test_db  # Replace with your test database name
-          POSTGRES_PASSWORD: ''
+          POSTGRES_DB: pi_ww_test
+          POSTGRES_PASSWORD: 'eipugneqriopgn34--1'
 
     working_directory: ~/rails
 
@@ -31,6 +31,12 @@ jobs:
 
   run-tests:
     executor: rails-executor
+    environment:
+      DATABASE_USERNAME: "postgres"
+      DATABASE_PASSWORD: "eipugneqriopgn34--1"
+      DATABASE_HOSTNAME: "localhost"
+      DATABASE_PORT: 5432
+      DATABASE_URL: "postgresql://postgres@localhost/pi_ww_test" 
     steps:
       - checkout
       - run:
