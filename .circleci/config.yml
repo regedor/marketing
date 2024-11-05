@@ -1,10 +1,13 @@
 jobs:
-  setup-dependencies:
+  run-tests:
     docker:
       - image: cimg/ruby:3.3.5
       - image: cimg/postgres:17.0
     working_directory: ~/rails
     environment:
+      DATABASE_USERNAME: "postgres"
+      DATABASE_PASSWORD: "eipugneqriopgn34--1"
+      DATABASE_URL: "postgresql://postgres@localhost/pi_ww_test"
       BUNDLE_PATH: ~/vendor/bundle
       GEM_HOME: ~/vendor/bundle
 
@@ -20,38 +23,15 @@ jobs:
           command: |
             bundle config set path '~/vendor/bundle' && \
             bundle install --jobs=4 --retry=3 --verbose
-      - save_cache:
-          key: bundle-{{ checksum "Gemfile.lock" }}
-          paths:
-            - vendor/bundle
-
-  run-tests:
-    docker:
-      - image: cimg/ruby:3.3.5
-      - image: cimg/postgres:17.0
-    working_directory: ~/rails
-    environment:
-      DATABASE_USERNAME: "postgres"
-      DATABASE_PASSWORD: "eipugneqriopgn34--1"
-      DATABASE_URL: "postgresql://postgres@localhost/pi_ww_test"
-      BUNDLE_PATH: ~/vendor/bundle
-      GEM_HOME: ~/vendor/bundle
-
-    steps:
-      - checkout
-      - restore_cache:
-          key: bundle-{{ checksum "Gemfile.lock" }}
       - run:
           name: Database setup
           command: bundle exec rails db:create db:schema:load
       - run:
           name: Run tests
           command: bundle exec rails test
+
 workflows:
   version: 2
   test:
     jobs:
-      - setup-dependencies
-      - run-tests:
-          requires:
-            - setup-dependencies
+      - run-tests
