@@ -6,7 +6,6 @@ executors:
       - image: cimg/ruby:3.3.5
         environment:
           RAILS_ENV: test
-          BUNDLE_PATH: $HOME/.bundle
       - image: cimg/postgres:17.0
         environment:
           POSTGRES_USER: postgres
@@ -19,6 +18,7 @@ jobs:
   setup-dependencies:
     executor: rails-executor
     environment:
+      BUNDLE_PATH: $HOME/.bundle
       GEM_HOME: "$HOME/.gem"
     steps:
       - checkout
@@ -47,13 +47,15 @@ jobs:
       DATABASE_PASSWORD: "eipugneqriopgn34--1"
       DATABASE_HOSTNAME: "localhost"
       DATABASE_PORT: 5432
-      DATABASE_URL: "postgresql://postgres@localhost/pi_ww_test" 
+      DATABASE_URL: "postgresql://postgres@localhost/pi_ww_test"
+      BUNDLE_PATH: $HOME/.bundle
+      GEM_HOME: "$HOME/.gem"
     steps:
       - checkout
       - run:
           name: Database setup
           command: |
-            bin/rails db:create db:schema:load RAILS_ENV=test
+            bin/rails db:create db:schema:load
       - run:
           name: Run tests
           command: bundle exec rails test
