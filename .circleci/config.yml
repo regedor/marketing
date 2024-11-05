@@ -1,9 +1,23 @@
+version: 2.1
+
 jobs:
   setup-dependencies:
-    executor: rails-executor
+    docker:
+      - image: cimg/ruby:3.3.5
+        environment:
+          RAILS_ENV: test
+      - image: cimg/postgres:17.0
+        environment:
+          POSTGRES_USER: postgres
+          POSTGRES_DB: pi_ww_test
+          POSTGRES_PASSWORD: 'eipugneqriopgn34--1'
+
+    working_directory: ~/rails
+
     environment:
       BUNDLE_PATH: $HOME/vendor/bundle
       GEM_HOME: "$HOME/vendor/bundle"
+
     steps:
       - checkout
       - run:
@@ -22,7 +36,18 @@ jobs:
             - vendor/bundle
 
   run-tests:
-    executor: rails-executor
+    docker:
+      - image: cimg/ruby:3.3.5
+        environment:
+          RAILS_ENV: test
+      - image: cimg/postgres:17.0
+        environment:
+          POSTGRES_USER: postgres
+          POSTGRES_DB: pi_ww_test
+          POSTGRES_PASSWORD: 'eipugneqriopgn34--1'
+
+    working_directory: ~/rails
+
     environment:
       DATABASE_USERNAME: "postgres"
       DATABASE_PASSWORD: "eipugneqriopgn34--1"
@@ -31,6 +56,7 @@ jobs:
       DATABASE_URL: "postgresql://postgres@localhost/pi_ww_test"
       BUNDLE_PATH: "$HOME/vendor/bundle"
       GEM_HOME: "$HOME/vendor/bundle"
+
     steps:
       - attach_workspace:
           at: ~/rails
