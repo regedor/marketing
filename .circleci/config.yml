@@ -27,7 +27,7 @@ jobs:
             sudo apt-get install --no-install-recommends -y curl libjemalloc2 libvips libpq-dev pkg-config nodejs
       - run:
           name: Bundle install
-          command: bundle install --jobs=4 --retry=3
+          command: bundle install --jobs=4 --retry=3 --verbose
 
   run-tests:
     executor: rails-executor
