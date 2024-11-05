@@ -1,0 +1,22 @@
+<div id="leadcontent">
+  <table class="w-full border-collapse my-5">
+    <thead>
+      <tr>
+        <th class="border-b py-2 px-4 font-medium text-left">Attribute</th>
+        <th class="border-b py-2 px-4 font-medium text-left">Value</th>
+        <th class="border-b py-2 px-4 font-medium text-left">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% lead.leadcontents.each do |leadcontent| %>
+        <tr>
+          <td class="border-t py-2 px-4"><%= leadcontent.pipeattribute.name %></td>
+          <td class="border-t py-2 px-4"><%= leadcontent.value %></td>
+          <td class="border-t py-2 px-4">
+            <%= link_to "Edit", edit_pipeline_lead_leadcontent_path(@pipeline, @lead, leadcontent) %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

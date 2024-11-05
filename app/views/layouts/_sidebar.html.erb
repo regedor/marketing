@@ -23,6 +23,26 @@
             <span class="ml-2">Posts</span>
           <% end %>
         </li>
+        <li class="mb-2 <%= 'bg-yellow-400' if current_page?(calendars_path) %>">
+          <%= link_to people_path, class: "SidebarLink flex items-center" do %>
+            <%= image_tag 'posts-icon.svg', class: 'SidebarIcon' %>
+            <span class="ml-2">People</span>
+          <% end %>
+        </li>
+        <li class="mb-2 <%= 'bg-yellow-400' if current_page?(calendars_path) %>">
+          <%= link_to companies_path, class: "SidebarLink flex items-center" do %>
+            <%= image_tag 'posts-icon.svg', class: 'SidebarIcon' %>
+            <span class="ml-2">Companies</span>
+          <% end %>
+        </li>
+        <% @sidebar_pipelines.each do |pipeline|%>
+          <li class="mb-2 <%= 'bg-yellow-400' if current_page?(calendars_path) %>">
+            <%= link_to pipeline_path(pipeline), class: "SidebarLink flex items-center" do %>
+              <%= image_tag 'posts-icon.svg', class: 'SidebarIcon' %>
+              <span class="ml-2">Pipe <%= pipeline.name %></span>
+            <% end %>
+          </li>
+        <% end %>
       <% else %>
         <li class="mt-8 mb-2 <%= 'bg-yellow-400' if current_page?(new_user_session_path) %>">
           <%= link_to new_user_session_path, class: "SidebarLink flex items-center" do %>

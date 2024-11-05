@@ -1,0 +1,20 @@
+<div id="calendar_selector" class="LoginSection">
+  <div class="Container w-full max-w-3xl">
+    
+    <div class="HeaderContainer">
+      <h2 class="ContainerHeaderText">Select a pipeline</h2>
+    </div>
+  
+  
+    <%= form_with model: Pipeline.new, url: select_pipeline_pipelines_path, method: :post do |form| %>
+      <div class="mb-4">
+        <%= form.select :pipeline_id, options_for_select(@pipelines.map { |pipeline| [pipeline[:name], pipeline[:id]] }), { prompt: 'Pipeline' }, class: "InputField" %>
+      </div>
+      <div class="Bottom-right">
+        <%= link_to 'Cancel', 'javascript:history.back()', class: "Btn-secondary ml-2" %>
+        <%= form.submit "Select", class: "Btn-primary ml-2" %>
+      </div>
+    <% end %>
+
+  </div>
+</div>
