@@ -28,7 +28,7 @@ jobs:
       - run:
           name: Bundle install
           command: |
-            bundle config set path 'vendor/bundle' && \
+            bundle config set path '~/vendor/bundle' && \
             bundle install --jobs=4 --retry=3 --verbose
       - persist_to_workspace:
           root: ~/rails
@@ -59,7 +59,7 @@ jobs:
 
     steps:
       - attach_workspace:
-          at: ~/rails/vendor
+          at: ~/rails
       - run:
           name: Database setup
           command: bundle exec rails db:create db:schema:load
