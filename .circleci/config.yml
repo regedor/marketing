@@ -6,7 +6,7 @@ executors:
       - image: cimg/ruby:3.3.5
         environment:
           RAILS_ENV: test
-          BUNDLE_PATH: /usr/local/bundle
+          BUNDLE_PATH: $HOME/.bundle
       - image: cimg/postgres:17.0
         environment:
           POSTGRES_USER: postgres
@@ -30,6 +30,9 @@ jobs:
       - run:
           name: Bundle Gem
           command: gem install bundle
+      - run:
+          name: Grant write permissions
+          command: sudo chown -R circleci:circleci /usr/local/bundle
       - run:
           name: Bundle install
           command: bundle install --jobs=4 --retry=3 --verbose
