@@ -47,3 +47,11 @@ jobs:
       - run:
           name: Run tests
           command: bundle exec rails test
+workflows:
+  version: 2
+  test:
+    jobs:
+      - setup-dependencies
+      - run-tests:
+          requires:
+            - setup-dependencies
