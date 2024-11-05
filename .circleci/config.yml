@@ -7,7 +7,7 @@ executors:
         environment:
           RAILS_ENV: test
           BUNDLE_PATH: /usr/local/bundle
-      - image: cimg/postgres:17.0.0
+      - image: cimg/postgres:17.0
         environment:
           POSTGRES_USER: postgres
           POSTGRES_DB: pi_ww_test
