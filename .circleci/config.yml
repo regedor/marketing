@@ -28,6 +28,9 @@ jobs:
             sudo apt-get update -qq && \
             sudo apt-get install --no-install-recommends -y curl libjemalloc2 libvips libpq-dev pkg-config nodejs
       - run:
+          name: Bundle Gem
+          command: gem install bundle
+      - run:
           name: Bundle install
           command: bundle install --jobs=4 --retry=3 --verbose
 
