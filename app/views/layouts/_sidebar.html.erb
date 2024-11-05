@@ -35,7 +35,7 @@
             <span class="ml-2">Companies</span>
           <% end %>
         </li>
-        <% Pipeline.where(organization:current_user.organization).each do |pipeline|%>
+        <% @sidebar_pipelines.each do |pipeline|%>
           <li class="mb-2 <%= 'bg-yellow-400' if current_page?(calendars_path) %>">
             <%= link_to pipeline_path(pipeline), class: "SidebarLink flex items-center" do %>
               <%= image_tag 'posts-icon.svg', class: 'SidebarIcon' %>
