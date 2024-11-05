@@ -10,6 +10,7 @@ class PeopleController < ApplicationController
   def index
   end
 
+  # GET /people/new
   def new
     @person = Person.new
   end
@@ -31,13 +32,13 @@ class PeopleController < ApplicationController
     @person = Person.new(person_params)
     @person.organization = current_user.organization
     @person.user = current_user
-    
+
     if !url?(params[:person][:linkedin_link])
       flash[:alert] = "Not a valid URL"
       render :new, status: :unprocessable_entity
       return
     end
-    
+
     if @person.save
       redirect_to person_path(@person), notice: "Person was successfully created."
     else
@@ -45,13 +46,12 @@ class PeopleController < ApplicationController
     end
   end
 
-  # GET/people/:id/edit
+  # GET /people/:id/edit
   def edit
   end
 
-  # PATCH/people/:id
+  # PATCH /people/:id
   def update
-    
     if !url?(params[:person][:linkedin_link])
       redirect_to edit_person_path(@person),  alert: "Not a valid URL"
       return
@@ -64,7 +64,7 @@ class PeopleController < ApplicationController
     end
   end
 
-  # DELETE/people/:id
+  # DELETE /people/:id
   def destroy
     @person.destroy
     redirect_to people_path, notice: "Person was successfully deleted."

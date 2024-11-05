@@ -5,6 +5,9 @@ class PersoncompaniesController < ApplicationController
   before_action :set_personcompany, only: [ :destroy_by_person, :destroy_by_company, :update_is_working_by_company, :update_is_working_by_person, :update_is_my_contact_by_person, :update_is_my_contact_by_company ]
   before_action :check_organization_by_person!, only: [ :destroy_by_person, :create_by_person, :update_is_working_by_person, :update_is_my_contact_by_person  ]
   before_action :check_organization_by_company!, only: [ :destroy_by_company, :create_by_company, :update_is_working_by_company, :update_is_my_contact_by_company ]
+  before_action :check_person_contact_1!, only: [ :destroy_by_company, :update_is_working_by_company, :update_is_my_contact_by_company ]
+  before_action :check_person_contact_2!, only: [ :create_by_company ]
+
 
   # POST /personcompanies/person/:person_id
   def create_by_person
@@ -56,10 +59,6 @@ class PersoncompaniesController < ApplicationController
 
   private
 
-    def check_organization!
-      redirect_to request.referrer || root_path, alert: "Access Denied" unless current_user.organization_id == @company.organization.id
-    end
-
     def personcompany_params_by_person
       params.require(:personcompany).permit(:is_working, :is_my_contact, :company_id,)
     end
@@ -100,5 +99,14 @@ class PersoncompaniesController < ApplicationController
         error_messages = @personcompany.errors.full_messages.join(", ")
         redirect_back(fallback_location: path, alert: "Failed: #{error_messages}")
       end
+    end
+
+    def check_person_contact_1!
+      redirect_to request.referrer || root_path, alert: "Access Denied" unless @person.is_private == false || @person.user == current_user
+    end
+
+    def check_person_contact_2!
+      person = Person.find(params[:personcompany][:person_id])
+      redirect_to request.referrer || root_path, alert: "Access Denied" unless person.is_private == false || person.user == current_user
     end
 end

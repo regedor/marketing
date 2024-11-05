@@ -4,5 +4,5 @@
   <%= render "form", pipeline: @pipeline, lead: @lead %>
 
   <%= link_to "Show this lead", pipeline_lead_path(@pipeline,@lead), class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
-  <%= link_to "Back to pipelines", pipelines_path, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
+  <%= link_to "Back to pipeline", pipeline_path(@pipeline), class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
 </div>

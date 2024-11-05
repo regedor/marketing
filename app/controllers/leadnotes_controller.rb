@@ -6,7 +6,7 @@ class LeadnotesController < ApplicationController
   before_action :check_leader!, only: [ :destroy ]
   before_action :check_author!, only: [ :edit, :update ]
 
-  # POST /pipeline/:pipeline_id/leads/lead_id/leadnotes
+  # POST /pipeline/:pipeline_id/leads/:lead_id/leadnotes
   def create
     @note = @lead.leadnotes.new(leadnote_params)
     @note.user_id = current_user.id
@@ -19,11 +19,11 @@ class LeadnotesController < ApplicationController
     end
   end
 
-  # GET /pipeline/:pipeline_id/leads/lead_id/leadnotes/leadnote_id/edit
+  # GET /pipeline/:pipeline_id/leads/:lead_id/leadnotes/:id/edit
   def edit
   end
 
-  # PATCH /pipeline/:pipeline_id/leads/lead_id/leadnotes/leadnote_id
+  # PATCH /pipeline/:pipeline_id/leads/:lead_id/leadnotes/:id
   def update
     if @note.update(leadnote_params)
       redirect_to pipeline_lead_path(@pipeline, @lead), notice: "Note was successfully updated."
@@ -32,7 +32,7 @@ class LeadnotesController < ApplicationController
     end
   end
 
-  # DELETE /pipeline/:pipeline_id/leads/lead_id/leadnotes/leadnote_id
+  # DELETE /pipeline/:pipeline_id/leads/:lead_id/leadnotes/:id
   def destroy
     @note.destroy
     redirect_back(fallback_location: pipeline_lead_path(@pipeline, @lead),  notice: "Note was successfully deleted.")

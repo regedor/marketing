@@ -4,15 +4,16 @@ class CompaniesController < ApplicationController
   before_action :set_company, only: [ :show, :edit, :update, :destroy ]
   before_action :check_organization!, only: [ :show, :edit, :update, :destroy ]
 
-  # GET /company
+  # GET /companies
   def index
   end
 
+  # GET /companies/new
   def new
     @company = Company.new()
   end
 
-  # GET /company/:id
+  # GET /companies/:id
   def show
     company_notes = @company.companynotes.map { |cn| { id: cn.id, note: cn.note, type: "company", author: cn.user.email, to: @company.name, datetime: cn.created_at } }
     person_company_notes =  @company.personcompanies.map { |pc| pc.person.personnotes }.flatten.map { |pn| { id: pn.id, note: pn.note, type: "person", to: pn.person.name, author: pn.user.email,  datetime: pn.created_at } }
@@ -27,7 +28,7 @@ class CompaniesController < ApplicationController
                 .where("is_private = ? OR user_id = ?", false, current_user.id)
   end
 
-  # POST /company
+  # POST /companies
   def create
     @company = Company.new(company_params)
 
@@ -47,11 +48,11 @@ class CompaniesController < ApplicationController
     end
   end
 
-  # GET/company/:id/edit
+  # GET /companies/:id/edit
   def edit
   end
 
-  # PATCH/company/:id
+  # PATCH /companies/:id
   def update
     if !url?(params[:company][:url_site]) || !url?(params[:company][:linkedin_link])
       redirect_to edit_company_path(@company),  alert: "Not a valid URL"
@@ -67,7 +68,7 @@ class CompaniesController < ApplicationController
     end
   end
 
-  # DELETE/company/:id
+  # DELETE /companies/:id
   def destroy
     @company.destroy
     redirect_to companies_path, notice: "Company was successfully deleted."

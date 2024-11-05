@@ -50,12 +50,12 @@ class PipelinesController < ApplicationController
     @pipeline.destroy!
     redirect_to pipelines_path, status: :see_other, notice: "Pipeline was successfully destroyed."
   end
-  
-  #GET /pipelines/:pipeline_id/selector
+
+  # GET /pipelines/:pipeline_id/selector
   def selector
   end
 
-  #POST /pipelines/:pipeline_id/select_pipeline
+  # POST /pipelines/:pipeline_id/select_pipeline
   def select_pipeline
     if params[:pipeline][:pipeline_id].present?
       redirect_to new_pipeline_lead_path(Pipeline.find(params[:pipeline][:pipeline_id]))

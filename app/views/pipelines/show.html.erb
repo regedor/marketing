@@ -6,7 +6,7 @@
     <%= link_to "New Lead", new_pipeline_lead_path(@pipeline), class: "rounded-lg py-3 px-5 bg-blue-600 text-white block font-medium" %>
     <%= link_to "Edit this pipeline", edit_pipeline_path(@pipeline), class: "mt-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
     <%= link_to "Back to pipelines", pipelines_path, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
-    <%= link_to "Delete", @pipeline, data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
+    <%= link_to "Delete", @pipeline, data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
 
     <!-- Stages Section -->
     <div id="stages">
@@ -35,7 +35,7 @@
               <td><%= stage.name %></td>
               <td><%= stage.is_final %></td>
               <td>
-                 <%= link_to "Edit", edit_pipeline_stage_path(@pipeline, stage) %>
+                <%= link_to "Edit", edit_pipeline_stage_path(@pipeline, stage) %>
                 <%= link_to "Delete", pipeline_stage_path(@pipeline, stage), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
               </td>
             </tr>
@@ -83,7 +83,10 @@
               <td><%= lead.name %> </td>
               <td><%= lead.start_date %> </td>
               <td><%= lead.end_date %> </td>
-              <td><%= link_to "Show this lead", pipeline_lead_path(@pipeline,lead), class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %></td>
+              <td>
+                <%= link_to "Show", pipeline_lead_path(@pipeline,lead) %>
+                <%= link_to "Delete", pipeline_lead_path(@pipeline, lead), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
+              </td>
             </tr>
           <% end %>
         </tbody>

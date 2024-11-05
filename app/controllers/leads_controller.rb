@@ -27,7 +27,7 @@ class LeadsController < ApplicationController
     @lead = Lead.new
   end
 
-  # GET /pipeline/:pipeline_id/leads/edit
+  # GET /pipeline/:pipeline_id/leads/:id/edit
   def edit
   end
 
@@ -50,7 +50,7 @@ class LeadsController < ApplicationController
     end
   end
 
-  # PATCH /pipeline/:pipeline_id/leads/lead_id
+  # PATCH /pipeline/:pipeline_id/leads/:id
   def update
     if @pipeline.to_people
       b = @lead.update(lead_person_params)
@@ -64,10 +64,10 @@ class LeadsController < ApplicationController
     end
   end
 
-  # DELETE /pipeline/:pipeline_id/leads/lead_id
+  # DELETE /pipeline/:pipeline_id/leads/:id
   def destroy
     @lead.destroy!
-    redirect_to pipelines_path, notice: "Lead was successfully destroyed."
+    redirect_to pipeline_path(@pipeline), notice: "Lead was successfully destroyed."
   end
 
   def update_stage

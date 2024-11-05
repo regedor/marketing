@@ -21,7 +21,7 @@ class StagesController < ApplicationController
       redirect_back(fallback_location: pipeline_path(@pipeline), alert: "Failed to create Stage: #{error_messages}")
     end
   end
-  
+
   # PATCH /pipeline/:pipeline_id/stage/:stage_id/edit
   def edit
   end
@@ -34,7 +34,7 @@ class StagesController < ApplicationController
       render :edit, status: :unprocessable_entity
     end
   end
-  
+
   # PATCH /pipeline/:pipeline_id/stage/:stage_id/update_index_stage
   def update_index_stage
     received_index = params[:stage][:index].to_i
