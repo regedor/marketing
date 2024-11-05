@@ -31,8 +31,8 @@ jobs:
           name: Bundle Gem
           command: gem install bundle
       - run:
-          name: Grant write permissions
-          command: sudo chown -R circleci:circleci /usr/local/bundle
+          name: Create and Grant write permissions
+          command: sudo mkdir -p /usr/local/bundle && sudo chown -R circleci:circleci /usr/local/bundle
       - run:
           name: Bundle install
           command: bundle install --jobs=4 --retry=3 --verbose
