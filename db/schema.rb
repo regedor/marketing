@@ -80,6 +80,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_11_03_155239) do
     t.index ["user_id"], name: "index_comments_on_user_id"
   end
 
+
   create_table "companies", force: :cascade do |t|
     t.string "name"
     t.integer "employers_min", default: 0
@@ -158,6 +159,12 @@ ActiveRecord::Schema[7.2].define(version: 2024_11_03_155239) do
     t.index ["person_id"], name: "index_leads_on_person_id"
     t.index ["pipeline_id"], name: "index_leads_on_pipeline_id"
     t.index ["stage_id"], name: "index_leads_on_stage_id"
+  end
+  
+  create_table "log_entries", force: :cascade do |t|
+    t.string "controller_name"
+    t.text "info"
+    t.datetime "created_at", null: false
   end
 
   create_table "organizations", force: :cascade do |t|
