@@ -60,7 +60,6 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/rails/vendor
-      - checkout
       - run:
           name: Database setup
           command: |
