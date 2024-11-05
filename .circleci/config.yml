@@ -18,11 +18,10 @@ executors:
 jobs:
   setup-dependencies:
     executor: rails-executor
+    environment:
+      GEM_HOME: "$HOME/.gem"
     steps:
       - checkout
-      - run:
-          name: Set permissions for BUNDLE_PATH
-          command: sudo chown -R circleci:circleci /usr/local/bundle
       - run:
           name: Install dependencies
           command: |
