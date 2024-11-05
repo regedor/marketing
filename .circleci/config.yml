@@ -1,22 +1,12 @@
-version: 2.1
-
 jobs:
   setup-dependencies:
     docker:
       - image: cimg/ruby:3.3.5
-        environment:
-          RAILS_ENV: test
       - image: cimg/postgres:17.0
-        environment:
-          POSTGRES_USER: postgres
-          POSTGRES_DB: pi_ww_test
-          POSTGRES_PASSWORD: 'eipugneqriopgn34--1'
-
     working_directory: ~/rails
-
     environment:
-      BUNDLE_PATH: $HOME/vendor/bundle
-      GEM_HOME: "$HOME/vendor/bundle"
+      BUNDLE_PATH: ~/vendor/bundle
+      GEM_HOME: ~/vendor/bundle
 
     steps:
       - checkout
@@ -30,48 +20,30 @@ jobs:
           command: |
             bundle config set path '~/vendor/bundle' && \
             bundle install --jobs=4 --retry=3 --verbose
-      - persist_to_workspace:
-          root: ~/rails
+      - save_cache:
+          key: bundle-{{ checksum "Gemfile.lock" }}
           paths:
             - vendor/bundle
 
   run-tests:
     docker:
       - image: cimg/ruby:3.3.5
-        environment:
-          RAILS_ENV: test
       - image: cimg/postgres:17.0
-        environment:
-          POSTGRES_USER: postgres
-          POSTGRES_DB: pi_ww_test
-          POSTGRES_PASSWORD: 'eipugneqriopgn34--1'
-
     working_directory: ~/rails
-
     environment:
       DATABASE_USERNAME: "postgres"
       DATABASE_PASSWORD: "eipugneqriopgn34--1"
-      DATABASE_HOSTNAME: "localhost"
-      DATABASE_PORT: 5432
       DATABASE_URL: "postgresql://postgres@localhost/pi_ww_test"
-      BUNDLE_PATH: "$HOME/vendor/bundle"
-      GEM_HOME: "$HOME/vendor/bundle"
+      BUNDLE_PATH: ~/vendor/bundle
+      GEM_HOME: ~/vendor/bundle
 
     steps:
-      - attach_workspace:
-          at: ~/rails
+      - checkout
+      - restore_cache:
+          key: bundle-{{ checksum "Gemfile.lock" }}
       - run:
           name: Database setup
           command: bundle exec rails db:create db:schema:load
       - run:
           name: Run tests
           command: bundle exec rails test
-
-workflows:
-  version: 2
-  test:
-    jobs:
-      - setup-dependencies
-      - run-tests:
-          requires:
-            - setup-dependencies
