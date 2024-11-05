@@ -2,7 +2,7 @@
 
 # Precompile the assets
 echo "Precompiling assets..."
-rails assets:precompile
+bundle exec rails assets:precompile
 
 # Check if precompilation was successful
 if [ $? -eq 0 ]; then
