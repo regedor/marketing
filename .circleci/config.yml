@@ -1,25 +1,9 @@
-version: 2.1
-
-executors:
-  rails-executor:
-    docker:
-      - image: cimg/ruby:3.3.5
-        environment:
-          RAILS_ENV: test
-      - image: cimg/postgres:17.0
-        environment:
-          POSTGRES_USER: postgres
-          POSTGRES_DB: pi_ww_test
-          POSTGRES_PASSWORD: 'eipugneqriopgn34--1'
-
-    working_directory: ~/rails
-
 jobs:
   setup-dependencies:
     executor: rails-executor
     environment:
-      BUNDLE_PATH: $HOME/.bundle
-      GEM_HOME: "$HOME/.gem"
+      BUNDLE_PATH: $HOME/vendor/bundle
+      GEM_HOME: "$HOME/vendor/bundle"
     steps:
       - checkout
       - run:
@@ -28,17 +12,14 @@ jobs:
             sudo apt-get update -qq && \
             sudo apt-get install --no-install-recommends -y curl libjemalloc2 libvips libpq-dev pkg-config nodejs
       - run:
-          name: Bundle Gem
-          command: gem install bundle
-      - run:
-          name: Create and Grant write permissions
-          command: sudo mkdir -p /usr/local/bundle && sudo chown -R circleci:circleci /usr/local/bundle
-      - run:
           name: Bundle install
-          command: bundle install --jobs=4 --retry=3 --verbose
-      - run:
-          name: Bundle gem install
-          command: bundle install --gemfile /home/circleci/rails/Gemfile
+          command: |
+            bundle config set path 'vendor/bundle' && \
+            bundle install --jobs=4 --retry=3 --verbose
+      - persist_to_workspace:
+          root: ~/rails
+          paths:
+            - vendor/bundle
 
   run-tests:
     executor: rails-executor
@@ -48,9 +29,11 @@ jobs:
       DATABASE_HOSTNAME: "localhost"
       DATABASE_PORT: 5432
       DATABASE_URL: "postgresql://postgres@localhost/pi_ww_test"
-      BUNDLE_PATH: $HOME/.bundle
-      GEM_HOME: "$HOME/.gem"
+      BUNDLE_PATH: "$HOME/vendor/bundle"
+      GEM_HOME: "$HOME/vendor/bundle"
     steps:
+      - attach_workspace:
+          at: ~/rails
       - checkout
       - run:
           name: Database setup
