@@ -1,44 +1,51 @@
-# Use the latest 2.1 version of CircleCI pipeline process engine.
 version: 2.1
 
-jobs:
-  run-rails-tests:
+executors:
+  rails-executor:
     docker:
-      - image: cimg/ruby:3.0 
-      - image: circleci/postgres:13 
-    
-    # Define environment variables if necessary
-    environment:
-      RAILS_ENV: test
-      POSTGRES_USER: postgres
-      POSTGRES_DB: pw-test # replace with your test database name
+      - image: circleci/ruby:3.3.5-slim  # Using a similar Ruby version as in your Dockerfile
+        environment:
+          RAILS_ENV: test
+          BUNDLE_PATH: /usr/local/bundle
+      - image: circleci/postgres:13.2-alpine
+        environment:
+          POSTGRES_USER: postgres
+          POSTGRES_DB: my_test_db  # Replace with your test database name
+          POSTGRES_PASSWORD: ''
 
+    working_directory: ~/rails
+
+jobs:
+  setup-dependencies:
+    executor: rails-executor
     steps:
       - checkout
-      
-      # Install dependencies
       - run:
-          name: Install Bundler
-          command: gem install bundler
-          
-      - run:
-          name: Bundle Install
-          command: bundle install --jobs=4 --retry=3
-      
-      # Set up the database
-      - run:
-          name: Database Setup
+          name: Install dependencies
           command: |
-            bundle exec rails db:create
-            bundle exec rails db:schema:load
-      
-      # Run Rails tests
+            sudo apt-get update -qq && \
+            sudo apt-get install --no-install-recommends -y curl libjemalloc2 libvips libpq-dev pkg-config nodejs
       - run:
-          name: Run Tests
-          command: bundle exec rails test # Use `rspec` if you use RSpec
+          name: Bundle install
+          command: bundle install --jobs=4 --retry=3
 
-# Workflows to orchestrate the jobs
+  run-tests:
+    executor: rails-executor
+    steps:
+      - checkout
+      - run:
+          name: Database setup
+          command: |
+            bin/rails db:create db:schema:load RAILS_ENV=test
+      - run:
+          name: Run tests
+          command: bundle exec rails test
+
 workflows:
+  version: 2
   test:
     jobs:
-      - run-rails-tests
+      - setup-dependencies
+      - run-tests:
+          requires:
+            - setup-dependencies
