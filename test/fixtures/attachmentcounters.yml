@@ -1,13 +1,13 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  attachment: one
-  user: one
+attachment_counter_one:
+  attachment: attachment_one
+  user: user_one
   aproved: false
   rejected: false
 
-two:
-  attachment: two
-  user: two
+attachment_counter_two:
+  attachment: attachment_two
+  user: user_two
   aproved: false
   rejected: false

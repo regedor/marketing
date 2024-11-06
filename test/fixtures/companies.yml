@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  employers_min: 1
+  employers_max: 1
+  phone_number: MyString
+  url_site: MyString
+
+two:
+  name: MyString
+  employers_min: 1
+  employers_max: 1
+  phone_number: MyString
+  url_site: MyString

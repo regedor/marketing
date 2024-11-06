@@ -24,9 +24,11 @@ class PerspectivesController < ApplicationController
 
     if @perspective_new.save
       redirect_to calendar_post_perspective_path(@calendar, @post, @perspective_new), notice: "Perspective was successfully created."
+
+      LogEntry.create_log("Perspective has been created by #{current_user.email}. [#{perspective_params}]")
     else
-      @comment = @post.comments.new
-      redirect_to calendar_post_perspective_path(@calendar, @post), alert: "Error creating Perspective."
+      redirect_to calendar_post_path(@calendar, @post), alert: "Error creating Perspective."
+      LogEntry.create_log("#{current_user.email} attempted to create perspective but failed (unprocessable_entity). [#{perspective_params}]")
     end
   end
 
@@ -34,9 +36,13 @@ class PerspectivesController < ApplicationController
   def destroy
     if @perspective.socialplatform.nil?
       redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), alert: "Perspective cannot be deleted."
+
+      LogEntry.create_log("#{current_user.email} attempted to delete perspective #{@perspective.id} but failed.")
     else
       @perspective.destroy
       redirect_to calendar_post_path(@calendar, @post), notice: "Perspective was successfully destroyed."
+
+      LogEntry.create_log("Perspective #{@perspective.id} has been destroyed by #{current_user.email}.")
     end
   end
 
@@ -44,17 +50,22 @@ class PerspectivesController < ApplicationController
   def update_status
     @perspective.update(perspective_params_status)
     redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Perspective status updated."
+
+    LogEntry.create_log("Perspective status has been updated by #{current_user.email}. [#{perspective_params}]")
   end
 
   # PATCH /calendars/:calendar_id/posts/:post_id/perspectives/:id/update_status_post
   def update_status_post
     @post.update(post_params_status)
     redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Post status updated."
+
+    LogEntry.create_log("Post status has been updated by #{current_user.email}. [#{post_params_status}]")
   end
 
   # PATCH /calendars/:calendar_id/posts/:post_id/perspectives/:id/update_copy
   def update_copy
     @perspective.update(perspective_params_copy)
+    LogEntry.create_log("Perspective copy has been updated by #{current_user.email}. [#{perspective_params_copy}]")
   end
 
   private
