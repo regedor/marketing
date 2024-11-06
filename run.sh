@@ -2,8 +2,8 @@
 
 # Precompile the assets
 echo "Precompiling assets..."
-bundle exec rails assets:clobber
-bundle exec rails assets:precompile
+bundle exec rails assets:clobber --trace
+bundle exec rails assets:precompile --trace
 
 # Check if precompilation was successful
 if [ $? -eq 0 ]; then
