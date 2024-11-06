@@ -1,2 +1,3 @@
-require("controllers");
-require("calendar_filter");
+import "@hotwired/turbo-rails"
+import "controllers"
+import "calendar_filter"
