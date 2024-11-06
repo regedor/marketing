@@ -138,6 +138,11 @@ GEM
       faraday-net_http (>= 2.0, < 3.4)
       json
       logger
+    faraday-mashify (0.1.1)
+      faraday (~> 2.0)
+      hashie
+    faraday-multipart (1.0.4)
+      multipart-post (~> 2)
     faraday-net_http (3.3.0)
       net-http
     ffi (1.17.0-aarch64-linux-gnu)
@@ -154,6 +159,7 @@ GEM
     formtastic (5.0.0)
       actionpack (>= 6.0.0)
     formtastic_i18n (0.7.0)
+    gli (2.22.0)
     globalid (1.2.1)
       activesupport (>= 6.1)
     has_scope (0.8.2)
@@ -219,6 +225,7 @@ GEM
     msgpack (1.7.3)
     multi_xml (0.7.1)
       bigdecimal (~> 3.1)
+    multipart-post (2.4.1)
     net-http (0.4.1)
       uri
     net-imap (0.5.0)
@@ -386,6 +393,12 @@ GEM
       websocket (~> 1.0)
     simple_calendar (2.4.3)
       rails (>= 3.0)
+    slack-ruby-client (2.4.0)
+      faraday (>= 2.0)
+      faraday-mashify
+      faraday-multipart
+      gli
+      hashie
     snaky_hash (2.0.1)
       hashie
       version_gem (~> 1.1, >= 1.1.1)
@@ -478,6 +491,7 @@ DEPENDENCIES
   sassc-rails
   selenium-webdriver
   simple_calendar (~> 2.0)
+  slack-ruby-client
   sprockets-rails
   stimulus-rails
   tailwindcss-rails

@@ -28,6 +28,7 @@ class PostsController < ApplicationController
     @post.user = current_user
 
     if @post.save
+      send_notification("created")
       redirect_to calendar_post_path(@calendar, @post), notice: "Post was successfully created."
 
       LogEntry.create_log("Post has been created by #{current_user.email}. [#{post_params}]")
@@ -45,6 +46,7 @@ class PostsController < ApplicationController
   # PATCH /calendars/:calendar_id/posts/:id
   def update
     if @post.update(post_params)
+      send_notification("updated")
       redirect_to calendar_post_path(@calendar, @post), notice: "Post was successfully updated."
 
       LogEntry.create_log("Post has been updated by #{current_user.email}. [#{post_params}]")
@@ -58,6 +60,7 @@ class PostsController < ApplicationController
   # DELETE /calendars/:calendar_id/posts/:id
   def destroy
     @post.destroy
+    send_notification("destroyed")
     redirect_to calendars_path(), notice: "Post was successfully deleted."
 
     LogEntry.create_log("Post #{@post.title} has been destroyed by #{current_user.email}.")
@@ -66,6 +69,7 @@ class PostsController < ApplicationController
   # PATCH /calendars/:calendar_id/posts/:id/update_design_idea
   def update_design_idea
     @post.update(perspective_params_design_idea)
+    send_notification("its design idea updated")
     LogEntry.create_log("Post design idea has been updated to In Analysis by #{current_user.email}. [#{perspective_params_design_idea}]")
   end
 
@@ -121,5 +125,9 @@ class PostsController < ApplicationController
 
     def perspective_params_design_idea
       params.require(:post).permit(:design_idea)
+    end
+
+    def send_notification(action)
+      SlackNotifier.post_message("#pei-teste", current_user.organization, "Post Notification", "The post #{@post.id}, with title `#{@post.title}`, has been #{action} by #{current_user.email}.")
     end
 end

@@ -31,6 +31,8 @@ DATABASE_PORT=5432
 
 GOOGLE_OAUTH_CLIENT_ID='your_client_id'
 GOOGLE_OAUTH_CLIENT_SECRET='your_client_secret'
+
+BOT_TOKEN='your_bot_token'
 ```
 
 4. Create the database
