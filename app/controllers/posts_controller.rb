@@ -60,7 +60,7 @@ class PostsController < ApplicationController
     @post.destroy
     redirect_to calendars_path(), notice: "Post was successfully deleted."
 
-    LogEntry.create_log("Post has been destroyed by #{current_user.email}. [#{post_params}]")
+    LogEntry.create_log("Post #{@post.title} has been destroyed by #{current_user.email}.")
   end
 
   # PATCH /calendars/:calendar_id/posts/:id/update_design_idea

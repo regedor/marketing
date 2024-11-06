@@ -54,7 +54,7 @@ class AttachmentsController < ApplicationController
     end
     if @attachment.update(data)
       redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Attachment was successfully updated."
-      
+
       LogEntry.create_log("Attachment has been updated by #{current_user.email}. [#{attachment_params}]")
     else
       render :edit, status: :unprocessable_entity
@@ -68,7 +68,7 @@ class AttachmentsController < ApplicationController
     @attachment.destroy
     redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Attachment was successfully destroyed."
 
-    LogEntry.create_log("Attachment has been destroyed by #{current_user.email}. [#{attachment_params}]")
+    LogEntry.create_log("Attachment #{@attachment.filename} has been destroyed by #{current_user.email}.")
   end
 
   # GET /calendars/:calendar_id/posts/:post_id/perspectives/:perspective_id/attachments/:id/download

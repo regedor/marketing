@@ -42,9 +42,9 @@ class CommentsController < ApplicationController
   # DELETE /calendars/:calendar_id/posts/:post_id/comments/:id
   def destroy
     @comment.destroy
-    redirect_back(fallback_location: calendar_post_path(@calendar, @post),  notice: "Comment was successfully deleted.")
+    redirect_to calendar_post_path(@calendar, @post),  notice: "Comment was successfully deleted."
 
-    LogEntry.create_log("Comment has been destroyed by #{current_user.email}. [#{comment_params}]")
+    LogEntry.create_log("Comment #{@comment.id} has been destroyed by #{current_user.email}.")
   end
 
   private
