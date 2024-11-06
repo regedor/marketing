@@ -6,10 +6,6 @@ Rails.application.configure do
   # Code is not reloaded between requests.
   config.enable_reloading = false
 
-  Rails.application.config.action_dispatch.default_headers.merge!({
-    'Permissions-Policy' => 'interest-cohort=(),private-state-token-redemption=(),private-state-token-issuance=()'
-  })
-
   # Eager load code on boot. This eager loads most of Rails and
   # your application in memory, allowing both threaded web servers
   # and those relying on copy on write to perform better.
