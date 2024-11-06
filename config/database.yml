@@ -1,48 +1,19 @@
-# PostgreSQL. Versions 9.3 and up are supported.
-#
-# Install the pg driver:
-#   gem install pg
-# On macOS with Homebrew:
-#   gem install pg -- --with-pg-config=/usr/local/bin/pg_config
-# On Windows:
-#   gem install pg
-#       Choose the win32 build.
-#       Install PostgreSQL and put its /bin directory on your path.
-#
-# Configure Using Gemfile
-# gem "pg"
-#
 default: &default
   adapter: postgresql
   encoding: unicode
-  # For details on connection pooling, see Rails configuration guide
-  # https://guides.rubyonrails.org/configuring.html#database-pooling
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  pool: 5
 
 development:
   <<: *default
-  database: pi_ww_development
-  # The specified database role being used to connect to PostgreSQL.
-  # To create additional roles in PostgreSQL see `$ createuser --help`.
-  # When left blank, PostgreSQL will use the default role. This is
-  # the same name as the operating system user running Rails.
+  database: <%= ENV["DATABASE_DEV_DBNAME"] %>
   username: <%= ENV['DATABASE_USERNAME'] %>
-
-  # The password associated with the PostgreSQL role (username).
   password: <%= ENV['DATABASE_PASSWORD'] %>
-
-  # Connect on a TCP socket. Omitted by default since the client uses a
-  # domain socket that doesn't need configuration. Windows does not have
-  # domain sockets, so uncomment these lines.
   host: <%= ENV['DATABASE_HOSTNAME'] %>
-
-  # The TCP port the server listens on. Defaults to 5432.
-  # If your server runs on a different port number, change accordingly.
   port: <%= ENV.fetch("DATABASE_PORT") { 5432 } %>
 
 test:
   <<: *default
-  database: pi_ww_test
+  database: <%= ENV["DATABASE_TEST_DBNAME"] %>
   username: <%= ENV['DATABASE_USERNAME'] %>
   password: <%= ENV['DATABASE_PASSWORD'] %>
   host: <%= ENV['DATABASE_HOSTNAME'] %>
@@ -50,6 +21,8 @@ test:
 
 production:
   <<: *default
-  database: pi_ww_production
-  username: pi_ww
-  password: <%= ENV["PI_WW_DATABASE_PASSWORD"] %>
+  database: <%= ENV["DATABASE_TEST_DBNAME"] %>
+  username: <%= ENV['DATABASE_USERNAME'] %>
+  password: <%= ENV['DATABASE_PASSWORD'] %>
+  host: <%= ENV['DATABASE_HOSTNAME'] %>
+  port: <%= ENV.fetch("DATABASE_PORT") { 5432 } %>

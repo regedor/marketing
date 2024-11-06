@@ -19,15 +19,36 @@ cd pi-ww
 bundle install
 ```
 
-3. Create a .env file in the root directory and add the following environment variables (change as your needs):
+3. Create a .env  file (like the .env.default file included in this repository) in the root directory and add the following environment variables (change as your needs):
 ```bash
+# Possible Environments: production, development, test
+RAILS_ENV=
+
+
+# ../admin page credentials
 SUPER_ADMIN_EMAIL=admin@example.com
 SUPER_ADMIN_PASSWORD=your_super_admin_password
 
+
+# Database credentials
 DATABASE_USERNAME=your_database_username
 DATABASE_PASSWORD=your_database_password
 DATABASE_HOSTNAME=localhost
 DATABASE_PORT=5432
+
+# Database names depending on the environment
+DATABASE_TEST_DBNAME=pi_ww_test
+DATABASE_DEV_DBNAME=pi_ww_development
+DATABASE_PROD_DBNAME=pi_ww_production
+
+
+# SMTP credentials
+SMTP_ADDRESS=your_smtp_address
+SMTP_PORT=your_smtp_port
+SMTP_DOMAIN=your_smtp_domain
+SMTP_USERNAME=your_smtp_username
+SMTP_PASSWORD=your_smtp_password
+
 
 GOOGLE_OAUTH_CLIENT_ID='your_client_id'
 GOOGLE_OAUTH_CLIENT_SECRET='your_client_secret'
