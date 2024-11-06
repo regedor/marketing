@@ -1,7 +1,10 @@
 #!/bin/bash
 
+EXPORT RAILS_ENV=production 
+
 # Precompile the assets
 echo "Precompiling assets..."
+bundle exec rails cache:clear
 bundle exec rails assets:clobber --trace
 bundle exec rails assets:precompile --trace
 
