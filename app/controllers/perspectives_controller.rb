@@ -37,12 +37,12 @@ class PerspectivesController < ApplicationController
     if @perspective.socialplatform.nil?
       redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), alert: "Perspective cannot be deleted."
 
-      LogEntry.create_log("#{current_user.email} attempted to delete perspective but failed. [#{perspective_params}]")
+      LogEntry.create_log("#{current_user.email} attempted to delete perspective #{@perspective.id} but failed.")
     else
       @perspective.destroy
       redirect_to calendar_post_path(@calendar, @post), notice: "Perspective was successfully destroyed."
 
-      LogEntry.create_log("Perspective has been destroyed by #{current_user.email}. [#{perspective_params}]")
+      LogEntry.create_log("Perspective #{@perspective.id} has been destroyed by #{current_user.email}.")
     end
   end
 

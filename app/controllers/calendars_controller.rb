@@ -54,7 +54,7 @@ class CalendarsController < ApplicationController
     @calendar.destroy
     redirect_to calendars_url, notice: "Calendar was successfully destroyed."
 
-    LogEntry.create_log("Calendar has been destroyed by #{current_user.email}. [#{calendar_params}]")
+    LogEntry.create_log("Calendar #{@calendar.name} has been destroyed by #{current_user.email}.")
   end
 
   def selector

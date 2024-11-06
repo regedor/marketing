@@ -39,11 +39,10 @@ class Dashboard::UsersController < ApplicationController
   end
 
   def destroy
-    user = User.find(params[:id])
-    user.destroy!
+    @user.destroy!
     redirect_to dashboard_path, notice: "User was successfully deleted."
 
-    LogEntry.create_log("User #{current_user.email} has been deleted by #{current_user.email}. [#{user_params}]")
+    LogEntry.create_log("User #{@user.email} has been deleted by #{current_user.email}.")
   end
 
   private
