@@ -1,5 +1,7 @@
 #!/bin/bash
 
+EXPORT RAILS_ENV=production 
+
 # Exit on error
 set -e
 

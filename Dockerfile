@@ -4,7 +4,7 @@ FROM docker.io/library/ruby:$RUBY_VERSION-slim AS base
 WORKDIR /rails
 
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y curl libjemalloc2 libvips postgresql-client && \
+    apt-get install --no-install-recommends -y curl libjemalloc2 libvips postgresql-client nodejs && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 ENV RAILS_ENV="production" \
