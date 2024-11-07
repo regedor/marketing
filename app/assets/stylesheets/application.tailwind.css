@@ -65,6 +65,9 @@
   #file-name {
     @apply text-gray-500;
   }
+  .Separator {
+    @apply my-1 h-px bg-gray-600;
+  }
 }
 
 @layer utilities {
