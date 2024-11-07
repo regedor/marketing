@@ -19,9 +19,9 @@
           <span class="text-red-600">Regular</span>
           <% end %>
         </td>
-        <td class="TableEntry flex space-x-2">
-          <%= link_to 'Edit', edit_dashboard_user_path(user), class: "text-yellow-600 hover:text-yellow-500 hover:underline" %>
-          <%= button_to "Delete", dashboard_user_path(user), method: :delete, data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to delete the user " + user.email + "?" }, class: "text-red-600 hover:text-red-500 hover:underline" %>
+        <td class="TableEntry">
+          <%= link_to 'Edit', edit_dashboard_user_path(user), class: "text-yellow-600 hover:text-yellow-500 hover:underline inline-block mr-2" %>
+          <%= button_to "Delete", dashboard_user_path(user), method: :delete, data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to delete the user " + user.email + "?" }, class: "text-red-600 hover:text-red-500 hover:underline", form_class: "inline" %>
         </td>
       </tr>
     <% end %>
