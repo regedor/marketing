@@ -41,7 +41,7 @@
           <li class="mb-2 <%= 'bg-yellow-400' if current_page?(pipeline_path(pipeline)) %>">
             <%= link_to pipeline_path(pipeline), class: "SidebarLink flex items-center" do %>
               <%= image_tag 'pipeline-icon.svg', class: 'SidebarIcon' %>
-              <span class="ml-2">Pipe <%= pipeline.name %></span>
+              <span class="ml-2"><%= pipeline.name %></span>
             <% end %>
           </li>
         <% end %>
