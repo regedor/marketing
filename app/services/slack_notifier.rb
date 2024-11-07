@@ -1,10 +1,10 @@
 class SlackNotifier
-  def self.post_message(channel, organization, title, body)
-    client = Slack::Web::Client.new(token:organization.slack_workspace_token)
+  def self.post_message(organization, title, body)
+    client = Slack::Web::Client.new(token: organization.slack_workspace_token)
     client.chat_postMessage(
       channel: "##{organization.slack_channel}",
       text: "Notification",
-      blocks: set_block(title,body),
+      blocks: set_block(title, body),
       as_user: true
     )
   rescue Slack::Web::Api::Errors::SlackError => e
@@ -12,8 +12,8 @@ class SlackNotifier
     nil
   end
 
-  private 
-    def self.set_block(title,body)
+  private
+    def self.set_block(title, body)
       [
         {
           type: "section",

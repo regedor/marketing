@@ -128,6 +128,6 @@ class PostsController < ApplicationController
     end
 
     def send_notification(action)
-      SlackNotifier.post_message("#pei-teste", current_user.organization, "Post Notification", "The post #{@post.id}, with title `#{@post.title}`, has been #{action} by #{current_user.email}.")
+      SlackNotifier.post_message(current_user.organization, "Post Notification", "The post #{@post.id}, with title `#{@post.title}`, has been #{action} by #{current_user.email}.")
     end
 end
