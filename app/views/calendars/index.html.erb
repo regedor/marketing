@@ -2,7 +2,6 @@
   <%= link_to "+", selector_calendars_path, class: "Btn-primary fixed bottom-4 right-4 z-50 rounded-full shadow-md  w-12 h-12 justify-center text-lg" %>
   <div class="w-1/4 p-4 bg-gray-100 rounded-lg shadow-md flex flex-col">
     <div class="mt-4">
-      <%= render "form", calendar: @calendar %>
       <h2 class="text-lg font-bold mb-4">Calendars</h2>
       <%= form_with url: calendars_path, method: :get, local: true, id: "calendar_filter_form" do %>
         <div class="overflow-x-auto">
@@ -11,7 +10,6 @@
               <tr>
                 <th class="TableHeader border-r border-gray-200">Select</th>
                 <th class="TableHeader border-r border-gray-200">Calendar Name</th>
-                <th class="TableHeader border-r border-gray-200">Actions</th>
               </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
@@ -22,10 +20,6 @@
                   </td>
                   <td class="TableEntry border-r border-gray-200">
                     <%= label_tag "calendar_ids_#{calendar.id}", calendar.name, class: "flex-grow" %>
-                  </td>
-                  <td class="TableEntry border-r border-gray-200 text-center">
-                    <%= link_to "Edit", edit_calendar_path(calendar), class: "text-yellow-600 hover:text-yellow-500 hover:underline" %>
-                    <%= link_to "Delete", calendar_path(calendar), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "text-red-500 hover:underline" %>
                   </td>
                 </tr>
               <% end %>

@@ -4,10 +4,9 @@
 
 
     <%= link_to "New Lead", new_pipeline_lead_path(@pipeline), class: "rounded-lg py-3 px-5 bg-blue-600 text-white block font-medium" %>
-    <%= link_to "Edit this pipeline", edit_pipeline_path(@pipeline), class: "mt-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
-    <%= link_to "Back to pipelines", pipelines_path, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
-    <%= link_to "Delete", @pipeline, data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
-
+    <% if current_user.isLeader %>
+      <%= link_to "Edit this pipeline", edit_pipeline_path(@pipeline), class: "mt-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
+    <% end %>
     <!-- Stages Section -->
     <div id="stages">
       <%= render "stages/form", pipeline: @pipeline, stage:@new_stage  %>
