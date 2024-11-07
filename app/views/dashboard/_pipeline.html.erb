@@ -1,0 +1,36 @@
+<div id="Pipelines">
+  <div class="overflow-x-auto">
+    <div class="flex justify-center">
+    <table class="min-w-full bg-white shadow-md rounded-lg border border-gray-200">
+      <thead>
+      <tr>
+        <th class="TableHeader border-r border-gray-200">Name</th>
+        <th class="TableHeader border-r border-gray-200">To</th>
+        <th class="TableHeader">Actions</th>
+      </tr>
+      </thead>
+      <tbody class="bg-white divide-y divide-gray-200">
+      <% @pipelines.each do |pipeline| %>
+        <tr class="hover:bg-gray-100">
+          <td class="TableEntry border-r border-gray-200">
+            <strong><%= link_to pipeline.name , pipeline_path(pipeline), class: "hover:underline" %></strong>
+          </td>
+          <td class="TableEntry border-r border-gray-200">
+            <span><%= pipeline.to_people ? "People" : "Companies" %></span>
+          </td>
+          <td class="TableEntry">
+            <%= link_to "Edit", edit_pipeline_path(pipeline), class: "text-yellow-600 hover:text-yellow-500 hover:underline" %>
+            <%= link_to "Delete", pipeline_path(pipeline), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "text-red-500 hover:underline" %>
+          </td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+  <div class="mt-2 text-center">
+    <%= link_to 'Create New Pipeline', new_pipeline_path, class: "Btn-primary" %>
+  </div>
+</div>
+
