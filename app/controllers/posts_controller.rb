@@ -1,8 +1,9 @@
+require "date"
 class PostsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_calendar
   before_action :check_organization!
-  before_action :set_post, only: [ :show, :edit, :update, :destroy, :update_design_idea, :download ]
+  before_action :set_post, only: [ :show, :edit, :update, :destroy, :update_design_idea, :download, :update_day ]
   before_action :check_author!, only: [ :edit, :update, :destroy, :update_design_idea ]
   before_action :sanitize_categories, only: [ :create, :update ]
 
@@ -67,6 +68,23 @@ class PostsController < ApplicationController
   def update_design_idea
     @post.update(perspective_params_design_idea)
     LogEntry.create_log("Post design idea has been updated to In Analysis by #{current_user.email}. [#{perspective_params_design_idea}]")
+  end
+
+  # PATCH /calendars/:calendar_id/posts/:id/update_day
+  def update_day
+    begin
+      new_date = Date.parse(params[:date])
+      @post.publish_date = DateTime.new(new_date.year, new_date.month, new_date.day, @post.publish_date.hour, @post.publish_date.min, @post.publish_date.sec)
+      if @post.save
+        LogEntry.create_log("Publish date for post ID #{@post.id} has been updated to #{new_date} by #{current_user.email}.")
+
+        render json: { success: true, new_publish_date: @post.publish_date.to_date, message: "Publish date updated to #{new_date}." }, status: :ok
+      else
+        render json: { success: false, error: "Failed to update publish date" }, status: :unprocessable_entity
+      end
+    rescue => e
+      render json: { success: false, error: e.message }, status: :bad_request
+    end
   end
 
   # GET /calendars/:calendar_id/posts/:id/download

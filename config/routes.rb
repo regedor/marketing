@@ -59,6 +59,7 @@ Rails.application.routes.draw do
       member do
         get :download
         patch :update_design_idea
+        patch :update_day
       end
 
       resources :perspectives, only: [ :show, :create, :destroy ] do

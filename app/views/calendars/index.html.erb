@@ -43,13 +43,13 @@
     </div>
 
     <%= month_calendar(events: @posts, attribute: :publish_date, previous_label: nil, next_label: nil) do |date, posts| %>
-      <div class="day wday-<%= date.wday %> past current-month border p-2 relative overflow-hidden calendar-box">
+      <div class="droppable day wday-<%= date.wday %> past current-month border p-2 relative calendar-box" data-date="<%= date %>">
         <div class="date text-sm font-bold text-gray-700">
           <%= date.day %>
         </div>
         <div class="posts-container overflow-y-auto">
           <% posts.each do |post| %>
-            <%= link_to post.title, calendar_post_path(post.calendar, post), class: "Btn-primary mt-2 bg-blue-500" %>
+            <%= link_to post.title, calendar_post_path(post.calendar, post), class: "Btn-primary mt-2 bg-blue-500 draggable", data: { post_id: post.id, calendar_id: post.calendar.id }  %>
           <% end %>
         </div>
       </div>
@@ -73,3 +73,46 @@
     table-layout: fixed;
   }
 </style>
+<script>
+  $(document).ready(function() {
+    function build_axios() {
+      axios.defaults.withCredentials = true;
+      const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+      axios.defaults.headers.common['X-CSRF-Token'] = csrfToken;
+    }
+
+    $(".draggable").draggable({
+      cursor: "move",
+      revert: "invalid",
+      helper: 'clone'
+    });
+    function reset_element(draggedElement) {
+      draggedElement.removeClass("ui-draggable-handle");
+      draggedElement.removeClass("ui-draggable");
+      draggedElement.removeAttr("style")
+      draggedElement.css("position","relative")
+    }
+    $(".droppable").droppable({
+      accept: ".draggable",
+      drop: function(event, ui) {
+        const draggedElement = ui.draggable;
+        const postId = draggedElement.data("post-id");
+        const calendarId = draggedElement.data("calendar-id");
+        const newDate = $(this).data("date");
+        const url = `/calendars/${calendarId}/posts/${postId}/update_day?date=${newDate}`;
+        build_axios()
+        axios.patch(url)
+        .then((response) => {
+          console.log('Sucess')
+          draggedElement.detach();
+          reset_element(draggedElement)
+          $(this).find(".posts-container").append(draggedElement);
+        })
+        .catch((error) => {
+          console.log('Error')
+          reset_element(draggedElement)
+        })
+      }
+    });
+  })
+</script>
