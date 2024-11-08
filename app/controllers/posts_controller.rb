@@ -21,6 +21,11 @@ class PostsController < ApplicationController
   def new
     @post = @calendar.posts.new
     @perspective = @post.perspectives.new
+
+    if params[:date].present?
+      new_date = Date.parse(params[:date])
+      @post.publish_date = DateTime.new(new_date.year, new_date.month, new_date.day, 12, 0, 0)
+    end
   end
 
   # POST /calendars/:calendar_id/posts

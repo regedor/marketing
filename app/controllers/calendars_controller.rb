@@ -56,17 +56,6 @@ class CalendarsController < ApplicationController
     redirect_to dashboard_path, notice: "Calendar was successfully destroyed."
   end
 
-  def selector
-  end
-
-  def select_calendar
-    if params[:calendar][:calendar_id].present?
-      redirect_to new_calendar_post_path(Calendar.find(params[:calendar][:calendar_id]))
-    else
-      redirect_to selector_calendars_path, alert: "Select a calendar."
-    end
-  end
-
   private
 
   def set_calendars

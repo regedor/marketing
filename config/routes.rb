@@ -51,10 +51,6 @@ Rails.application.routes.draw do
   end
 
   resources :calendars, only: [ :new, :index, :create, :edit, :update, :destroy ] do
-    collection do
-      get :selector
-      post :select_calendar
-    end
     resources :posts, only: [ :show, :new, :create, :edit, :update, :destroy ] do
       member do
         get :download

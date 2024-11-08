@@ -1,5 +1,4 @@
 <div id="calendars_page" class="p-4 flex">
-  <%= link_to "+", selector_calendars_path, class: "Btn-primary fixed bottom-4 right-4 z-50 rounded-full shadow-md  w-12 h-12 justify-center text-lg" %>
   <div class="w-1/4 p-4 bg-gray-100 rounded-lg shadow-md flex flex-col">
     <div class="mt-4">
       <h2 class="text-lg font-bold mb-4">Calendars</h2>
@@ -43,9 +42,18 @@
     </div>
 
     <%= month_calendar(events: @posts, attribute: :publish_date, previous_label: nil, next_label: nil) do |date, posts| %>
-      <div class="droppable day wday-<%= date.wday %> past current-month border p-2 relative calendar-box" data-date="<%= date %>">
+      <div class="droppable border p-2 relative calendar-box" data-date="<%= date %>">
         <div class="date text-sm font-bold text-gray-700">
-          <%= date.day %>
+          <%= date.day %> +
+          <div class="menu hidden absolute left-0 border bg-white border-gray-300 shadow-md rounded-md max-h-32 overflow-y-auto">
+            <ul>
+              <% @calendars.each do |calendar| %>
+                <li>
+                  <%= link_to calendar.name, new_calendar_post_path(calendar,date:date), class: "block block px-4 py-2 text-gray-700 hover:bg-yellow-400" %>
+                </li>
+              <% end %>
+            </ul>
+          </div>
         </div>
         <div class="posts-container overflow-y-auto">
           <% posts.each do |post| %>
@@ -57,22 +65,6 @@
   </div>
 </div>
 
-<style>
-  .calendar-heading {
-    display: none;
-  }
-  .posts-container {
-    max-height: 6rem; /* Adjust this value as needed */
-  }
-  .calendar-box {
-    height: 150px; /* Set a fixed height */
-    width: 100%; /* Ensure it takes the full width of the container */
-    box-sizing: border-box; /* Include padding and border in the element's total width and height */
-  }
-  .table {
-    table-layout: fixed;
-  }
-</style>
 <script>
   $(document).ready(function() {
     function build_axios() {
@@ -114,5 +106,16 @@
         })
       }
     });
+    $(".date").hover(
+      function() {
+        console.log('Show')
+        console.log($(this).find(".menu"))
+        $(this).find(".menu").removeClass("hidden"); // Show the menu
+      },
+      function() {
+        console.log('Hide')
+        $(this).find(".menu").addClass("hidden"); // Hide the menu
+      }
+    );
   })
 </script>
