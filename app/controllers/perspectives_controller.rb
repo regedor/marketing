@@ -51,7 +51,7 @@ class PerspectivesController < ApplicationController
     @perspective.update(perspective_params_status)
     redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Perspective status updated."
 
-    LogEntry.create_log("Perspective status has been updated by #{current_user.email}. [#{perspective_params}]")
+    LogEntry.create_log("Perspective status has been updated by #{current_user.email}. [#{perspective_params_status}]")
   end
 
   # PATCH /calendars/:calendar_id/posts/:post_id/perspectives/:id/update_status_post
