@@ -53,6 +53,7 @@ Rails.application.routes.draw do
   resources :calendars, only: [ :new, :index, :create, :edit, :update, :destroy ] do
     resources :posts, only: [ :show, :new, :create, :edit, :update, :destroy ] do
       member do
+        get :json
         get :download
         patch :update_design_idea
         patch :update_day
