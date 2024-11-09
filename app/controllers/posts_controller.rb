@@ -3,7 +3,7 @@ class PostsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_calendar
   before_action :check_organization!
-  before_action :set_post, only: [ :show, :edit, :update, :destroy, :update_design_idea, :update_categories, :download, :update_day, :update_date_time ]
+  before_action :set_post, only: [ :show, :edit, :update, :destroy, :update_design_idea, :update_categories, :download, :update_day, :update_date_time, :json]
   before_action :check_author!, only: [ :edit, :update, :destroy ]
   before_action :sanitize_categories, only: [ :create, :update ]
 
@@ -125,6 +125,45 @@ class PostsController < ApplicationController
     zip_data.rewind
     send_data zip_data.read, filename: zip_filename, type: "application/zip", disposition: "attachment"
   end
+
+  # GET /calendars/:calendar_id/posts/:id/json
+  def json
+    begin
+      attachments_data = @post.perspectives.map do |perspective|
+        perspective.attachments.reject { |a| a.type_content == "cloud" }.map do |attachment|
+          {
+            content_url: calendar_post_perspective_attachment_path(@calendar,@post,perspective,attachment)
+          }
+        end
+      end.flatten
+
+      perspective_default_copy = @post.perspectives.find_by(socialplatform: nil)&.copy
+
+      all_social_platforms = Publishplatform.where(post: @post).map do |publishplatform|
+        {
+          name: publishplatform.socialplatform.name
+        }
+      end
+  
+      render json: {
+        success: true,
+        post: {
+          publish_date: @post.publish_date.strftime("%d/%m/%Y %H:%M"),
+          calendar: @post.calendar.name,
+          author:  @post.user.email,
+          status: @post.status,
+          design_idea: @post.design_idea,
+          socialplatforms: all_social_platforms,
+          attachments: attachments_data,
+          perspective_default_copy: perspective_default_copy,
+        }
+      }, status: :ok
+    rescue => e
+      render json: { success: false, error: e.message }, status: :bad_request
+    end
+  end
+  
+
 
   private
     def set_calendar
