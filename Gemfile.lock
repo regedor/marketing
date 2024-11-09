@@ -150,6 +150,8 @@ GEM
     ffi (1.17.0-x86_64-darwin)
     ffi (1.17.0-x86_64-linux-gnu)
     ffi (1.17.0-x86_64-linux-musl)
+    font-awesome-sass (6.5.2)
+      sassc (~> 2.0)
     foreman (0.88.1)
     formtastic (5.0.0)
       actionpack (>= 6.0.0)
@@ -461,6 +463,7 @@ DEPENDENCIES
   debug
   devise
   dotenv-rails
+  font-awesome-sass
   foreman
   importmap-rails
   jbuilder

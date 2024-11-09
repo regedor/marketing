@@ -2,7 +2,7 @@
   <div id="form_post" class="Container w-full max-w-5xl px-8 mx-auto mt-16">
   
     <div class="HeaderContainer mb-8">
-      <h2 class="ContainerHeaderText"><%= @post.title %></h2>
+      <h2 class="ContainerHeaderText"><%= @post.publish_date.strftime("%d/%m/%Y %H:%M") %></h2>
     </div>
   
     <div id="perspective_info"> 
