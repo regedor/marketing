@@ -2,7 +2,13 @@
   <div id="form_post" class="Container w-full max-w-5xl px-8 mx-auto mt-16">
   
     <div class="HeaderContainer mb-8">
-      <h2 class="ContainerHeaderText"><%= @post.publish_date.strftime("%d/%m/%Y %H:%M") %></h2>
+      <div class="flex items-center gap-2">
+        <div id="post_date_time" contenteditable="true" 
+             class="ContainerHeaderText border-none outline-none focus:outline-none">
+          <%= @post.publish_date.strftime("%Y-%m-%d %H:%M") %>
+        </div>
+        <span id="savedDT" class="text-sm text-gray-500"></span>
+      </div>
     </div>
   
     <div id="perspective_info"> 
@@ -32,3 +38,50 @@
     </div>
   </div>
 </div>
+
+<%= content_tag :div, "", 
+    data: { 
+      calendar_id: @calendar.id,
+      post_id: @post.id 
+    },
+    style: "display: none;" 
+%>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const calendarId = document.querySelector('[data-calendar-id]').dataset.calendarId;
+  const postId = document.querySelector('[data-post-id]').dataset.postId;
+  let original_date_time = $('#post_date_time').text().trim();
+  let updateTimer = null;
+
+  function update_date_time() {
+    let date_time_data = $('#post_date_time').text().trim();
+    
+    if(date_time_data != original_date_time && date_time_data.length > 0) {
+      
+      axios.patch(
+        `/calendars/${calendarId}/posts/${postId}/update_date_time`, 
+        { post: { date_time: date_time_data } }
+      )
+      .then((response) => {
+        console.log("Date updated successfully");
+        original_date_time = date_time_data;
+        $("#savedDT").text("(saved)");
+      })
+      .catch((error) => {
+        $('#post_date_time').text(date_time_data);
+      });
+    }
+  }
+
+  $('#post_date_time').on('input', function() {
+    $("#savedDT").text("(editing...)");
+    if (updateTimer) {
+      clearTimeout(updateTimer);
+    }
+    updateTimer = setTimeout(() => {
+      update_date_time();
+    }, 3000);
+  });
+});
+</script>

@@ -3,7 +3,7 @@ class PostsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_calendar
   before_action :check_organization!
-  before_action :set_post, only: [ :show, :edit, :update, :destroy, :update_design_idea, :download, :update_day ]
+  before_action :set_post, only: [ :show, :edit, :update, :destroy, :update_design_idea, :update_categories, :download, :update_day, :update_date_time ]
   before_action :check_author!, only: [ :edit, :update, :destroy ]
   before_action :sanitize_categories, only: [ :create, :update ]
 
@@ -75,6 +75,12 @@ class PostsController < ApplicationController
     LogEntry.create_log("Post design idea has been updated to In Analysis by #{current_user.email}. [#{perspective_params_design_idea}]")
   end
 
+  def update_categories
+    @post.update(categories: params[:post][:categories])
+    head :ok
+    LogEntry.create_log("Post categories have been updated by #{current_user.email}. [#{params[:post][:categories]}]")
+  end
+
   # PATCH /calendars/:calendar_id/posts/:id/update_day
   def update_day
     begin
@@ -89,6 +95,20 @@ class PostsController < ApplicationController
       end
     rescue => e
       render json: { success: false, error: e.message }, status: :bad_request
+    end
+  end
+
+  # posts_controller.rb
+  def update_date_time
+    begin
+      new_datetime = DateTime.parse(params[:post][:date_time])
+      if @post.update(publish_date: new_datetime)
+        head :ok
+      else
+        render json: { error: "Failed to save" }, status: :unprocessable_entity
+      end
+    rescue ArgumentError
+      render json: { error: "Invalid date format" }, status: :unprocessable_entity
     end
   end
 
