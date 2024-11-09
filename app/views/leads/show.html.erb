@@ -1,6 +1,8 @@
-<div class="mx-auto md:w-2/3 w-full flex">
-  <div class="mx-auto">
-
+<div class="flex items-center justify-center min-h-screen">
+  <div class="Container w-full max-w-5xl px-8 mx-auto mt-16">
+    <div class="HeaderContainer mb-8">
+      <h2 class="ContainerHeaderText"><%= @lead.name %></h2>
+    </div>  
     <!-- Lead Attributes -->
     <%= render @lead, pipeline:@pipeline %>
 

@@ -1,6 +1,9 @@
-<div class="mx-auto md:w-2/3 w-full flex">
-  <div class="mx-auto">
+<div class="flex items-center justify-center min-h-screen">
+  <div class="Container w-full max-w-5xl px-8 mx-auto mt-16">
 
+    <div class="HeaderContainer mb-8">
+      <h2 class="ContainerHeaderText"><%= @company.name %></h2>
+    </div>
     <%= render @company %>
 
     <%= link_to "Edit this company", edit_company_path(@company), class: "mt-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
