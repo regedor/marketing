@@ -4,7 +4,7 @@ class PostsController < ApplicationController
   before_action :set_calendar
   before_action :check_organization!
   before_action :set_post, only: [ :show, :edit, :update, :destroy, :update_design_idea, :download, :update_day ]
-  before_action :check_author!, only: [ :edit, :update, :destroy, :update_design_idea ]
+  before_action :check_author!, only: [ :edit, :update, :destroy ]
   before_action :sanitize_categories, only: [ :create, :update ]
 
   # GET /calendars/:calendar_id/posts/:id
@@ -133,7 +133,7 @@ class PostsController < ApplicationController
     end
 
     def check_author!
-      redirect_to root_path, alert: "Access Denied" unless current_user == @post.user
+      redirect_to root_path, alert: "Access Denied" unless current_user == @post.user || current_user.isLeader
     end
 
     def sanitize_categories
