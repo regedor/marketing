@@ -6,9 +6,14 @@
     </div>
     <%= render @company %>
 
-    <%= link_to "Edit this company", edit_company_path(@company), class: "mt-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
-    <%= link_to "Back to companies", companies_path, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
-    <%= link_to "Delete", @company, data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
+
+    <div class="overflow-x-auto mt-4">
+      <div class="flex flex-nowrap md:justify-end space-x-2 text-sm mb-2 whitespace-nowrap min-w-full">
+        <%= link_to "Back to companies", companies_path, class:"Btn-secondary block" %>
+        <%= link_to "Edit this company", edit_company_path(@company),  class:"Btn-primary block"  %>
+        <%= link_to "Delete", @company, data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class:"Btn-delete block" %>
+      </div>
+    </div>
 
     <div id="company_links">
       <%= render "companylinks/form", company:@company, companylink: @new_company_link%>

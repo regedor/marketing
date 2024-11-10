@@ -1,37 +1,62 @@
 <div id="<%= dom_id company %>">
-  <p class="my-5">
-    <strong class="block font-medium mb-1">Name:</strong>
-    <%= company.name %>
+  <p class="my-4">
+    <label class="GenericFormLabel">Name:</label>    
+    <input class="InputFieldReadOnly" type="text" value="<%= company.name %>" readonly>
   </p>
 
-  <p class="my-5">
-    <strong class="block font-medium mb-1">Employers min:</strong>
-    <%= company.employers_min %>
+  <p class="my-4">
+    <label class="GenericFormLabel">Employers min:</label> 
+    <input class="InputFieldReadOnly" type="text" value="<%= company.employers_min %>" readonly>
   </p>
 
-  <p class="my-5">
-    <strong class="block font-medium mb-1">Employers max:</strong>
-    <%= company.employers_max %>
+  <p class="my-4">
+    <label class="GenericFormLabel">Employers max:</label> 
+    <input class="InputFieldReadOnly" type="text" value="<%= company.employers_max %>" readonly>
   </p>
 
-  <p class="my-5">
-    <strong class="block font-medium mb-1">Phone number:</strong>
-    <%= company.phone_number %>
+  <p class="my-4">
+    <label class="GenericFormLabel">Phone number:</label> 
+    <input class="InputFieldReadOnly" type="text" value="<%= company.phone_number %>" readonly>
   </p>
 
-  <p class="my-5">
-    <strong class="block font-medium mb-1">Url site:</strong>
-    <%= company.url_site %>
+  <div id="<%= dom_id company %>">
+  <p class="my-4" data-url="<%= company.url_site %>">
+    <label class="GenericFormLabel">Url site:</label>
+    <input class="InputFieldReadOnly " type="text" value="<%= company.url_site %>" readonly>
   </p>
 
-  <p class="my-5">
-    <strong class="block font-medium mb-1"> Linkedin link:</strong>
-    <%= company.linkedin_link %>
+  <p class="my-4" data-url="<%= company.linkedin_link %>">
+    <label class="GenericFormLabel">Linkedin link:</label>
+    <input class="InputFieldReadOnly " type="text" value="<%= company.linkedin_link %>" readonly>
   </p>
-  
-  <p class="my-5">
-    <strong class="block font-medium mb-1">Description:</strong>
-    <%= company.description %>
-  </p>
+  </div>
 
+  <p class="my-4">
+    <label class="GenericFormLabel">Description:</label>
+    <div class="Comment">
+      <% company.description.split("\n").each do |line| %>
+        <p><%= line %></p>
+      <% end %>
+    </div>
+  </p>
 </div>
+
+<script>
+$(document).ready(function() {
+  $('p[data-url]').hover(
+    function() {
+      $(this).css('cursor', 'pointer');
+    },
+    function() {
+      $(this).css('cursor', 'default');
+    }
+  );
+
+  $('p[data-url]').on('click', function() {
+    const url = $(this).data('url');
+    window.open(url, '_blank');
+  });
+});
+</script>
+
+
