@@ -73,16 +73,6 @@
     let original_categories = $('#categories').text();
     let will_update_categories = false;
 
-    // If you need to handle the categories input
-    $('#categories').on('input', function() {
-      var categories = $(this).text().split(',').map(function(item) {
-        return item.trim();
-      }).filter(Boolean);
-      
-      // Update the data attribute for the copy button
-      $('#categories-copy-button').data('copy-text', categories.join(', '));
-    });
-
     // Add categories update function
     function update_categories() {
       let categories_data = $('#categories').text();
@@ -114,12 +104,11 @@
 
     // Add event listener for categories changes
     $('#categories').on('input', function() {
+      if(!will_update_categories) {
+        setTimeout(update_categories, 3000);
+      }
+      $("#savedCat").text("saving...");
       will_update_categories = true;
-      setTimeout(function() {
-        if(will_update_categories) {
-          update_categories();
-        }
-      }, 1000);
     });
     
     var count = 1;

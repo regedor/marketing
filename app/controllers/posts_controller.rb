@@ -3,7 +3,7 @@ class PostsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_calendar
   before_action :check_organization!
-  before_action :set_post, only: [ :show, :edit, :update, :destroy, :update_design_idea, :update_categories, :download, :update_day, :update_date_time, :json]
+  before_action :set_post, only: [ :show, :edit, :update, :destroy, :update_design_idea, :update_categories, :download, :update_day, :update_date_time, :json ]
   before_action :check_author!, only: [ :edit, :update, :destroy ]
   before_action :sanitize_categories, only: [ :create, :update ]
 
@@ -98,17 +98,20 @@ class PostsController < ApplicationController
     end
   end
 
-  # posts_controller.rb
+  # PATCH /calendars/:calendar_id/posts/:id/update_date_time
   def update_date_time
     begin
-      new_datetime = DateTime.parse(params[:post][:date_time])
-      if @post.update(publish_date: new_datetime)
-        head :ok
+      new_date = DateTime.parse(params[:datetime])
+      @post.publish_date = DateTime.new(new_date.year, new_date.month, new_date.day, new_date.hour, new_date.min, @post.publish_date.sec)
+      if @post.save
+        LogEntry.create_log("Publish datetiem for post ID #{@post.id} has been updated to #{new_date} by #{current_user.email}.")
+
+        render json: { success: true, new_publish_date: @post.publish_date, message: "Publish date updated to #{new_date}." }, status: :ok
       else
-        render json: { error: "Failed to save" }, status: :unprocessable_entity
+        render json: { success: false, error: "Failed to update publish date" }, status: :unprocessable_entity
       end
-    rescue ArgumentError
-      render json: { error: "Invalid date format" }, status: :unprocessable_entity
+    rescue => e
+      render json: { success: false, error: e.message }, status: :bad_request
     end
   end
 
@@ -132,7 +135,7 @@ class PostsController < ApplicationController
       attachments_data = @post.perspectives.map do |perspective|
         perspective.attachments.reject { |a| a.type_content == "cloud" }.map do |attachment|
           {
-            content_url: calendar_post_perspective_attachment_path(@calendar,@post,perspective,attachment)
+            content_url: calendar_post_perspective_attachment_path(@calendar, @post, perspective, attachment)
           }
         end
       end.flatten
@@ -144,7 +147,7 @@ class PostsController < ApplicationController
           name: publishplatform.socialplatform.name
         }
       end
-  
+
       render json: {
         success: true,
         post: {
@@ -155,14 +158,14 @@ class PostsController < ApplicationController
           design_idea: @post.design_idea,
           socialplatforms: all_social_platforms,
           attachments: attachments_data,
-          perspective_default_copy: perspective_default_copy,
+          perspective_default_copy: perspective_default_copy
         }
       }, status: :ok
     rescue => e
       render json: { success: false, error: e.message }, status: :bad_request
     end
   end
-  
+
 
 
   private

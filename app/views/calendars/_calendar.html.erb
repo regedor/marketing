@@ -39,6 +39,25 @@
       </div>
       <div id="have-info" class="hidden">
         <div>
+          <div class="grid grid-cols-2 mb-4 gap-0.5">
+            <%= link_to "", id:"attachments_1", class:"hidden", target: :_black do %> 
+              <%= image_tag "", id:"img_1", class: "rounded-lg w-full h-36 object-cover" %>
+            <% end %>
+            <%= link_to "", id:"attachments_2", class: "hidden", target: :_black do %> 
+              <%= image_tag "", id:"img_2", class: "rounded-lg w-full h-36 object-cover" %>
+            <% end %>
+            <%= link_to "", id:"attachments_3", class:"hidden", target: :_black do %> 
+              <%= image_tag "", id:"img_3", class: "rounded-lg w-full h-36 object-cover" %>
+            <% end %>
+            <%= link_to "", id:"attachments_4", class:"hidden", target: :_black do %> 
+              <%= image_tag "", id:"img_4", class: "rounded-lg w-full h-36 object-cover" %>
+            <% end %>
+          </div>
+          <div class="Bottom-right">
+            <button class="Btn-primary hidden mb-4" id="more-photos" >See More Photos</button>
+          </div>
+        </div>
+        <div>
           <strong>Publish Date</strong>
           <span id="publish_date"></span>
         </div>
@@ -62,6 +81,14 @@
           <strong>Copy</strong>
           <span id="copy"></span>
         </div>
+      </div>
+    </div>
+  </div>
+  <div id="myModal" class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-50 ">
+    <div class="modal-content Container text-gray-900">
+      <button class="close-btn text-2xl absolute top-0 right-0 p-4 cursor-pointe">&times;</button>
+      <h2 class="text-2xl font-semibold mb-4">All Photos</h2>
+      <div class="grid grid-cols-3 gap-4 overflow-y-auto max-h-96" id="photos-display">
       </div>
     </div>
   </div>
@@ -114,11 +141,12 @@
         $(this).find(".menu").addClass("hidden"); // Hide the menu
       }
     );
-    
+    var array_attachments = []
     function fill_post_info() {
       const postId = $(this).data("post-id");
       const calendarId = $(this).data("calendar-id");
       const url = `/calendars/${calendarId}/posts/${postId}/json`
+      clear_post_info()
       $('#no-info').text('...');
       build_axios()
       axios.get(url)
@@ -132,6 +160,32 @@
         $('#publish_date').text(data.publish_date);
         $('#no-info').addClass('hidden');
         $('#have-info').removeClass('hidden');
+        console.log(data.attachments.length)
+        array_attachments = data.attachments
+        if(data.attachments.length > 0){
+          console.log($('#attachments_1'))
+          $('#attachments_1').attr("href",data.attachments[0].content_url);
+          $('#attachments_1').find('#img_1').attr("src",data.attachments[0].content_url);
+          $('#attachments_1').removeClass('hidden');
+          if(data.attachments.length > 1){
+            $('#attachments_2').attr("href",data.attachments[1].content_url);
+            $('#attachments_2').find('#img_2').attr("src",data.attachments[1].content_url);
+            $('#attachments_2').removeClass('hidden');
+            if(data.attachments.length > 2){
+              $('#attachments_3').attr("href",data.attachments[2].content_url);
+              $('#attachments_3').find('#img_3').attr("src",data.attachments[2].content_url);
+              $('#attachments_3').removeClass('hidden');
+              if(data.attachments.length > 3) {
+                $('#attachments_4').attr("href",data.attachments[3].content_url);
+                $('#attachments_4').find('#img_4').attr("src",data.attachments[3].content_url);
+                $('#attachments_4').removeClass('hidden');
+                if(data.attachments.length > 4) {
+                  $('#more-photos').removeClass('hidden');
+                }
+              }
+            }
+          }
+        }
       })
       .catch(err => {
         $('#no-info').text('Error');
@@ -139,19 +193,50 @@
     }
 
     function clear_post_info() {
-      
-        $('#design_idea').text('');
-        $('#calendar').text('');
-        $('#author').text('');
-        $('#status').text('');
-        $('#copy').text('');
-        $('#publish_date').text('');
-        $('#no-info').text('Select a Post');
-        $('#no-info').removeClass('hidden');
-        $('#have-info').addClass('hidden');
-
+      $('#design_idea').text('');
+      $('#calendar').text('');
+      $('#author').text('');
+      $('#status').text('');
+      $('#copy').text('');
+      $('#publish_date').text('');
+      $('#no-info').text('Select a Post');
+      $('#no-info').removeClass('hidden');
+      $('#have-info').addClass('hidden');
+      $('#attachments_1').attr("href","");
+      $('#attachments_2').attr("href","");
+      $('#attachments_3').attr("href","");
+      $('#attachments_4').attr("href","");
+      $('#attachments_1').find("#img1").attr("str","");
+      $('#attachments_2').find("#img2").attr("str","");
+      $('#attachments_3').find("#img3").attr("str","");
+      $('#attachments_4').find("#img4").attr("str","");
+      $('#attachments_1').addClass('hidden');
+      $('#attachments_2').addClass('hidden');
+      $('#attachments_3').addClass('hidden');
+      $('#attachments_4').addClass('hidden');
+      $('#more-photos').addClass('hidden');
     }
 
-    $('.draggable').hover(fill_post_info, clear_post_info)
+    $('.draggable').hover(fill_post_info, () => {})
+    $('#more-photos').on('click', function() {
+      $('#myModal').removeClass('hidden').addClass('flex');
+      $('#photos-display').empty();
+      array_attachments.map((a) => a.content_url).forEach(function(imageSrc) {
+        var imgElement = $('<img>').attr('src', imageSrc).addClass('w-full h-36 object-cover rounded-lg mb-4');
+        $('#photos-display').append(imgElement);
+      });
+    });
+
+    // When the user clicks the close button (×), hide the modal
+    $('.close-btn').on('click', function() {
+      $('#myModal').removeClass('flex').addClass('hidden');
+    });
+
+    // When the user clicks outside the modal content, hide the modal
+    $(window).on('click', function(event) {
+      if ($(event.target).is('#myModal')) {
+        $('#myModal').removeClass('flex').addClass('hidden');
+      }
+    });
   })
 </script>
