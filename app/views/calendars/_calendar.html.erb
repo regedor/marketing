@@ -142,6 +142,19 @@
       }
     );
     var array_attachments = []
+    function show_photos(attachments) {
+      for(var num = 0; num < 5 && num < attachments.length; num ++){
+        console.log('#attachments_' + num)
+        $('#attachments_' + num).attr("href",attachments[num].content_url);
+        $('#attachments_' + num).find('#img_' + num).attr("src",attachments[num].content_url);
+        $('#attachments_' + num).removeClass('hidden');
+        console.log('#attachments_' + num)
+      }
+      if(attachments.length > 5) {
+        $('#more-photos').removeClass('hidden');
+      }
+    }
+
     function fill_post_info() {
       const postId = $(this).data("post-id");
       const calendarId = $(this).data("calendar-id");
@@ -151,6 +164,7 @@
       build_axios()
       axios.get(url)
       .then(response => {
+        console.log('Olá 1')
         data = response.data.post
         $('#design_idea').text(data.design_idea);
         $('#calendar').text(data.calendar);
@@ -160,32 +174,9 @@
         $('#publish_date').text(data.publish_date);
         $('#no-info').addClass('hidden');
         $('#have-info').removeClass('hidden');
-        console.log(data.attachments.length)
         array_attachments = data.attachments
-        if(data.attachments.length > 0){
-          console.log($('#attachments_1'))
-          $('#attachments_1').attr("href",data.attachments[0].content_url);
-          $('#attachments_1').find('#img_1').attr("src",data.attachments[0].content_url);
-          $('#attachments_1').removeClass('hidden');
-          if(data.attachments.length > 1){
-            $('#attachments_2').attr("href",data.attachments[1].content_url);
-            $('#attachments_2').find('#img_2').attr("src",data.attachments[1].content_url);
-            $('#attachments_2').removeClass('hidden');
-            if(data.attachments.length > 2){
-              $('#attachments_3').attr("href",data.attachments[2].content_url);
-              $('#attachments_3').find('#img_3').attr("src",data.attachments[2].content_url);
-              $('#attachments_3').removeClass('hidden');
-              if(data.attachments.length > 3) {
-                $('#attachments_4').attr("href",data.attachments[3].content_url);
-                $('#attachments_4').find('#img_4').attr("src",data.attachments[3].content_url);
-                $('#attachments_4').removeClass('hidden');
-                if(data.attachments.length > 4) {
-                  $('#more-photos').removeClass('hidden');
-                }
-              }
-            }
-          }
-        }
+        console.log('Olá 2')
+        show_photos(data.attachments)
       })
       .catch(err => {
         $('#no-info').text('Error');
@@ -193,31 +184,18 @@
     }
 
     function clear_post_info() {
-      $('#design_idea').text('');
-      $('#calendar').text('');
-      $('#author').text('');
-      $('#status').text('');
-      $('#copy').text('');
-      $('#publish_date').text('');
+      ["#design_idea", "#calendar", "#author", "#status", "#copy", "#publish_date"].forEach(id => $(id).text(''));
       $('#no-info').text('Select a Post');
       $('#no-info').removeClass('hidden');
       $('#have-info').addClass('hidden');
-      $('#attachments_1').attr("href","");
-      $('#attachments_2').attr("href","");
-      $('#attachments_3').attr("href","");
-      $('#attachments_4').attr("href","");
-      $('#attachments_1').find("#img1").attr("str","");
-      $('#attachments_2').find("#img2").attr("str","");
-      $('#attachments_3').find("#img3").attr("str","");
-      $('#attachments_4').find("#img4").attr("str","");
-      $('#attachments_1').addClass('hidden');
-      $('#attachments_2').addClass('hidden');
-      $('#attachments_3').addClass('hidden');
-      $('#attachments_4').addClass('hidden');
+      [1,2,3,4].forEach(id => $("#attachments_" + id).attr("href",""));
+      [1,2,3,4].forEach(id => $("#attachments_" + id).find("#img_"+id).attr("str",""));
+      [1,2,3,4].forEach(id => $("#attachments_" + id).addClass('hidden'));
       $('#more-photos').addClass('hidden');
     }
 
     $('.draggable').hover(fill_post_info, () => {})
+    
     $('#more-photos').on('click', function() {
       $('#myModal').removeClass('hidden').addClass('flex');
       $('#photos-display').empty();
@@ -227,12 +205,10 @@
       });
     });
 
-    // When the user clicks the close button (×), hide the modal
     $('.close-btn').on('click', function() {
       $('#myModal').removeClass('flex').addClass('hidden');
     });
 
-    // When the user clicks outside the modal content, hide the modal
     $(window).on('click', function(event) {
       if ($(event.target).is('#myModal')) {
         $('#myModal').removeClass('flex').addClass('hidden');
