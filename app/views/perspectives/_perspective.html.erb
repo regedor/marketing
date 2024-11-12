@@ -44,7 +44,7 @@
                       <% end %>
                     </strong>
                     
-                    <% if p.id.present? %>
+                    <% if p.id.present? && p.socialplatform.present? %>
                       <%= link_to calendar_post_perspective_path(@calendar, @post, p),
                           data: { turbo_method: :delete, turbo_confirm: "Are you sure?" },
                           class: "text-red-500 hover:text-red-700" do %>

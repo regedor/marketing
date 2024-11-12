@@ -7,7 +7,7 @@
     <p class="font-medium">Calendar:</p>
     <span class="ml-2"><%= @post.calendar.name %></span>
   </div>
-  <div class="flex items-center">
+  <div>
     <%= form_with url: update_status_post_calendar_post_perspective_path(@calendar, @post, @perspective), 
                   method: :patch, 
                   local: true, 
