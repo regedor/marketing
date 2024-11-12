@@ -3,7 +3,7 @@ class PostsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_calendar
   before_action :check_organization!
-  before_action :set_post, only: [ :show, :edit, :update, :destroy, :update_design_idea, :update_categories, :download, :update_day, :update_date_time, :json ]
+  before_action :set_post, only: [ :show, :edit, :update, :destroy, :update_design_idea, :update_categories, :download, :update_day, :update_date_time, :update_status_post, :json ]
   before_action :check_author!, only: [ :edit, :update, :destroy ]
   before_action :sanitize_categories, only: [ :create, :update ]
 
@@ -112,6 +112,16 @@ class PostsController < ApplicationController
       end
     rescue => e
       render json: { success: false, error: e.message }, status: :bad_request
+    end
+  end
+
+  # app/controllers/posts_controller.rb
+  def update_status_post
+    @post = Post.find(params[:id])
+    if @post.update(status: params[:post][:status])
+      redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: 'Status updated successfully'
+    else
+      redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), alert: 'Failed to update status'
     end
   end
 
