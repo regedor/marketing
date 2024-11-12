@@ -1,47 +1,49 @@
 <div class="flex">
   <div id="calendar-div" class="w-3/4">
-    <div class="flex justify-between items-center mb-4">
-      <%= link_to "Previous Year", params.permit(:start_date, calendar_ids: []).merge(start_date: @start_date.prev_year), class: "text-blue-500 hover:underline" %>
-      <%= link_to "Previous", params.permit(:start_date, calendar_ids: []).merge(start_date: @start_date.prev_month), class: "text-blue-500 hover:underline" %>
-      <div class="text-lg font-bold text-gray-700">
-        <%= @start_date.strftime("%B %Y") %>
+    <div class="Container2">
+      <div class="flex justify-between items-center mb-4">
+        <%= link_to "Previous Year", params.permit(:start_date, calendar_ids: []).merge(start_date: @start_date.prev_year), class: "text-blue-500 hover:underline" %>
+        <%= link_to "Previous", params.permit(:start_date, calendar_ids: []).merge(start_date: @start_date.prev_month), class: "text-blue-500 hover:underline" %>
+        <div class="text-lg font-bold text-gray-700">
+          <%= @start_date.strftime("%B %Y") %>
+        </div>
+        <%= link_to "Next", params.permit(:start_date, calendar_ids: []).merge(start_date: @start_date.next_month), class: "text-blue-500 hover:underline" %>
+        <%= link_to "Next Year", params.permit(:start_date, calendar_ids: []).merge(start_date: @start_date.next_year), class: "text-blue-500 hover:underline" %>
       </div>
-      <%= link_to "Next", params.permit(:start_date, calendar_ids: []).merge(start_date: @start_date.next_month), class: "text-blue-500 hover:underline" %>
-      <%= link_to "Next Year", params.permit(:start_date, calendar_ids: []).merge(start_date: @start_date.next_year), class: "text-blue-500 hover:underline" %>
+      <%= month_calendar(events: @posts, attribute: :publish_date, previous_label: nil, next_label: nil) do |date, posts| %>
+        <div class="droppable border relative calendar-box" data-date="<%= date %>">
+          <div class="date text-sm font-bold text-gray-700">
+            <div class="p-2 flex">
+              <%= date.day %>
+              <button class="w-6 h-6 bg-yellow-400 text-black rounded-full shadow-md create-post ml-auto" data-day="<%= date.month %>-<%= date.day%>">+</button>
+            </div>
+            <div id="<%= date.month %>-<%= date.day%>" class="w-full hidden absolute left-0 border bg-white border-gray-300 shadow-md rounded-md max-h-32 overflow-y-auto z-50">
+              <ul>
+                <% @calendars.each do |calendar| %>
+                  <li>
+                    <%= link_to calendar.name, new_calendar_post_path(calendar,date:date), class: "block block px-4 py-2 text-gray-700 hover:bg-yellow-400" %>
+                  </li>
+                <% end %>
+              </ul>
+            </div>
+          </div>
+          <div class="posts-container overflow-y-auto grid grid-cols-2">
+            <% posts.each do |post| %>
+              <% attachment = @attachments_by_post_id[post.id] %>
+              <% if attachment && attachment[:default_attachment_content_url].present? %>
+                <%= link_to calendar_post_path(post.calendar, post), class: "draggable", data: { post_id: post.id, calendar_id: post.calendar.id , datetime: post.publish_date - Time.new(post.publish_date.year, post.publish_date.month, post.publish_date.day) } do %>
+                  <%= image_tag attachment[:default_attachment_content_url], alt: "Post Image"%>
+                <% end %>
+              <% else %>
+                <%= link_to post.title, calendar_post_path(post.calendar, post), class: "Btn-primary mt-2 bg-blue-500 draggable", data: { post_id: post.id, calendar_id: post.calendar.id, datetime: post.publish_date - Time.new(post.publish_date.year, post.publish_date.month, post.publish_date.day) } %>
+              <% end %>          
+            <% end %>
+          </div>
+        </div>
+      <% end %>
     </div>
-    <%= month_calendar(events: @posts, attribute: :publish_date, previous_label: nil, next_label: nil) do |date, posts| %>
-      <div class="droppable border relative calendar-box" data-date="<%= date %>">
-        <div class="date text-sm font-bold text-gray-700">
-          <div class="p-2 flex">
-            <%= date.day %>
-            <button class="w-6 h-6 bg-yellow-400 text-black rounded-full shadow-md create-post ml-auto" data-day="<%= date.day %>">+</button>
-          </div>
-          <div id="day-<%= date.day%>" class="w-full hidden absolute left-0 border bg-white border-gray-300 shadow-md rounded-md max-h-32 overflow-y-auto">
-            <ul>
-              <% @calendars.each do |calendar| %>
-                <li>
-                  <%= link_to calendar.name, new_calendar_post_path(calendar,date:date), class: "block block px-4 py-2 text-gray-700 hover:bg-yellow-400" %>
-                </li>
-              <% end %>
-            </ul>
-          </div>
-        </div>
-        <div class="posts-container overflow-y-auto grid grid-cols-2">
-          <% posts.each do |post| %>
-            <% attachment = @attachments_by_post_id[post.id] %>
-            <% if attachment && attachment[:default_attachment_content_url].present? %>
-              <%= link_to calendar_post_path(post.calendar, post), class: "draggable", data: { post_id: post.id, calendar_id: post.calendar.id , datetime: post.publish_date - Time.new(post.publish_date.year, post.publish_date.month, post.publish_date.day) } do %>
-                <%= image_tag attachment[:default_attachment_content_url], alt: "Post Image"%>
-              <% end %>
-            <% else %>
-              <%= link_to post.title, calendar_post_path(post.calendar, post), class: "Btn-primary mt-2 bg-blue-500 draggable", data: { post_id: post.id, calendar_id: post.calendar.id, datetime: post.publish_date - Time.new(post.publish_date.year, post.publish_date.month, post.publish_date.day) } %>
-            <% end %>          
-          <% end %>
-        </div>
-      </div>
-    <% end %>
   </div>
-  <div class="p-4 w-1/4 ">
+  <div class="ml-4 w-1/4">
     <div id="post-info" class="Container text-gray-600 h-full">
       <div id="no-info">
         <span> Select a Post</span>
@@ -65,36 +67,36 @@
           <div class="Bottom-right">
             <button class="Btn-primary hidden mb-4" id="more-photos" >See More Photos</button>
           </div>
-          <div class="overflow-x-auto">
+          <div class="overflow-y-auto">
             <table class="min-w-full bg-white shadow-md rounded-lg border border-gray-200">
               <tbody class="bg-white divide-y divide-gray-200">
                 <tr class="hover:bg-gray-100">
-                  <td class="TableEntry border-r border-gray-200">Social Media</td>
-                  <td class="TableEntry border-r border-gray-200" id="social_platforms"></td>
+                  <th class="TableHeader border-r border-gray-200">Social Media</th>
+                  <td class="TableEntry2 border-r border-gray-200" id="social_platforms"></td>
                 </tr>
                 <tr class="hover:bg-gray-100">
-                  <td class="TableEntry border-r border-gray-200">Publish Date</td>
-                  <td class="TableEntry border-r border-gray-200" id="publish_date"></td>
+                  <th class="TableHeader border-r border-gray-200">Publish Date</th>
+                  <td class="TableEntry2 border-r border-gray-200" id="publish_date"></td>
                 </tr>
                 <tr class="hover:bg-gray-100">
-                  <td class="TableEntry border-r border-gray-200">Calendar</td>
-                  <td class="TableEntry border-r border-gray-200" id="calendar"></td>
+                  <th class="TableHeader border-r border-gray-200">Calendar</th>
+                  <td class="TableEntry2 border-r border-gray-200" id="calendar"></td>
                 </tr>
                 <tr class="hover:bg-gray-100">
-                  <td class="TableEntry border-r border-gray-200">Author</td>
-                  <td class="TableEntry border-r border-gray-200" id="author"></td>
+                  <th class="TableHeader border-r border-gray-200">Author</th>
+                  <td class="TableEntry2 border-r border-gray-200" id="author"></td>
                 </tr>
                 <tr class="hover:bg-gray-100">
-                  <td class="TableEntry border-r border-gray-200">Status</td>
-                  <td class="TableEntry border-r border-gray-200" id="status"></td>
+                  <th class="TableHeader border-r border-gray-200">Status</th>
+                  <td class="TableEntry2 border-r border-gray-200" id="status"></td>
                 </tr>
                 <tr class="hover:bg-gray-100">
-                  <td class="TableEntry border-r border-gray-200">Design Idea</td>
-                  <td class="TableEntry border-r border-gray-200" id="design_idea"></td>
+                  <th class="TableHeader border-r border-gray-200">Design Idea</th>
+                  <td class="TableEntry2 border-r border-gray-200" id="design_idea"></td>
                 </tr>
                 <tr class="hover:bg-gray-100">
-                  <td class="TableEntry border-r border-gray-200">Copy</td>
-                  <td class="TableEntry border-r border-gray-200" id="copy"></td>
+                  <th class="TableHeader border-r border-gray-200">Copy</th>
+                  <td class="TableEntry2 border-r border-gray-200"id="copy"></td>
                 </tr>
               </tbody>
             </table>
@@ -178,11 +180,11 @@
     $('.create-post').on('click', function click() {
       const day = $(this).data("day")
       if (menu_opened){
-        $(`#day-${day}`).addClass("hidden");
+        $(`#${day}`).addClass("hidden");
         $(this).text("+");
       }
       else {
-        $(`#day-${day}`).removeClass("hidden");
+        $(`#${day}`).removeClass("hidden");
         $(this).text("x");
       }
       menu_opened = !menu_opened;

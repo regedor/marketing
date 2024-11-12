@@ -15,6 +15,7 @@ class PerspectivesController < ApplicationController
     new_perspectives = Socialplatform.all.reject { |socialplatform| post_socialplatforms.include?(socialplatform) }.map { |s| Perspective.new(socialplatform: s) }
     @perspectives = (post_perspectives + new_perspectives).sort_by { |perspective| perspective.socialplatform.present? ? perspective.socialplatform&.name : "Default" }
     @publishplatform = Publishplatform.where(post: @post).map { |pp| pp.socialplatform }
+    @attachments = @post.perspectives.flat_map(&:attachments).select { |a| a.filename.present? && a.id.present? }.uniq { |a| a.filename }.sort_by { |a| a.filename.to_s.downcase }
   end
 
   # POST /calendars/:calendar_id/posts/:post_id/perspectives

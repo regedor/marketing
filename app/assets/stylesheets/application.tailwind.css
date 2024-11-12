@@ -28,6 +28,10 @@
     @apply flex flex-col bg-gray-100 text-gray-200 border border-gray-300 p-6 shadow-lg max-w-2xl rounded-lg;
   }
 
+  .Container2 {
+    @apply bg-gray-100 text-gray-200 border border-gray-300 p-6 shadow-lg rounded-lg;
+  }
+
   .HeaderContainer {
     @apply sm:mx-auto sm:w-full sm:max-w-sm flex items-center justify-center;
   }
@@ -54,6 +58,10 @@
 
   .TableEntry {
     @apply px-4 py-4 whitespace-nowrap text-sm text-gray-600 border-b border-gray-200;
+  }
+
+  .TableEntry2 {
+    @apply px-4 py-4 text-sm text-gray-600 border-b border-gray-200;
   }
 
   .InputField {
