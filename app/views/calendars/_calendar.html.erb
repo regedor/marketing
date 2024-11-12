@@ -1,20 +1,22 @@
-<div class="flex justify-between items-center mb-4">
-  <%= link_to "Previous Year", params.permit(:start_date, calendar_ids: []).merge(start_date: @start_date.prev_year), class: "text-blue-500 hover:underline" %>
-  <%= link_to "Previous", params.permit(:start_date, calendar_ids: []).merge(start_date: @start_date.prev_month), class: "text-blue-500 hover:underline" %>
-  <div class="text-lg font-bold text-gray-700">
-    <%= @start_date.strftime("%B %Y") %>
-  </div>
-  <%= link_to "Next", params.permit(:start_date, calendar_ids: []).merge(start_date: @start_date.next_month), class: "text-blue-500 hover:underline" %>
-  <%= link_to "Next Year", params.permit(:start_date, calendar_ids: []).merge(start_date: @start_date.next_year), class: "text-blue-500 hover:underline" %>
-</div>
-
 <div class="flex">
   <div id="calendar-div" class="w-3/4">
+    <div class="flex justify-between items-center mb-4">
+      <%= link_to "Previous Year", params.permit(:start_date, calendar_ids: []).merge(start_date: @start_date.prev_year), class: "text-blue-500 hover:underline" %>
+      <%= link_to "Previous", params.permit(:start_date, calendar_ids: []).merge(start_date: @start_date.prev_month), class: "text-blue-500 hover:underline" %>
+      <div class="text-lg font-bold text-gray-700">
+        <%= @start_date.strftime("%B %Y") %>
+      </div>
+      <%= link_to "Next", params.permit(:start_date, calendar_ids: []).merge(start_date: @start_date.next_month), class: "text-blue-500 hover:underline" %>
+      <%= link_to "Next Year", params.permit(:start_date, calendar_ids: []).merge(start_date: @start_date.next_year), class: "text-blue-500 hover:underline" %>
+    </div>
     <%= month_calendar(events: @posts, attribute: :publish_date, previous_label: nil, next_label: nil) do |date, posts| %>
-      <div class="droppable border p-2 relative calendar-box" data-date="<%= date %>">
+      <div class="droppable border relative calendar-box" data-date="<%= date %>">
         <div class="date text-sm font-bold text-gray-700">
-          <%= date.day %> +
-          <div class="menu hidden absolute left-0 border bg-white border-gray-300 shadow-md rounded-md max-h-32 overflow-y-auto">
+          <div class="p-2 flex">
+            <%= date.day %>
+            <button class="w-6 h-6 bg-yellow-400 text-black rounded-full shadow-md create-post ml-auto" data-day="<%= date.day %>">+</button>
+          </div>
+          <div id="day-<%= date.day%>" class="w-full hidden absolute left-0 border bg-white border-gray-300 shadow-md rounded-md max-h-32 overflow-y-auto">
             <ul>
               <% @calendars.each do |calendar| %>
                 <li>
@@ -24,16 +26,23 @@
             </ul>
           </div>
         </div>
-        <div class="posts-container overflow-y-auto">
+        <div class="posts-container overflow-y-auto grid grid-cols-2">
           <% posts.each do |post| %>
-            <%= link_to post.title, calendar_post_path(post.calendar, post), class: "Btn-primary mt-2 bg-blue-500 draggable", data: { post_id: post.id, calendar_id: post.calendar.id }  %>
+            <% attachment = @attachments_by_post_id[post.id] %>
+            <% if attachment && attachment[:default_attachment_content_url].present? %>
+              <%= link_to calendar_post_path(post.calendar, post), class: "draggable", data: { post_id: post.id, calendar_id: post.calendar.id , datetime: post.publish_date - Time.new(post.publish_date.year, post.publish_date.month, post.publish_date.day) } do %>
+                <%= image_tag attachment[:default_attachment_content_url], alt: "Post Image"%>
+              <% end %>
+            <% else %>
+              <%= link_to post.title, calendar_post_path(post.calendar, post), class: "Btn-primary mt-2 bg-blue-500 draggable", data: { post_id: post.id, calendar_id: post.calendar.id, datetime: post.publish_date - Time.new(post.publish_date.year, post.publish_date.month, post.publish_date.day) } %>
+            <% end %>          
           <% end %>
         </div>
       </div>
     <% end %>
   </div>
   <div class="p-4 w-1/4 ">
-    <div id="post-info" class="Container text-gray-600">
+    <div id="post-info" class="Container text-gray-600 h-full">
       <div id="no-info">
         <span> Select a Post</span>
       </div>
@@ -56,30 +65,40 @@
           <div class="Bottom-right">
             <button class="Btn-primary hidden mb-4" id="more-photos" >See More Photos</button>
           </div>
-        </div>
-        <div>
-          <strong>Publish Date</strong>
-          <span id="publish_date"></span>
-        </div>
-        <div>
-          <strong>Calendar</strong>
-          <span id="calendar"></span>
-        </div>
-        <div>
-          <strong>Author</strong>
-          <span id="author"></span>
-        </div>
-        <div>
-          <strong>Status</strong>
-          <span id="status"></span>
-        </div>
-        <div>
-          <strong>Design Idea</strong>
-          <span id="design_idea"></span>
-        </div>
-        <div>
-          <strong>Copy</strong>
-          <span id="copy"></span>
+          <div class="overflow-x-auto">
+            <table class="min-w-full bg-white shadow-md rounded-lg border border-gray-200">
+              <tbody class="bg-white divide-y divide-gray-200">
+                <tr class="hover:bg-gray-100">
+                  <td class="TableEntry border-r border-gray-200">Social Media</td>
+                  <td class="TableEntry border-r border-gray-200" id="social_platforms"></td>
+                </tr>
+                <tr class="hover:bg-gray-100">
+                  <td class="TableEntry border-r border-gray-200">Publish Date</td>
+                  <td class="TableEntry border-r border-gray-200" id="publish_date"></td>
+                </tr>
+                <tr class="hover:bg-gray-100">
+                  <td class="TableEntry border-r border-gray-200">Calendar</td>
+                  <td class="TableEntry border-r border-gray-200" id="calendar"></td>
+                </tr>
+                <tr class="hover:bg-gray-100">
+                  <td class="TableEntry border-r border-gray-200">Author</td>
+                  <td class="TableEntry border-r border-gray-200" id="author"></td>
+                </tr>
+                <tr class="hover:bg-gray-100">
+                  <td class="TableEntry border-r border-gray-200">Status</td>
+                  <td class="TableEntry border-r border-gray-200" id="status"></td>
+                </tr>
+                <tr class="hover:bg-gray-100">
+                  <td class="TableEntry border-r border-gray-200">Design Idea</td>
+                  <td class="TableEntry border-r border-gray-200" id="design_idea"></td>
+                </tr>
+                <tr class="hover:bg-gray-100">
+                  <td class="TableEntry border-r border-gray-200">Copy</td>
+                  <td class="TableEntry border-r border-gray-200" id="copy"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>       
         </div>
       </div>
     </div>
@@ -101,11 +120,21 @@
       const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
       axios.defaults.headers.common['X-CSRF-Token'] = csrfToken;
     }
-
+    var outside = false
     $(".draggable").draggable({
       cursor: "move",
       revert: "invalid",
-      helper: 'clone'
+      helper: "clone",
+      start: function (event, ui) {
+        ui.helper.width($(this).width());
+        ui.helper.height($(this).height());
+        $(this).hide()
+        outside = false
+      },
+      stop: function (event, ui) {
+        if(outside)
+          $(this).show()
+      }
     });
     function reset_element(draggedElement) {
       draggedElement.removeClass("ui-draggable-handle");
@@ -115,6 +144,12 @@
     }
     $(".droppable").droppable({
       accept: ".draggable",
+      out : function(){
+        outside = true;
+      },
+      over : function(){
+        outside = false;
+      },
       drop: function(event, ui) {
         const draggedElement = ui.draggable;
         const postId = draggedElement.data("post-id");
@@ -127,30 +162,40 @@
           draggedElement.detach();
           reset_element(draggedElement)
           $(this).find(".posts-container").append(draggedElement);
+          $container = $(this).find(".posts-container")
+          $container.find('.draggable').sort(function (a, b) {
+            var contentA = parseInt($(a).data('datetime'));
+            var contentB = parseInt($(b).data('datetime'));
+            return (contentA < contentB) ? -1 : (contentA > contentB) ? 1 : 0;
+          }).appendTo($container); 
         })
         .catch((error) => {
           reset_element(draggedElement)
         })
       }
     });
-    $(".date").hover(
-      function() {
-        $(this).find(".menu").removeClass("hidden"); // Show the menu
-      },
-      function() {
-        $(this).find(".menu").addClass("hidden"); // Hide the menu
+    var menu_opened = false;
+    $('.create-post').on('click', function click() {
+      const day = $(this).data("day")
+      if (menu_opened){
+        $(`#day-${day}`).addClass("hidden");
+        $(this).text("+");
       }
-    );
+      else {
+        $(`#day-${day}`).removeClass("hidden");
+        $(this).text("x");
+      }
+      menu_opened = !menu_opened;
+    });
+
     var array_attachments = []
     function show_photos(attachments) {
       for(var num = 0; num < 5 && num < attachments.length; num ++){
-        console.log('#attachments_' + num)
         $('#attachments_' + num).attr("href",attachments[num].content_url);
         $('#attachments_' + num).find('#img_' + num).attr("src",attachments[num].content_url);
         $('#attachments_' + num).removeClass('hidden');
-        console.log('#attachments_' + num)
       }
-      if(attachments.length > 5) {
+      if(attachments.length > 4) {
         $('#more-photos').removeClass('hidden');
       }
     }
@@ -164,7 +209,6 @@
       build_axios()
       axios.get(url)
       .then(response => {
-        console.log('Olá 1')
         data = response.data.post
         $('#design_idea').text(data.design_idea);
         $('#calendar').text(data.calendar);
@@ -172,10 +216,14 @@
         $('#status').text(data.status);
         $('#copy').text(data.perspective_default_copy);
         $('#publish_date').text(data.publish_date);
+        $('#social_platforms').text(data.socialplatforms.map(sp => sp.name.charAt(0).toUpperCase() + sp.name.slice(1)));
+        // data.socialplatforms.map(sp => sp.name).forEach(function(imageSrc) {
+        //   var imgElement = $('<img>').attr('src', social_platforms[imageSrc]).addClass('w-4 h-4');
+        //   $('#social_platforms').append(imgElement);
+        // });
         $('#no-info').addClass('hidden');
         $('#have-info').removeClass('hidden');
         array_attachments = data.attachments
-        console.log('Olá 2')
         show_photos(data.attachments)
       })
       .catch(err => {
@@ -184,7 +232,7 @@
     }
 
     function clear_post_info() {
-      ["#design_idea", "#calendar", "#author", "#status", "#copy", "#publish_date"].forEach(id => $(id).text(''));
+      ["#design_idea", "#calendar", "#author", "#status", "#copy", "#publish_date", '#social_platforms'].forEach(id => $(id).text(''));
       $('#no-info').text('Select a Post');
       $('#no-info').removeClass('hidden');
       $('#have-info').addClass('hidden');
@@ -192,6 +240,7 @@
       [1,2,3,4].forEach(id => $("#attachments_" + id).find("#img_"+id).attr("str",""));
       [1,2,3,4].forEach(id => $("#attachments_" + id).addClass('hidden'));
       $('#more-photos').addClass('hidden');
+      // $('#social_platforms').empty();
     }
 
     $('.draggable').hover(fill_post_info, () => {})

@@ -8,11 +8,25 @@ class CalendarsController < ApplicationController
   def index
     @start_date = params[:start_date] ? Date.parse(params[:start_date]) : Date.today
     selected_calendar_ids = params[:calendar_ids] || @calendars.pluck(:id)
+
     @posts = Post.where(calendar_id: selected_calendar_ids).where(
       publish_date: @start_date.beginning_of_month.beginning_of_week..@start_date.end_of_month.end_of_week
     )
+
+    @default_attachments = @posts.map do |post|
+      default_perspective = post.perspectives.find_by(socialplatform: nil)
+      default_attachment = default_perspective&.attachments&.reject { |a| a.type_content == "cloud" }&.first
+      {
+        post: post.id,
+        default_attachment_content_url: default_attachment ? calendar_post_perspective_attachment_path(post.calendar, post, default_perspective, default_attachment) : nil
+      }
+    end
+    @attachments_by_post_id = @default_attachments.index_by { |attachment| attachment[:post] }
+
     @permitted_params = permitted_params
   end
+
+
 
   def new
     @calendar = current_user.organization.calendars.new

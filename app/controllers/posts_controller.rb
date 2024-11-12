@@ -144,7 +144,7 @@ class PostsController < ApplicationController
 
       all_social_platforms = Publishplatform.where(post: @post).map do |publishplatform|
         {
-          name: publishplatform.socialplatform.name
+          name: publishplatform.socialplatform.name.downcase
         }
       end
 
