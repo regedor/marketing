@@ -111,7 +111,8 @@ class LeadsController < ApplicationController
 
     def set_companies_people
       @companies = Company.where(organization: current_user.organization)
-      @people = Person.where(organization: current_user.organization)
+      @people = Person.where(organization: current_user.organization).where("is_private = ? OR user_id = ?", false, current_user.id)
+
     end
 
     def check_company_people!
