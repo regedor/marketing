@@ -18,7 +18,7 @@
         </thead>
         <tbody class="bg-white divide-y divide-gray-200">
           <% @companies.each do |company| %>
-            <tr>
+            <tr class="hover:bg-gray-100">
               <td class="TableEntry border-r border-gray-200">
                 <strong><%= link_to company.name, company, class: "hover:underline" %></strong>
               </td>
