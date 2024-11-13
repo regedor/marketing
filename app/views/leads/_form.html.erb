@@ -11,40 +11,41 @@
     </div>
   <% end %>
 
-  <div class="my-5">
-    <%= form.label :name %>
-    <%= form.text_field :name, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
+  <div class="mb-4">
+    <%= form.label :name, class: "GenericFormLabel" %>
+    <%= form.text_field :name, class: "InputField" %>
   </div>
 
-  <div class="my-5">
-    <%= form.label :start_date %>
-    <%= form.date_field :start_date, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
+  <div class="mb-4">
+    <%= form.label :start_date, class: "GenericFormLabel" %>
+    <%= form.date_field :start_date, class: "InputField" %>
   </div>
 
-  <div class="my-5">
-    <%= form.label :end_date %>
-    <%= form.date_field :end_date, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
+  <div class="mb-4">
+    <%= form.label :end_date, class: "GenericFormLabel" %>
+    <%= form.date_field :end_date, class: "InputField" %>
   </div>
 
-  <div class="mb-5">
-    <%= form.label :description%>
-    <%= form.text_area :description,  class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full"%>
+  <div class="mb-4">
+    <%= form.label :description, class: "GenericFormLabel"%>
+    <%= form.text_area :description,  class: "InputField"%>
   </div>
 
   <% if pipeline.to_people %>
-    <div class="my-5">
-      <%= form.label :person_id %>
-      <%= form.select :person_id, options_for_select(@people.map { |w| [w[:name], w[:id]] }), { prompt: 'People' } %>
+    <div class="mb-4">
+      <%= form.label :person_id, class: "GenericFormLabel" %>
+      <%= form.select :person_id, options_for_select(@people.map { |w| [w[:name], w[:id]] }), { prompt: 'People' }, class: "InputField border-0" %>
     </div>
     
   <% else %>
-    <div class="my-5">
-      <%= form.label :company_id %>
-      <%= form.select :company_id, options_for_select(@companies.map { |w| [w[:name], w[:id]] }), { prompt: 'Company' } %>
+    <div class="mb-4">
+      <%= form.label :company_id, class: "GenericFormLabel" %>
+      <%= form.select :company_id, options_for_select(@companies.map { |w| [w[:name], w[:id]] }), { prompt: 'Company' }, class: "InputField border-0" %>
     </div>
   <% end %>
 
-  <div class="inline">
-    <%= form.submit class: "rounded-lg py-3 px-5 bg-blue-600 text-white inline-block font-medium cursor-pointer" %>
+  <div class="Bottom-right">
+    <%= link_to "Cancel", 'javascript:history.back()', class: "Bottom-right Btn-secondary" %>
+    <%= form.submit class: "Btn-primary ml-2" %>
   </div>
 <% end %>
