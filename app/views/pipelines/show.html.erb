@@ -5,11 +5,17 @@
     </div>
     <%= render @pipeline %>
 
+    <div class="Bottom-right">
+      <div class="flex flex-nowrap md:justify-end space-x-2 text-sm mb-2 whitespace-nowrap min-w-full">
+        <% if current_user.isLeader %>
+          <%= link_to "Edit this pipeline", edit_pipeline_path(@pipeline), class:"Btn-primary block" %>
+        <% end %>
+        <%= link_to "New Lead", new_pipeline_lead_path(@pipeline), class:"Btn-primary block" %>
+      </div>
+    </div>
 
-    <%= link_to "New Lead", new_pipeline_lead_path(@pipeline), class: "rounded-lg py-3 px-5 bg-blue-600 text-white block font-medium" %>
-    <% if current_user.isLeader %>
-      <%= link_to "Edit this pipeline", edit_pipeline_path(@pipeline), class: "mt-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
-    <% end %>
+    
+
     <!-- Stages Section -->
     <div id="stages">
       <%= render "stages/form", pipeline: @pipeline, stage:@new_stage  %>

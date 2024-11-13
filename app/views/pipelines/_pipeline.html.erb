@@ -1,11 +1,11 @@
 <div id="<%= dom_id pipeline %>">
-  <p class="my-5">
-    <strong class="block font-medium mb-1">Name:</strong>
-    <%= pipeline.name %>
+  <p class="my-4">
+    <label class="GenericFormLabel">Name:</label>
+    <input class="InputFieldReadOnly text-gray-900" type="text" value="<%= pipeline.name %>" readonly>
   </p>
 
-  <p class="my-5">
-    <strong class="block font-medium mb-1">To People:</strong>
-    <%= pipeline.to_people %>
+  <p class="my-4">
+    <label class="GenericFormLabel">Origin:</label>
+    <input class="InputFieldReadOnly text-gray-900" type="text" value="<%= pipeline.to_people ? "People" : "Companies" %>" readonly>
   </p>
 </div>
