@@ -1,9 +1,13 @@
 <div id="calendars_page" class="p-4 flex flex-col w-full">
-  <div class="p-4">
-    <%= render "filter" %>
-  </div>
+  <% if @calendars.length > 1%>
+    <div class="p-4">
+      <%= render "filter" %>
+    </div>
+  <% end %>
 
-  <div class="w-full p-4 pt-0">
+  <div class="w-full p-4 pt-0 flex">
     <%= render "calendar" %>
+    <%= render "post_info" %>
+    <%= render "post_photos" %>
   </div>
 </div>

@@ -104,7 +104,7 @@ class PostsController < ApplicationController
       new_date = DateTime.parse(params[:datetime])
       @post.publish_date = DateTime.new(new_date.year, new_date.month, new_date.day, new_date.hour, new_date.min, @post.publish_date.sec)
       if @post.save
-        LogEntry.create_log("Publish datetiem for post ID #{@post.id} has been updated to #{new_date} by #{current_user.email}.")
+        LogEntry.create_log("Publish datetime for post ID #{@post.id} has been updated to #{new_date} by #{current_user.email}.")
 
         render json: { success: true, new_publish_date: @post.publish_date, message: "Publish date updated to #{new_date}." }, status: :ok
       else
@@ -119,9 +119,9 @@ class PostsController < ApplicationController
   def update_status_post
     @post = Post.find(params[:id])
     if @post.update(status: params[:post][:status])
-      redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: 'Status updated successfully'
+      redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Status updated successfully"
     else
-      redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), alert: 'Failed to update status'
+      redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), alert: "Failed to update status"
     end
   end
 
@@ -161,7 +161,7 @@ class PostsController < ApplicationController
       render json: {
         success: true,
         post: {
-          publish_date: @post.publish_date.strftime("%d/%m/%Y %H:%M"),
+          publish_date: @post.publish_date.strftime("%H:%M"),
           calendar: @post.calendar.name,
           author:  @post.user.email,
           status: @post.status,
