@@ -1,11 +1,11 @@
 email_one:
-  email: emailone@example
+  email: emailone@example.com
   current: true
   is_active: false
   person: person_one
 
 email_two:
-  email: emailone@example
+  email: emailone@example.com
   current: false
   is_active: false
   person: person_two

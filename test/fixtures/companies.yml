@@ -3,7 +3,7 @@ company_one:
   employers_min: 1
   employers_max: 2
   phone_number: 987654321
-  url_site: companyone.example
+  url_site: https://companyone.example
   organization: organization_one
 
 company_two:
@@ -11,5 +11,5 @@ company_two:
   employers_min: 1
   employers_max: 2
   phone_number: 123456789
-  url_site: companytwo.example
+  url_site: https://companytwo.example
   organization: organization_two
