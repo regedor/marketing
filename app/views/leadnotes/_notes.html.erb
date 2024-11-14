@@ -1,34 +1,46 @@
 <div id="notes">
   <%= render "leadnotes/form", pipeline: @pipeline, lead: @lead, leadnote: @new_lead_note %>
-  <table>
-    <thead>
-      <tr>
-        <th>Note</th>
-        <th>Author</th>
-        <th>Type</th>
-        <th>To</th>
-        <th>Actions</th>
-        <th>Date</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @notes.each do |note| %>
-        <tr>
-          <td><%= note[:note] %></td>
-          <td><%= note[:author] %></td>
-          <td><%= note[:type] %></td>
-          <td><%= note[:to] %></td>
-          <td>
-						<% if note[:type] == "lead" %>
-							<%= link_to "Edit", edit_pipeline_lead_leadnote_path(@pipeline, @lead, note) %>
-							<%= link_to "Delete", pipeline_lead_leadnote_path(@pipeline, @lead, note), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
-						<% else %>
-							-
-						<% end %>
-					</td>
-          <td><%= note[:datetime] %></td>
-        </tr>
+
+  <% @notes.each do |note| %>
+    <div id="note-<%= note[:id] || note.object_id %>" class="mb-4" data-type="<%= note[:type] %>">
+      <div class="flex items-center">
+        <div class="icon-placeholder mr-2"></div>
+        
+        <p class="GenericFormLabel pl-4">
+          <strong>From: <%= note[:author] %> To: Lead <%= note[:to] %></strong>
+        </p>
+        <p class="flex-grow"></p>
+        <p class="SmallText text-right pr-4"><%= time_ago_in_words(note[:datetime]) %> ago</p>
+      </div>
+
+      <div class="Comment mt-2 pl-4">
+        <% note[:note].split("\n").each do |line| %>
+          <p><%= line %></p>
+        <% end %>
+      </div>
+
+      <% if note[:type] == "lead" %>
+        <div class="Bottom-right mt-3">
+          <%= link_to "Edit", edit_pipeline_lead_leadnote_path(@pipeline, @lead, note[:id]), class: "Btn-secondary mr-2" %>
+          <%= link_to "Delete", pipeline_lead_leadnote_path(@pipeline, @lead, note[:id]), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "Btn-delete" %>
+        </div>
       <% end %>
-    </tbody>
-  </table>
+    </div>
+  <% end %>
 </div>
+
+<script>
+  $(document).ready(function() {
+    $('.mb-4').each(function() {
+      var noteType = $(this).data('type');
+      var iconHtml = '';
+      if (noteType === 'lead') {
+        iconHtml = '<%= image_tag "lead-icon.svg", class: "h-5 w-5" %>';
+      } else if (noteType === 'person') {
+        iconHtml = '<%= image_tag "people-icon2.svg", class: "h-5 w-5" %>';
+      }
+
+      $(this).find('.icon-placeholder').html(iconHtml);
+    });
+  });
+</script>
