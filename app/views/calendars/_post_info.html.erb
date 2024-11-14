@@ -79,9 +79,9 @@
     var array_attachments = []
     function show_photos(attachments) {
       for(var num = 0; num < 5 && num < attachments.length; num ++){
-        $('#attachments_' + num).attr("href",attachments[num].content_url);
-        $('#attachments_' + num).find('#img_' + num).attr("src",attachments[num].content_url);
-        $('#attachments_' + num).removeClass('hidden');
+        $('#attachments_' + (num+1)).attr("href",attachments[num].content_url);
+        $('#attachments_' + (num+1)).find('#img_' + (num+1)).attr("src",attachments[num].content_url);
+        $('#attachments_' + (num+1)).removeClass('hidden');
       }
       if(attachments.length > 4) {
         $('#more-photos').removeClass('hidden');
