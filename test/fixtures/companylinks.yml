@@ -1,9 +1,9 @@
 company_one_link_one:
   name: CompanyOneLinkOne
-  link: companyone.example/linkOne
+  link: https://exampleone.com
   company: company_one
 
 company_one_link_two:
   name: CompanyLinkTwo
-  link: companyone.example/linkTwo
+  link: https://exampletwo.com
   company: company_one
