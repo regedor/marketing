@@ -7,9 +7,10 @@ class SlackNotifier
       blocks: set_block(title, body),
       as_user: true
     )
+    true
   rescue Slack::Web::Api::Errors::SlackError => e
     Rails.logger.error "Slack API error: #{e.message}"
-    nil
+    false
   end
 
   private
