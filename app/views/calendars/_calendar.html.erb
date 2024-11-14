@@ -14,8 +14,9 @@
         <div class="date text-sm font-bold text-gray-700">
           <div class="p-2 flex">
             <%= date.day %>
-            <% if @calendars.length == 1%>
-              <%= link_to "+", new_calendar_post_path(@calendars[0],date:date), class: "text-center w-6 h-6 bg-yellow-400 text-black rounded-full shadow-md ml-auto"%>
+            <% if @calendars.length == 1 || @only_1.present? %>
+              <% calendar = @calendars.length == 1 ? @calendars[0] : @only_1%>
+              <%= link_to "+", new_calendar_post_path(calendar,date:date), class: "text-center w-6 h-6 bg-yellow-400 text-black rounded-full shadow-md ml-auto"%>
             <% else %>
               <button class="w-6 h-6 bg-yellow-400 text-black rounded-full shadow-md create-post ml-auto" data-day="<%= date.month %>-<%= date.day%>">+</button>
             <% end %>

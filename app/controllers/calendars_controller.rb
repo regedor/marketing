@@ -7,7 +7,10 @@ class CalendarsController < ApplicationController
   # GET /calendars
   def index
     @start_date = params[:start_date] ? Date.parse(params[:start_date]) : Date.today
-    selected_calendar_ids = params[:calendar_ids] || @calendars.pluck(:id)
+    pcids = params[:calendar_ids].present? ? params[:calendar_ids].map { |id| id.to_i } : []
+    selected_calendar_ids = pcids.empty? ? @calendars.map { |c| c.id } : @calendars.select { |c| pcids.include?(c.id) }.map { |c| c.id }
+
+    @only_1 = selected_calendar_ids.length == 1 ? selected_calendar_ids.first : nil
 
     @posts = Post.where(calendar_id: selected_calendar_ids).where(
       publish_date: @start_date.beginning_of_month.beginning_of_week..@start_date.end_of_month.end_of_week

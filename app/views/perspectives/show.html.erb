@@ -91,7 +91,7 @@
 
     // Event listener with delayed execution to avoid rapid updates
     $('#post_date_time').on('input', function() {
-      $('#savedDT').text("(editing...)");
+      $('#savedDT').text("(saving...)");
 
       if (updateTimer) {
         clearTimeout(updateTimer);
