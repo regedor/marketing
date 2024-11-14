@@ -1,15 +1,13 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-
-one:
-  name: MyString
+company_one:
+  name: Company One
   employers_min: 1
-  employers_max: 1
-  phone_number: MyString
-  url_site: MyString
+  employers_max: 2
+  phone_number: 987654321
+  url_site: companyone.example
 
-two:
-  name: MyString
+company_two:
+  name: Company Two
   employers_min: 1
-  employers_max: 1
-  phone_number: MyString
-  url_site: MyString
+  employers_max: 2
+  phone_number: 123456789
+  url_site: companytwo.example

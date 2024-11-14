@@ -1,11 +1,9 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+company_one_link_one:
+  name: CompanyOneLinkOne
+  link: companyone.example/linkOne
+  company: company_one
 
-one:
-  name: MyString
-  link: MyString
-  company: one
-
-two:
-  name: MyString
-  link: MyString
-  company: two
+company_one_link_two:
+  name: CompanyLinkTwo
+  link: companyone.example/linkTwo
+  company: company_one
