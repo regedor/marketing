@@ -10,28 +10,26 @@
         <% if current_user.isLeader %>
           <%= link_to "Edit this pipeline", edit_pipeline_path(@pipeline), class:"Btn-primary block" %>
         <% end %>
-        <%= link_to "New Lead", new_pipeline_lead_path(@pipeline), class:"Btn-primary block" %>
+        <%= link_to "New Item", new_pipeline_lead_path(@pipeline), class:"Btn-primary block" %>
       </div>
     </div>
 
-    
-
     <!-- Stages Section -->
+    <h2 class="ContainerHeaderText">Stages</h2>
     <div id="stages">
       <%= render "stages/form", pipeline: @pipeline, stage:@new_stage  %>
-      <table>
+      <table class="min-w-full bg-white shadow-md rounded-lg border border-gray-200">
         <thead>
           <tr>
-            <th>Order</th>
-            <th>Name</th>
-            <th>Is Final</th>
-            <th>Actions</th>
+            <th class="TableHeader border-r border-gray-200">Order</th>
+            <th class="TableHeader border-r border-gray-200">Name</th>
+            <th class="TableHeader border-r border-gray-200">Actions</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody class="bg-white divide-y divide-gray-200">
           <% @pipeline.stages.order(:index).select{ |stage| stage.id.present? }.each do |stage| %>
-            <tr>
-              <td>
+            <tr class="hover:bg-gray-100">
+              <td class="TableEntry border-r border-gray-200">
                 <%= form_with url: pipeline_stage_update_index_stage_path(@pipeline, stage), method: :patch, local: true, id: "stage-form-#{dom_id(stage)}" do %>
                   <select name="stage[index]" id="selector_<%= dom_id(stage) %>" class="InputField text-sm" onchange="this.form.submit()">
                     <% @indexs.each do |index| %>
@@ -40,11 +38,10 @@
                   </select>
                 <% end %>
               </td>
-              <td><%= stage.name %></td>
-              <td><%= stage.is_final %></td>
-              <td>
-                <%= link_to "Edit", edit_pipeline_stage_path(@pipeline, stage) %>
-                <%= link_to "Delete", pipeline_stage_path(@pipeline, stage), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
+              <td class="TableEntry border-r border-gray-200"><%= stage.name %><strong><%=" (final)" if stage.is_final %></strong></td>
+              <td class="TableEntry border-r border-gray-200">
+                <%= link_to "Edit", edit_pipeline_stage_path(@pipeline, stage), class: "text-yellow-600 hover:text-yellow-500 hover:underline" %>
+                <%= link_to "Delete", pipeline_stage_path(@pipeline, stage), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "text-red-600 hover:text-red-500 hover:underline"%>
               </td>
             </tr>
           <% end %>
@@ -53,47 +50,51 @@
     </div>
 
     <!-- Pipeattributes Section -->
+    <h2 class="ContainerHeaderText">Extra Attributes</h2>
     <div id="pipeattributes">
       <%= render "pipeattributes/form", pipeline: @pipeline, pipeattribute: @new_pipeattribute %>
-      <table>
+      <table class="min-w-full bg-white shadow-md rounded-lg border border-gray-200">
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Actions</th>
+            <th class="TableHeader border-r border-gray-200">Name</th>
+            <th class="TableHeader border-r border-gray-200">Actions</th>
           </tr>
         </thead>
         <tbody>
           <% @pipeline.pipeattributes.select{ |pa| pa.id.present? }.each do |pipeattribute| %>
             <tr>
-              <td><%= pipeattribute.name %></td>
-              <td>
-                <%= link_to "Edit", edit_pipeline_pipeattribute_path(@pipeline, pipeattribute) %>
-                <%= link_to "Delete", pipeline_pipeattribute_path(@pipeline, pipeattribute), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
+              <td class="TableEntry border-r border-gray-200"><%= pipeattribute.name %></td>
+              <td class="TableEntry border-r border-gray-200">
+                <%= link_to "Edit", edit_pipeline_pipeattribute_path(@pipeline, pipeattribute), class: "text-yellow-600 hover:text-yellow-500 hover:underline" %>
+                <%= link_to "Delete", pipeline_pipeattribute_path(@pipeline, pipeattribute), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "text-red-600 hover:text-red-500 hover:underline" %>
               </td>
             </tr>
           <% end %>
         </tbody>
       </table>
     </div>
-    <div id="leads" class="min-w-full">
-      <table>
+
+    <!-- Leads Section -->
+    <h2 class="ContainerHeaderText">Items</h2>
+    <div id="leads" class="overflow-x-auto my-4">
+      <table class="min-w-full bg-white shadow-md rounded-lg border border-gray-200">
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Start Date</th>
-            <th>End Date</th>
-            <th>Actions</th>
+            <th class="TableHeader border-r border-gray-200">Name</th>
+            <th class="TableHeader border-r border-gray-200">Start Date</th>
+            <th class="TableHeader border-r border-gray-200">End Date</th>
+            <th class="TableHeader border-r border-gray-200">Actions</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody class="bg-white divide-y divide-gray-200">
           <% @pipeline.leads.each do |lead| %>
-            <tr>
-              <td><%= lead.name %> </td>
-              <td><%= lead.start_date %> </td>
-              <td><%= lead.end_date %> </td>
-              <td>
-                <%= link_to "Show", pipeline_lead_path(@pipeline,lead) %>
-                <%= link_to "Delete", pipeline_lead_path(@pipeline, lead), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
+            <tr class="hover:bg-gray-100">
+              <td class="TableEntry border-r border-gray-200"><%= lead.name %> </td>
+              <td class="TableEntry border-r border-gray-200"><%= lead.start_date %> </td>
+              <td class="TableEntry border-r border-gray-200"><%= lead.end_date %> </td>
+              <td class="TableEntry border-r border-gray-200">
+                <%= link_to "Show", pipeline_lead_path(@pipeline,lead), class: "text-blue-600 hover:underline inline-block mr-2" %>
+                <%= link_to "Delete", pipeline_lead_path(@pipeline, lead), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "text-red-600 hover:text-red-500 hover:underline" %>
               </td>
             </tr>
           <% end %>
