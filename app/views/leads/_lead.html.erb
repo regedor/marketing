@@ -1,21 +1,29 @@
 <div id="<%= dom_id lead %>">
-  <p class="my-5">
-    <strong class="block font-medium mb-1">Name:</strong>
-    <%= lead.name %>
+  <p class="mb-4">
+    <label class="GenericFormLabel">Name:</label>
+    <input class="InputFieldReadOnly text-gray-900" type="text" value="<%= lead.name %>" readonly>
   </p>
 
-  <p class="my-5">
-    <strong class="block font-medium mb-1">Start date:</strong>
-    <%= lead.start_date %>
+  <p class="mb-4">
+    <label class="GenericFormLabel">Start date:</label>
+    <input class="InputFieldReadOnly text-gray-900" type="text" value="<%= lead.start_date %>" readonly>
   </p>
 
-  <p class="my-5">
-    <strong class="block font-medium mb-1">End date:</strong>
-    <%= lead.end_date %>
+  <p class="mb-4">
+    <label class="GenericFormLabel">End date:</label>
+    <input class="InputFieldReadOnly text-gray-900" type="text" value="<%= lead.end_date %>" readonly>
   </p>
 
-  <p class="my-5">
-    <strong class="block font-medium mb-1">Description:</strong>
-    <%= lead.description %>
-  </p>
+  <div class="mb-4">
+    <label class="GenericFormLabel">Description:</label>
+    <div class="Comment mb-4">
+      <% if lead.description.strip.empty? %>
+        <p> No Description</p>
+      <% else %>
+        <% lead.description.split("\n").each do |line| %>
+          <p><%= line %></p>
+        <% end %>
+      <% end %>
+    </div>
+  <div>
 </div>

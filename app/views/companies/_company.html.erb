@@ -33,9 +33,13 @@
 
   <p class="my-4">
     <label class="GenericFormLabel">Description:</label>
-    <div class="Comment">
-      <% company.description.split("\n").each do |line| %>
-        <p><%= line %></p>
+     <div class="Comment">
+      <% if company.description.strip.empty? %>
+        <p> No Description</p>
+      <% else %>
+        <% company.description.split("\n").each do |line| %>
+          <p><%= line %></p>
+        <% end %>
       <% end %>
     </div>
   </p>

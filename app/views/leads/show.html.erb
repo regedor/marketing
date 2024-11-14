@@ -7,7 +7,7 @@
     <%= render @lead, pipeline:@pipeline %>
 
     <%= form_with url: update_stage_pipeline_lead_path(@pipeline, @lead), method: :patch, local: true, id: "stage-form-#{dom_id(@lead)}" do %>
-      <label class="font-medium text-sm">Lead Stage:</label>
+      <label class="GenericFormLabel">Lead Stage:</label>
       <select name="lead[stage_id]" id="selector_<%= dom_id(@lead) %>" class="InputField text-sm" onchange="this.form.submit()">
         <% @pipeline.stages.each do |stage| %>
           <option value="<%= stage.id%>" <% if @lead.stage == stage %> selected <% end %>><%= stage.name %></option>
@@ -15,9 +15,13 @@
       </select>
     <% end %>
 
-    <%= link_to "Edit this lead", edit_pipeline_lead_path(@pipeline, @lead), class: "mt-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
-    <%= link_to "Back to pipeline", pipeline_path(@pipeline), class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
-    <%= link_to "Delete", pipeline_lead_path(@pipeline, @lead), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
+    <div class="overflow-x-auto my-4">
+      <div class="flex flex-nowrap md:justify-end space-x-2 text-sm mb-2 whitespace-nowrap min-w-full">
+        <%= link_to "Back to pipeline", pipeline_path(@pipeline), class:"Btn-secondary block" %>
+        <%= link_to "Edit lead", edit_pipeline_lead_path(@pipeline, @lead), class:"Btn-primary block" %>
+        <%= link_to "Delete", pipeline_lead_path(@pipeline, @lead), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class:"Btn-delete block" %>
+      </div>
+    </div>
 
     <%= render "leadcontents/leadcontents", lead:@lead%>
     <%= render "leadnotes/notes" %>

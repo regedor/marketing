@@ -1,19 +1,21 @@
-<div id="leadcontent">
-  <table class="w-full border-collapse my-5">
+<div id="leadcontent" class="overflow-x-auto">
+  <table class="min-w-full bg-white shadow-md rounded-lg border border-gray-200">
     <thead>
       <tr>
-        <th class="border-b py-2 px-4 font-medium text-left">Attribute</th>
-        <th class="border-b py-2 px-4 font-medium text-left">Value</th>
-        <th class="border-b py-2 px-4 font-medium text-left">Action</th>
+        <th class="TableHeader border-r border-gray-200">Attribute</th>
+        <th class="TableHeader border-r border-gray-200">Value</th>
+        <th class="TableHeader border-r border-gray-200">Actions</th>
       </tr>
     </thead>
     <tbody>
       <% lead.leadcontents.each do |leadcontent| %>
         <tr>
-          <td class="border-t py-2 px-4"><%= leadcontent.pipeattribute.name %></td>
-          <td class="border-t py-2 px-4"><%= leadcontent.value %></td>
-          <td class="border-t py-2 px-4">
-            <%= link_to "Edit", edit_pipeline_lead_leadcontent_path(@pipeline, @lead, leadcontent) %>
+          <td class="TableEntry border-r border-gray-200 text-center"><%= leadcontent.pipeattribute.name %></td>
+          <td class="TableEntry border-r border-gray-200 text-center">
+            <%= leadcontent.value.present? ? leadcontent.value : "<em>Empty</em>".html_safe %>
+          </td>
+          <td class="TableEntry border-r border-gray-200 text-center">
+            <%= link_to "Edit", edit_pipeline_lead_leadcontent_path(@pipeline, @lead, leadcontent), class: "text-yellow-600 hover:text-yellow-500 hover:underline", form_class: "inline" %>
           </td>
         </tr>
       <% end %>
