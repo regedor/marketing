@@ -1,13 +1,11 @@
 <%= form_with(model: [pipeline,lead], class: "contents") do |form| %>
   <% if lead.errors.any? %>
-    <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-lg mt-3">
-      <h2><%= pluralize(lead.errors.count, "error") %> prohibited this lead from being saved:</h2>
-
-      <ul>
+    <div class="text-red-500 mb-1">
+      <ol class="list-decimal list-inside">
         <% lead.errors.each do |error| %>
           <li><%= error.full_message %></li>
         <% end %>
-      </ul>
+      </ol>
     </div>
   <% end %>
 

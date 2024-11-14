@@ -1,19 +1,17 @@
 <%= form_with(model: pipeline, class: "contents") do |form| %>
   <% if pipeline.errors.any? %>
-    <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-lg mt-3">
-      <h2><%= pluralize(pipeline.errors.count, "error") %> prohibited this pipeline from being saved:</h2>
-
-      <ul>
+    <div class="text-red-500 mb-1">
+      <ol class="list-decimal list-inside">
         <% pipeline.errors.each do |error| %>
           <li><%= error.full_message %></li>
         <% end %>
-      </ul>
+      </ol>
     </div>
   <% end %>
 
-  <div class="my-5">
-    <%= form.label :name %>
-    <%= form.text_field :name, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
+  <div class="mb-4">
+    <%= form.label :name, class: "GenericFormLabel" %>
+    <%= form.text_field :name, class: "InputField" %>
   </div>
 
   <div class="mb-4 flex items-center">
@@ -21,7 +19,8 @@
     <%= form.check_box :to_people, class: "CheckboxField" %>
   </div>
 
-  <div class="inline">
-    <%= form.submit class: "rounded-lg py-3 px-5 bg-blue-600 text-white inline-block font-medium cursor-pointer" %>
+  <div class="Bottom-right">
+    <%= link_to "Cancel", 'javascript:history.back()', class: "Bottom-right Btn-secondary" %>
+    <%= form.submit class: "Btn-primary ml-2" %>
   </div>
 <% end %>
