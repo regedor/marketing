@@ -1,7 +1,7 @@
 person_links_one:
-  content: personlinkone.example
+  link: personlinkone.example
   person: person_one
 
 two:
-  content: personlinktwo.example
+  link: personlinktwo.example
   person: person_two

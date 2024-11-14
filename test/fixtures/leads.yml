@@ -1,15 +1,17 @@
 lead_one:
   name: LeadOne
-  content: abc
+  description: abc
   start_date: 2024-10-29
   end_date: 2024-11-29
   pipeline: pipeline_one
   company: company_one
+  stage: stage_one
 
 lead_two:
   name: LeadTwo
-  content: cba
+  description: cba
   start_date: 2024-10-29
   end_date: 2024-11-29
   pipeline: pipeline_two
   company: company_one
+  stage: stage_two

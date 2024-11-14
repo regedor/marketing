@@ -3,11 +3,11 @@ person_one:
   birthdate: 2024-10-29
   is_private: false
   user: user_one
-  organization: one
+  organization: organization_one
 
 person_two:
   name: PersonTwo
   birthdate: 2024-12-29
   is_private: false
   user: user_two
-  organization: user_two
+  organization: organization_two
