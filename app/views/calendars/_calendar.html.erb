@@ -50,6 +50,11 @@
 
 <script>
   $(document).ready(function() {
+    function build_axios() {
+      axios.defaults.withCredentials = true;
+      const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+      axios.defaults.headers.common['X-CSRF-Token'] = csrfToken;
+    }
     var outside = false
     $(".draggable").draggable({
       cursor: "move",

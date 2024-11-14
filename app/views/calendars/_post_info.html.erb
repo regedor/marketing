@@ -76,7 +76,7 @@
       const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
       axios.defaults.headers.common['X-CSRF-Token'] = csrfToken;
     }
-        var array_attachments = []
+    var array_attachments = []
     function show_photos(attachments) {
       for(var num = 0; num < 5 && num < attachments.length; num ++){
         $('#attachments_' + num).attr("href",attachments[num].content_url);
