@@ -28,7 +28,7 @@ jobs:
           command: bundle exec rails db:create db:schema:load
       - run:
           name: Run tests
-          command: bundle exec rails test --parallel 1
+          command: bundle exec rails test
 
 workflows:
   version: 2
