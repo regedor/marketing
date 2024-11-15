@@ -17,7 +17,9 @@ jobs:
           name: Install dependencies
           command: |
             sudo apt-get update -qq && \
-            sudo apt-get install --no-install-recommends -y curl libjemalloc2 libvips libpq-dev pkg-config nodejs
+            sudo apt-get install --no-install-recommends -y curl libjemalloc2 libvips libpq-dev pkg-config && \
+            curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash && \
+            nvm install 22
       - run:
           name: Bundle install
           command: |
