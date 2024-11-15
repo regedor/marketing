@@ -1,48 +1,44 @@
 require "test_helper"
 
 class EmailsControllerTest < ActionDispatch::IntegrationTest
+  include Devise::Test::IntegrationHelpers
+
   setup do
-    @email = emails(:one)
-  end
-
-  test "should get index" do
-    get emails_url
-    assert_response :success
-  end
-
-  test "should get new" do
-    get new_email_url
-    assert_response :success
+    @person_one = people(:person_one)
+    @person_two = people(:person_two)
+    @email_one = emails(:email_one)
+    @email_two = emails(:email_two)
+    sign_in users(:user_one)
   end
 
   test "should create email" do
-    assert_difference("Email.count") do
-      post emails_url, params: { email: { current: @email.current, email: @email.email, is_active: @email.is_active, person_id: @email.person_id } }
+    assert_difference('Email.count') do
+      post person_emails_url(@person_one), params: { email: { email: 'newemail@example.com', current: true, is_active: false } }
     end
-
-    assert_redirected_to email_url(Email.last)
+    assert_redirected_to person_path(@person_one)
   end
 
-  test "should show email" do
-    get email_url(@email)
-    assert_response :success
-  end
-
-  test "should get edit" do
-    get edit_email_url(@email)
-    assert_response :success
+  test "should not create email with invalid data" do
+    assert_no_difference('Email.count') do
+      post person_emails_url(@person_one), params: { email: { email: '', current: true, is_active: false } }
+    end
+    assert_redirected_to person_path(@person_one)
   end
 
   test "should update email" do
-    patch email_url(@email), params: { email: { current: @email.current, email: @email.email, is_active: @email.is_active, person_id: @email.person_id } }
-    assert_redirected_to email_url(@email)
+    patch person_email_url(@person_one, @email_one), params: { email: { email: 'updatedemail@example.com' } }
+    assert_redirected_to person_path(@person_one)
+  end
+
+  test "should not update email with invalid data" do
+    patch person_email_url(@person_one, @email_one), params: { email: { email: '' } }
+    assert_response :unprocessable_entity
   end
 
   test "should destroy email" do
-    assert_difference("Email.count", -1) do
-      delete email_url(@email)
+    assert_difference('Email.count', -1) do
+      delete person_email_url(@person_one, @email_one)
     end
-
-    assert_redirected_to emails_url
+    assert_redirected_to person_path(@person_one)
   end
 end

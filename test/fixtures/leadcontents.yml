@@ -1,11 +1,9 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+lead_content_one:
+  value: LeadContentOne
+  lead: lead_one
+  pipeattribute: pipe_one_attribute_one
 
-one:
-  value: MyString
-  lead: one
-  pipeattribute: one
-
-two:
-  value: MyString
-  lead: two
-  pipeattribute: two
+lead_content_two:
+  value: LeadContentTwo
+  lead: lead_two
+  pipeattribute: pipe_one_attribute_two

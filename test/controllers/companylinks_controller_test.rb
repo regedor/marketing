@@ -1,48 +1,65 @@
 require "test_helper"
 
 class CompanylinksControllerTest < ActionDispatch::IntegrationTest
+  include Devise::Test::IntegrationHelpers
+
   setup do
-    @companylink = companylinks(:one)
+    @user = users(:user_two)
+    @company = companies(:company_one)
+    @companylink = companylinks(:company_one_link_one)
+    sign_in @user
   end
 
-  test "should get index" do
-    get companylinks_url
-    assert_response :success
-  end
-
-  test "should get new" do
-    get new_companylink_url
-    assert_response :success
-  end
-
-  test "should create companylink" do
-    assert_difference("Companylink.count") do
-      post companylinks_url, params: { companylink: { company_id: @companylink.company_id, link: @companylink.link, name: @companylink.name } }
+  test "should create companylink with valid url" do
+    assert_difference('Companylink.count') do
+      post company_companylinks_path(@company), params: {
+        companylink: {
+          name: "Test Link",
+          link: "https://example.com"
+        }
+      }
     end
-
-    assert_redirected_to companylink_url(Companylink.last)
+    assert_redirected_to company_path(@company)
+    assert_equal "Entry was successfully created.", flash[:notice]
   end
 
-  test "should show companylink" do
-    get companylink_url(@companylink)
-    assert_response :success
-  end
-
-  test "should get edit" do
-    get edit_companylink_url(@companylink)
-    assert_response :success
-  end
-
-  test "should update companylink" do
-    patch companylink_url(@companylink), params: { companylink: { company_id: @companylink.company_id, link: @companylink.link, name: @companylink.name } }
-    assert_redirected_to companylink_url(@companylink)
-  end
-
-  test "should destroy companylink" do
-    assert_difference("Companylink.count", -1) do
-      delete companylink_url(@companylink)
+  test "should not create companylink with invalid url" do
+    assert_no_difference('Companylink.count') do
+      post company_companylinks_path(@company), params: {
+        companylink: {
+          name: "Invalid Link",
+          link: "not-a-url"
+        }
+      }
     end
+    assert_redirected_to company_path(@company)
+    assert_equal "Not a valid URL", flash[:alert]
+  end
 
-    assert_redirected_to companylinks_url
+  test "should not create duplicate companylink" do
+    assert_no_difference('Companylink.count') do
+      post company_companylinks_path(@company), params: {
+        companylink: {
+          name: @companylink.name,
+          link: @companylink.link
+        }
+      }
+    end
+    assert_redirected_to company_path(@company)
+    assert_equal "Entry already exists for this company.", flash[:alert]
+  end
+
+  test "should not allow access from different organization" do
+    @user.update(organization: organizations(:organization_two))
+    
+    post company_companylinks_path(@company), params: {
+      companylink: {
+        name: "Test Link",
+        link: "https://example.com"
+      }
+    }
+    
+    assert_redirected_to root_path
+    assert_equal "Access Denied", flash[:alert]
   end
 end
