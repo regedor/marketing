@@ -60,6 +60,7 @@ group :test do
   gem "selenium-webdriver"
   gem "rails-controller-testing"
   gem "minitest"
+  gem 'mocha'
 end
 
 gem "devise"

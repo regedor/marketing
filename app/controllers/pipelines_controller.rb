@@ -1,9 +1,9 @@
 class PipelinesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_pipelines
-  before_action :set_pipeline, only: %i[show edit update destroy ]
-  before_action :check_organization!, only: %i[ edit update destroy ]
-  before_action :check_leader!, only: %i[ new create edit update destroy ]
+  before_action :set_pipeline, only: %i[ show edit update destroy ]
+  before_action :check_organization!, only: %i[ show edit update destroy ]
+  before_action :check_leader!, only: %i[ show new create edit update destroy ]
 
   # GET /pipeline/:pipeline_id
   def show

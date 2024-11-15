@@ -1,17 +1,17 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-
-one:
-  name: MyString
-  content: 
+lead_one:
+  name: LeadOne
+  description: abc
   start_date: 2024-10-29
-  end_date: 2024-10-29
-  pipeline: one
-  company: one
+  end_date: 2024-11-29
+  pipeline: pipeline_one
+  company: company_one
+  stage: stage_one
 
-two:
-  name: MyString
-  content: 
+lead_two:
+  name: LeadTwo
+  description: cba
   start_date: 2024-10-29
-  end_date: 2024-10-29
-  pipeline: two
-  company: two
+  end_date: 2024-11-29
+  pipeline: pipeline_two
+  company: company_one
+  stage: stage_two

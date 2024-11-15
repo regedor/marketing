@@ -218,6 +218,8 @@ GEM
     matrix (0.4.2)
     mini_mime (1.1.5)
     minitest (5.25.1)
+    mocha (2.5.0)
+      ruby2_keywords (>= 0.0.5)
     msgpack (1.7.3)
     multi_xml (0.7.1)
       bigdecimal (~> 3.1)
@@ -470,6 +472,7 @@ DEPENDENCIES
   jwt
   letter_opener
   minitest
+  mocha
   omniauth-google-oauth2
   omniauth-rails_csrf_protection
   pg (~> 1.1)

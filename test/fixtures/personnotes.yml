@@ -1,11 +1,9 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+person_one_note_one:
+  note: Note
+  person: person_one
+  user: user_one
 
-one:
-  note: MyText
-  person: one
-  user: one
-
-two:
-  note: MyText
-  person: two
-  user: two
+person_one_note_two:
+  note: Note
+  person: person_two
+  user: user_one

@@ -71,8 +71,6 @@ class LeadsController < ApplicationController
   end
 
   def update_stage
-    puts "=============="
-    puts params
     if @lead.update(lead_stage_params)
       redirect_to pipeline_lead_path(@pipeline, @lead), notice: "Stage was successfully updated."
     else
