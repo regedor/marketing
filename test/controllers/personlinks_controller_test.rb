@@ -1,48 +1,73 @@
 require "test_helper"
 
 class PersonlinksControllerTest < ActionDispatch::IntegrationTest
+  include Devise::Test::IntegrationHelpers
+  
   setup do
-    @personlink = personlinks(:one)
+    @user = users(:user_one)
+    @person = people(:person_one)
+    @personlink = personlinks(:person_links_one)
+    sign_in @user
   end
 
-  test "should get index" do
-    get personlinks_url
-    assert_response :success
-  end
-
-  test "should get new" do
-    get new_personlink_url
-    assert_response :success
-  end
-
-  test "should create personlink" do
-    assert_difference("Personlink.count") do
-      post personlinks_url, params: { personlink: { content: @personlink.content, person_id: @personlink.person_id } }
+  test "should create personlink with valid url" do
+    assert_difference('Personlink.count') do
+      post person_personlinks_path(@person), params: {
+        personlink: {
+          name: "Test Link",
+          link: "https://example.com"
+        }
+      }
     end
-
-    assert_redirected_to personlink_url(Personlink.last)
+    assert_redirected_to person_path(@person)
+    assert_equal "Entry was successfully updated.", flash[:notice]
   end
 
-  test "should show personlink" do
-    get personlink_url(@personlink)
-    assert_response :success
+  test "should not create personlink with invalid url" do
+    assert_no_difference('Personlink.count') do
+      post person_personlinks_path(@person), params: {
+        personlink: {
+          name: "Invalid Link",
+          link: "not-a-url"
+        }
+      }
+    end
+    assert_redirected_to person_path(@person)
+    assert_equal "Not a valid URL", flash[:alert]
   end
 
-  test "should get edit" do
-    get edit_personlink_url(@personlink)
-    assert_response :success
-  end
-
-  test "should update personlink" do
-    patch personlink_url(@personlink), params: { personlink: { content: @personlink.content, person_id: @personlink.person_id } }
-    assert_redirected_to personlink_url(@personlink)
+  test "should not create duplicate personlink" do
+    assert_no_difference('Personlink.count') do
+      post person_personlinks_path(@person), params: {
+        personlink: {
+          name: @personlink.name,
+          link: "https://example.com"
+        }
+      }
+    end
+    assert_redirected_to person_path(@person)
+    assert_equal "Entry already exists for this person.", flash[:alert]
   end
 
   test "should destroy personlink" do
-    assert_difference("Personlink.count", -1) do
-      delete personlink_url(@personlink)
+    assert_difference('Personlink.count', -1) do
+      delete destroy_content_person_personlink_path(@person, @personlink, name: @personlink.name)
     end
+    assert_redirected_to person_path(@person)
+    assert_equal "Content removed successfully.", flash[:notice]
+  end
 
-    assert_redirected_to personlinks_url
+  test "should not allow access from different organization" do
+    @user.update(organization: organizations(:organization_two))
+    
+    post person_personlinks_path(@person), params: {
+      personlink: {
+        name: "Test Link",
+        link: "https://example.com"
+      }
+    }
+    
+    assert_redirected_to root_path
+    assert_equal "Access Denied", flash[:alert]
   end
 end

@@ -1,11 +1,11 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-
-one:
-  name: MyString
+stage_one:
+  name: Stage One
   is_final: false
-  pipeline: one
+  pipeline: pipeline_one
+  index: 1
 
-two:
-  name: MyString
-  is_final: false
-  pipeline: two
+stage_two:
+  name: Stage Two
+  is_final: true
+  pipeline: pipeline_two
+  index: 1

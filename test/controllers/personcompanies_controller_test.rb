@@ -1,48 +1,69 @@
 require "test_helper"
 
 class PersoncompaniesControllerTest < ActionDispatch::IntegrationTest
+  include Devise::Test::IntegrationHelpers
+  
   setup do
-    @personcompany = personcompanies(:one)
+    @user = users(:user_one)
+    @person = people(:person_one) 
+    @personTwo = people(:person_two) 
+    @company = companies(:company_one)
+    @companyTwo = companies(:company_two)
+    @personcompany = personcompanies(:person_companies_one)
+    sign_in @user
   end
 
-  test "should get index" do
-    get personcompanies_url
-    assert_response :success
-  end
-
-  test "should get new" do
-    get new_personcompany_url
-    assert_response :success
-  end
-
-  test "should create personcompany" do
-    assert_difference("Personcompany.count") do
-      post personcompanies_url, params: { personcompany: { company_id: @personcompany.company_id, is_working: @personcompany.is_working, person_id: @personcompany.person_id } }
+  test "should create personcompany by person" do
+    assert_difference('Personcompany.count') do
+      post create_by_person_personcompanies_url(@person), params: {
+        personcompany: {
+          company_id: @companyTwo.id,
+          is_working: true,
+          is_my_contact: false
+        }
+      }
     end
-
-    assert_redirected_to personcompany_url(Personcompany.last)
+    assert_redirected_to person_path(@person)
   end
 
-  test "should show personcompany" do
-    get personcompany_url(@personcompany)
-    assert_response :success
-  end
-
-  test "should get edit" do
-    get edit_personcompany_url(@personcompany)
-    assert_response :success
-  end
-
-  test "should update personcompany" do
-    patch personcompany_url(@personcompany), params: { personcompany: { company_id: @personcompany.company_id, is_working: @personcompany.is_working, person_id: @personcompany.person_id } }
-    assert_redirected_to personcompany_url(@personcompany)
-  end
-
-  test "should destroy personcompany" do
-    assert_difference("Personcompany.count", -1) do
-      delete personcompany_url(@personcompany)
+  test "should create personcompany by company" do  
+    assert_difference('Personcompany.count') do
+      post create_by_company_personcompanies_url(@company), params: {
+        personcompany: {
+          person_id: @personTwo.id,
+          is_working: true, 
+          is_my_contact: false
+        }
+      }
     end
+    assert_redirected_to company_path(@company)
+  end
 
-    assert_redirected_to personcompanies_url
+  test "should update personcompany is_working by person" do
+    patch update_is_working_by_person_personcompanies_url(@person, @company)
+    assert_redirected_to person_path(@person)
+    @personcompany.reload
+    assert_not @personcompany.is_working
+  end
+
+  test "should update personcompany is_working by company" do
+    patch update_is_working_by_company_personcompanies_url(@company, @person) 
+    assert_redirected_to company_path(@company)
+    @personcompany.reload
+    assert_not @personcompany.is_working
+  end
+
+  test "should destroy personcompany by person" do
+    assert_difference('Personcompany.count', -1) do
+      delete destroy_by_person_personcompanies_url(@person, @company)
+    end
+    assert_redirected_to person_path(@person)
+  end
+
+  test "should destroy personcompany by company" do
+    assert_difference('Personcompany.count', -1) do
+      delete destroy_by_company_personcompanies_url(@company, @person)
+    end
+    assert_redirected_to company_path(@company) 
   end
 end
