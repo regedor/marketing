@@ -85,7 +85,7 @@ class AttachmentsController < ApplicationController
     @attachment.update(attachment_params_status)
     redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Attachment status updated."
 
-    LogEntry.create_log("Attachment status has been updated by #{current_user.email}. [#{attachment_params}]")
+    LogEntry.create_log("Attachment #{@attachment.id} status has been updated by #{current_user.email}. [#{attachment_params_status}]")
   end
 
   # PATCH /calendars/:calendar_id/posts/:post_id/perspectives/:perspective_id/attachments/:id/like
@@ -95,7 +95,7 @@ class AttachmentsController < ApplicationController
     @attachmentcounter.rejected = false
     save_counter(@attachmentcounter)
 
-    LogEntry.create_log("Attachment has been liked by #{current_user.email}. [#{attachment_params}]")
+    LogEntry.create_log("Attachment #{@attachment.id} has been liked by #{current_user.email}.")
   end
 
   # PATCH /calendars/:calendar_id/posts/:post_id/perspectives/:perspective_id/attachments/:id/dislike
@@ -105,7 +105,7 @@ class AttachmentsController < ApplicationController
     @attachmentcounter.rejected = !@attachmentcounter.rejected
     save_counter(@attachmentcounter)
 
-    LogEntry.create_log("Attachment has been disliked by #{current_user.email}. [#{attachment_params}]")
+    LogEntry.create_log("Attachment #{@attachment.id} has been disliked by #{current_user.email}.")
   end
 
   private
@@ -117,7 +117,7 @@ class AttachmentsController < ApplicationController
     end
 
     def set_attachment
-      @attachment = @perspective.attachments.find(params[:id])
+      @attachment = @post.perspectives.map { |p| p.attachments }.flatten.select { |a| a.id == params[:id].to_i }.first
     end
 
     def attachment_params
@@ -137,7 +137,6 @@ class AttachmentsController < ApplicationController
         redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Reaction was successfully saved."
       else
         error_message = attachmentcounter.errors.full_messages.join(", ")
-        puts error_message
         redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), alert: "There was an error saving the reaction." + error_message
       end
     end

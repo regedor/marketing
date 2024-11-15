@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  resources :pipelines, only: [ :new, :show, :create, :edit, :update, :destroy, :index ] do
+  resources :pipelines, only: [ :new, :show, :create, :edit, :update, :destroy ] do
     collection do
       get :selector
       post :select_pipeline
@@ -50,15 +50,15 @@ Rails.application.routes.draw do
     delete "company/:company_id/:person_id", to: "personcompanies#destroy_by_company", as: :destroy_by_company, on: :collection
   end
 
-  resources :calendars, only: [ :index, :create, :edit, :update, :destroy ] do
-    collection do
-      get :selector
-      post :select_calendar
-    end
+  resources :calendars, only: [ :new, :index, :create, :edit, :update, :destroy ] do
     resources :posts, only: [ :show, :new, :create, :edit, :update, :destroy ] do
       member do
+        get :json
         get :download
         patch :update_design_idea
+        patch :update_categories
+        patch :update_day
+        patch :update_date_time
       end
 
       resources :perspectives, only: [ :show, :create, :destroy ] do

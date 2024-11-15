@@ -60,6 +60,7 @@ group :test do
   gem "selenium-webdriver"
   gem "rails-controller-testing"
   gem "minitest"
+  gem 'mocha'
 end
 
 gem "devise"
@@ -75,3 +76,4 @@ gem "tailwindcss-rails"
 gem "foreman"
 gem "slack-ruby-client"
 gem "whenever", require: false
+gem 'font-awesome-sass'

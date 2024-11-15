@@ -3,7 +3,8 @@ class CommentsController < ApplicationController
   before_action :set_data
   before_action :check_organization!
   before_action :set_comment, only: [ :edit, :update, :destroy ]
-  before_action :check_author!, only: [ :edit, :update, :destroy ]
+  before_action :check_author!, only: [ :edit, :update ]
+  before_action :check_leader!, only: [ :destroy ]
 
   # POST /calendars/:calendar_id/posts/:post_id/comments
   def create
@@ -67,5 +68,9 @@ class CommentsController < ApplicationController
 
     def check_author!
       redirect_to root_path, alert: "Access Denied" unless current_user == @comment.user
+    end
+
+    def check_leader!
+      check_author! unless current_user.isLeader
     end
 end

@@ -15,6 +15,7 @@ class PerspectivesController < ApplicationController
     new_perspectives = Socialplatform.all.reject { |socialplatform| post_socialplatforms.include?(socialplatform) }.map { |s| Perspective.new(socialplatform: s) }
     @perspectives = (post_perspectives + new_perspectives).sort_by { |perspective| perspective.socialplatform.present? ? perspective.socialplatform&.name : "Default" }
     @publishplatform = Publishplatform.where(post: @post).map { |pp| pp.socialplatform }
+    @attachments = @post.perspectives.flat_map(&:attachments).select { |a| a.filename.present? && a.id.present? }.uniq { |a| a.filename }.sort_by { |a| a.created_at }
   end
 
   # POST /calendars/:calendar_id/posts/:post_id/perspectives
@@ -54,7 +55,7 @@ class PerspectivesController < ApplicationController
     send_notification("updated", 1)
     redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Perspective status updated."
 
-    LogEntry.create_log("Perspective status has been updated by #{current_user.email}. [#{perspective_params}]")
+    LogEntry.create_log("Perspective status has been updated by #{current_user.email}. [#{perspective_params_status}]")
   end
 
   # PATCH /calendars/:calendar_id/posts/:post_id/perspectives/:id/update_status_post

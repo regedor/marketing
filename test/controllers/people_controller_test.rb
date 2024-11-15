@@ -1,8 +1,12 @@
 require "test_helper"
 
 class PeopleControllerTest < ActionDispatch::IntegrationTest
+  include Devise::Test::IntegrationHelpers
+
   setup do
-    @person = people(:one)
+    @user = users(:user_one)
+    @person = people(:person_one)
+    sign_in @user
   end
 
   test "should get index" do
@@ -16,10 +20,9 @@ class PeopleControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should create person" do
-    assert_difference("Person.count") do
-      post people_url, params: { person: { birthdate: @person.birthdate, is_private: @person.is_private, name: @person.name, organization_id: @person.organization_id, user_id: @person.user_id } }
+    assert_difference('Person.count') do
+      post people_url, params: { person: { name: 'New Person', birthdate: '2024-01-01', description: 'New description', linkedin_link: 'http://linkedin.com/new_person' } }
     end
-
     assert_redirected_to person_url(Person.last)
   end
 
@@ -34,15 +37,14 @@ class PeopleControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update person" do
-    patch person_url(@person), params: { person: { birthdate: @person.birthdate, is_private: @person.is_private, name: @person.name, organization_id: @person.organization_id, user_id: @person.user_id } }
+    patch person_url(@person), params: { person: { name: 'Updated Name', linkedin_link: 'http://linkedin.com/updated_person' } }
     assert_redirected_to person_url(@person)
   end
 
   test "should destroy person" do
-    assert_difference("Person.count", -1) do
+    assert_difference('Person.count', -1) do
       delete person_url(@person)
     end
-
     assert_redirected_to people_url
   end
 end

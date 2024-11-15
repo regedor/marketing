@@ -9,3 +9,9 @@ user_two:
   encrypted_password: <%= Devise::Encryptor.digest(User, 'password') %>
   organization: organization_one
   isLeader: true
+
+user_three:
+  email: otherorg_leader@example.com
+  encrypted_password: <%= Devise::Encryptor.digest(User, 'password') %>
+  organization: organization_two
+  isLeader: true

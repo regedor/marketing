@@ -1,14 +1,27 @@
-<div class="mb-4 text-gray-900 grid grid-cols-1 md:grid-cols-3 gap-2">
-  <div class="flex items-center">
-    <span class="font-medium">Publish Date:</span>
-    <span class="ml-2"><%= @post.publish_date.strftime("%d/%m/%Y %H:%M") %></span>
-  </div>
+<div class="mb-4 text-gray-900 grid grid-cols-1 md:grid-cols-3 gap-3">
   <div class="flex items-center">
     <p class="font-medium">Creator:</p>
     <span class="ml-2"><%= @post.user.email %></span>
   </div>
-  <div class="flex items-center">
+  <div class="flex items-center justify-center">
     <p class="font-medium">Calendar:</p>
     <span class="ml-2"><%= @post.calendar.name %></span>
+  </div>
+  <div>
+    <%= form_with url: update_status_post_calendar_post_perspective_path(@calendar, @post, @perspective), 
+                  method: :patch, 
+                  local: true, 
+                  id: "status-form-#{dom_id(@post)}",
+                  class: "flex items-center ml-auto" do %>
+      <label class="font-medium mr-2">Status:</label>
+      <select name="post[status]" 
+              id="selector_<%= dom_id(@post) %>" 
+              class="InputField text-sm" 
+              onchange="this.form.submit()">
+        <option value="approved" class="text-green-600" <%= 'selected' if @post.status == "approved" %>>Approved</option>
+        <option value="in_analysis" class="text-yellow-600" <%= 'selected' if @post.status == "in_analysis" %>>In Analysis</option>
+        <option value="rejected" class="text-red-600" <%= 'selected' if @post.status == "rejected" %>>Rejected</option>
+      </select>
+    <% end %>
   </div>
 </div>

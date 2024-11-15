@@ -1,12 +1,9 @@
 class PipelinesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_pipelines
-  before_action :set_pipeline, only: %i[show edit update destroy ]
-  before_action :check_organization!, only: %i[ edit update destroy ]
-
-  # GET /pipeline
-  def index
-  end
+  before_action :set_pipeline, only: %i[ show edit update destroy ]
+  before_action :check_organization!, only: %i[ show edit update destroy ]
+  before_action :check_leader!, only: %i[ show new create edit update destroy ]
 
   # GET /pipeline/:pipeline_id
   def show
@@ -48,7 +45,7 @@ class PipelinesController < ApplicationController
   # DELETE /pipeline/:pipeline_id
   def destroy
     @pipeline.destroy!
-    redirect_to pipelines_path, status: :see_other, notice: "Pipeline was successfully destroyed."
+    redirect_to dashboard_path, status: :see_other, notice: "Pipeline was successfully destroyed."
   end
 
   # GET /pipelines/:pipeline_id/selector
@@ -81,5 +78,9 @@ class PipelinesController < ApplicationController
 
     def check_organization!
       redirect_to request.referrer || root_path, alert: "Access Denied" unless current_user.organization_id == @pipeline.organization_id
+    end
+
+    def check_leader!
+      redirect_to request.referrer || root_path, alert: "Access Denied" unless current_user.isLeader
     end
 end
