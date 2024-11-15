@@ -13,11 +13,4 @@ module ActiveSupport
 
     # Add more helper methods to be used by all tests here...
   end
-
-  class ActiveSupport::TestCase
-    # Setup and teardown for each test
-    setup do
-      puts "Setting up for #{name}"
-    end
-  end
 end
