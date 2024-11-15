@@ -2,12 +2,12 @@
 
 one:
   description: MyText
-  organization: one
   type_notification: 1
+  organization: organization_one
   sent: false
 
 two:
   description: MyText
-  organization: two
   type_notification: 1
+  organization: organization_one
   sent: false
