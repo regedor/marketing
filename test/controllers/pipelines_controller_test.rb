@@ -6,7 +6,7 @@ class PipelinesControllerTest < ActionDispatch::IntegrationTest
   setup do
     @pipeline = pipelines(:pipeline_one)
     @pipeline_two = pipelines(:pipeline_two)
-    @user = users(:user_one)
+    @user = users(:user_two)
     @other_org_user = users(:user_three)
     @organization = organizations(:organization_one)
     sign_in @user
@@ -70,7 +70,7 @@ class PipelinesControllerTest < ActionDispatch::IntegrationTest
     assert_difference("Pipeline.count", -1) do
       delete pipeline_url(@pipeline)
     end
-    assert_redirected_to pipelines_url
+    assert_redirected_to dashboard_url
     assert_equal "Pipeline was successfully destroyed.", flash[:notice]
   end
 
