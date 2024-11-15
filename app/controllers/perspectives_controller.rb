@@ -19,11 +19,12 @@ class PerspectivesController < ApplicationController
 
   # POST /calendars/:calendar_id/posts/:post_id/perspectives
   def create
-    @perspective_new = @post.perspectives.new(perspective_params)
-    @perspective_new.copy = @post.perspectives.reject { |p| p.socialplatform.present? }.map(&:copy).first
+    @perspective = @post.perspectives.new(perspective_params)
+    @perspective.copy = @post.perspectives.reject { |p| p.socialplatform.present? }.map(&:copy).first
 
-    if @perspective_new.save
-      redirect_to calendar_post_perspective_path(@calendar, @post, @perspective_new), notice: "Perspective was successfully created."
+    if @perspective.save
+      send_notification("created", 0)
+      redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Perspective was successfully created."
 
       LogEntry.create_log("Perspective has been created by #{current_user.email}. [#{perspective_params}]")
     else
@@ -40,6 +41,7 @@ class PerspectivesController < ApplicationController
       LogEntry.create_log("#{current_user.email} attempted to delete perspective #{@perspective.id} but failed.")
     else
       @perspective.destroy
+      send_notification("destroyed", 2)
       redirect_to calendar_post_path(@calendar, @post), notice: "Perspective was successfully destroyed."
 
       LogEntry.create_log("Perspective #{@perspective.id} has been destroyed by #{current_user.email}.")
@@ -49,6 +51,7 @@ class PerspectivesController < ApplicationController
   # PATCH /calendars/:calendar_id/posts/:post_id/perspectives/:id/update_status
   def update_status
     @perspective.update(perspective_params_status)
+    send_notification("updated", 1)
     redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Perspective status updated."
 
     LogEntry.create_log("Perspective status has been updated by #{current_user.email}. [#{perspective_params}]")
@@ -57,6 +60,7 @@ class PerspectivesController < ApplicationController
   # PATCH /calendars/:calendar_id/posts/:post_id/perspectives/:id/update_status_post
   def update_status_post
     @post.update(post_params_status)
+    send_notification_post("updated", 1)
     redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Post status updated."
 
     LogEntry.create_log("Post status has been updated by #{current_user.email}. [#{post_params_status}]")
@@ -65,6 +69,7 @@ class PerspectivesController < ApplicationController
   # PATCH /calendars/:calendar_id/posts/:post_id/perspectives/:id/update_copy
   def update_copy
     @perspective.update(perspective_params_copy)
+    send_notification("updated", 1)
     LogEntry.create_log("Perspective copy has been updated by #{current_user.email}. [#{perspective_params_copy}]")
   end
 
@@ -96,5 +101,18 @@ class PerspectivesController < ApplicationController
 
     def perspective_params_copy
       params.require(:perspective).permit(:copy)
+    end
+
+    def send_notification(action, action_type)
+      if @perspective.socialplatform.nil?
+        Notification.create(description: "The perspective #{@perspective.id},the default perspective, has been #{action} by #{current_user.email}.", type_notification: action_type, organization: current_user.organization, title: "Post #{@perspective.post.title} for the default perspective Notification")
+      else
+        Notification.create(description: "The perspective #{@perspective.id}, for the social media `#{@perspective.socialplatform.name}`, has been #{action} by #{current_user.email}.", type_notification: action_type, organization: current_user.organization, title: "Post #{@perspective.post.title} for the social media #{@perspective.socialplatform.name} Notification")
+      end
+    end
+
+
+    def send_notification_post(action, action_type)
+      Notification.create(description: "The post #{@post.id}, with title `#{@post.title}`, has been #{action} by #{current_user.email}.", type_notification: action_type, organization: current_user.organization, title: "Post #{@post.title} Notification")
     end
 end

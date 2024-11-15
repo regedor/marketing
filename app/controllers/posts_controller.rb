@@ -28,7 +28,7 @@ class PostsController < ApplicationController
     @post.user = current_user
 
     if @post.save
-      send_notification("created")
+      send_notification("created", 0)
       redirect_to calendar_post_path(@calendar, @post), notice: "Post was successfully created."
 
       LogEntry.create_log("Post has been created by #{current_user.email}. [#{post_params}]")
@@ -46,7 +46,7 @@ class PostsController < ApplicationController
   # PATCH /calendars/:calendar_id/posts/:id
   def update
     if @post.update(post_params)
-      send_notification("updated")
+      send_notification("updated", 1)
       redirect_to calendar_post_path(@calendar, @post), notice: "Post was successfully updated."
 
       LogEntry.create_log("Post has been updated by #{current_user.email}. [#{post_params}]")
@@ -60,7 +60,7 @@ class PostsController < ApplicationController
   # DELETE /calendars/:calendar_id/posts/:id
   def destroy
     @post.destroy
-    send_notification("destroyed")
+    send_notification("destroyed", 2)
     redirect_to calendars_path(), notice: "Post was successfully deleted."
 
     LogEntry.create_log("Post #{@post.title} has been destroyed by #{current_user.email}.")
@@ -69,7 +69,7 @@ class PostsController < ApplicationController
   # PATCH /calendars/:calendar_id/posts/:id/update_design_idea
   def update_design_idea
     @post.update(perspective_params_design_idea)
-    send_notification("its design idea updated")
+    send_notification("updated", 1)
     LogEntry.create_log("Post design idea has been updated to In Analysis by #{current_user.email}. [#{perspective_params_design_idea}]")
   end
 
@@ -127,7 +127,7 @@ class PostsController < ApplicationController
       params.require(:post).permit(:design_idea)
     end
 
-    def send_notification(action)
-      Notification.create(description: "The post #{@post.id}, with title `#{@post.title}`, has been #{action} by #{current_user.email}.", type_notification: 1, organization: current_user.organization, title: "Post Notification")
+    def send_notification(action, action_type)
+      Notification.create(description: "The post #{@post.id}, with title `#{@post.title}`, has been #{action} by #{current_user.email}.", type_notification: action_type, organization: current_user.organization, title: "Post #{@post.title} Notification")
     end
 end
