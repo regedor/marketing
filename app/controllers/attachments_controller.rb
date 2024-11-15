@@ -117,7 +117,7 @@ class AttachmentsController < ApplicationController
     end
 
     def set_attachment
-      @attachment = @perspective.attachments.find(params[:id])
+      @attachment = @post.perspectives.map { |p| p.attachments }.flatten.select { |a| a.id == params[:id].to_i }.first
     end
 
     def attachment_params
