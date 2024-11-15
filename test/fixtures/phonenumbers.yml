@@ -1,13 +1,11 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+phonenumber_one:
+  number: 987654321
+  current: true
+  is_active: true
+  person: person_one
 
-one:
-  number: MyString
+phonenumber_two:
+  number: 123456789
   current: false
   is_active: false
-  person: one
-
-two:
-  number: MyString
-  current: false
-  is_active: false
-  person: two
+  person: person_two

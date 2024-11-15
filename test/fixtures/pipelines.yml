@@ -1,9 +1,7 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+pipeline_one:
+  name: Pipeline One
+  organization: organization_one
 
-one:
-  name: MyString
-  organization: one
-
-two:
-  name: MyString
-  organization: two
+pipeline_two:
+  name: Pipeline Two
+  organization: organization_one

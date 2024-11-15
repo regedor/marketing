@@ -1,48 +1,77 @@
 require "test_helper"
 
 class PhonenumbersControllerTest < ActionDispatch::IntegrationTest
+  include Devise::Test::IntegrationHelpers
+
   setup do
-    @phonenumber = phonenumbers(:one)
-  end
-
-  test "should get index" do
-    get phonenumbers_url
-    assert_response :success
-  end
-
-  test "should get new" do
-    get new_phonenumber_url
-    assert_response :success
+    @person = people(:person_one)
+    @other_person = people(:person_two)
+    @phonenumber = phonenumbers(:phonenumber_one)
+    @user = users(:user_one)
+    sign_in @user
   end
 
   test "should create phonenumber" do
-    assert_difference("Phonenumber.count") do
-      post phonenumbers_url, params: { phonenumber: { current: @phonenumber.current, is_active: @phonenumber.is_active, number: @phonenumber.number, person_id: @phonenumber.person_id } }
+    assert_difference('Phonenumber.count') do
+      post person_phonenumbers_path(@person), params: {
+        phonenumber: { 
+          number: "1234567890",
+          current: true,
+          is_active: true
+        }
+      }
     end
-
-    assert_redirected_to phonenumber_url(Phonenumber.last)
+    assert_redirected_to person_path(@person)
+    assert_equal "Phonenumber was successfully created.", flash[:notice]
   end
 
-  test "should show phonenumber" do
-    get phonenumber_url(@phonenumber)
-    assert_response :success
-  end
-
-  test "should get edit" do
-    get edit_phonenumber_url(@phonenumber)
-    assert_response :success
+  test "should not create phonenumber with invalid data" do
+    assert_no_difference('Phonenumber.count') do
+      post person_phonenumbers_path(@person), params: {
+        phonenumber: { number: "" }
+      }
+    end
+    assert_redirected_to person_path(@person)
+    assert_match /Failed to create phonenumber/, flash[:alert]
   end
 
   test "should update phonenumber" do
-    patch phonenumber_url(@phonenumber), params: { phonenumber: { current: @phonenumber.current, is_active: @phonenumber.is_active, number: @phonenumber.number, person_id: @phonenumber.person_id } }
-    assert_redirected_to phonenumber_url(@phonenumber)
+    patch person_phonenumber_path(@person, @phonenumber), params: {
+      phonenumber: { number: "9876543210" }
+    }
+    assert_redirected_to person_path(@person)
+    assert_equal "Phonenumber was successfully updated.", flash[:notice]
+  end
+
+  test "should not update phonenumber with invalid data" do
+    patch person_phonenumber_path(@person, @phonenumber), params: {
+      phonenumber: { number: "" }
+    }
+    assert_response :unprocessable_entity
   end
 
   test "should destroy phonenumber" do
-    assert_difference("Phonenumber.count", -1) do
-      delete phonenumber_url(@phonenumber)
+    assert_difference('Phonenumber.count', -1) do
+      delete person_phonenumber_path(@person, @phonenumber)
     end
+    assert_redirected_to person_path(@person)
+    assert_equal "Phonenumber was successfully deleted.", flash[:notice]
+  end
 
-    assert_redirected_to phonenumbers_url
+  test "should not allow access from different organization" do
+    @user.update(organization: organizations(:organization_two))
+    post person_phonenumbers_path(@person), params: {
+      phonenumber: { number: "1234567890" }
+    }
+    assert_redirected_to root_path
+    assert_equal "Access Denied", flash[:alert]
+  end
+
+  test "should redirect when not authenticated" do
+    sign_out @user
+    post person_phonenumbers_path(@person), params: {
+      phonenumber: { number: "1234567890" }
+    }
+    assert_redirected_to new_user_session_path
   end
 end

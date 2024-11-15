@@ -1,11 +1,9 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+company_one_note_one:
+  note: CompanyOneNoteOne
+  user: user_one
+  company: company_one
 
-one:
-  note: MyText
-  user: one
-  company: one
-
-two:
-  note: MyText
-  user: two
-  company: two
+company_one_note_two:
+  note: CompanyOneNoteTwo
+  user: user_one
+  company: company_one
