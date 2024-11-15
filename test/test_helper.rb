@@ -1,16 +1,23 @@
 ENV["RAILS_ENV"] ||= "test"
 require_relative "../config/environment"
 require "rails/test_help"
-require 'mocha/minitest'
+require "mocha/minitest"
 
 module ActiveSupport
   class TestCase
     # Run tests in parallel with specified workers
-    parallelize(workers: :number_of_processors)
+    parallelize(workers: 1)
 
     # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
     fixtures :all
 
     # Add more helper methods to be used by all tests here...
+  end
+
+  class ActiveSupport::TestCase
+    # Setup and teardown for each test
+    setup do
+      puts "Setting up for #{name}"
+    end
   end
 end
