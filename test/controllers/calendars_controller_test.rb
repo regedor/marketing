@@ -41,14 +41,4 @@ class CalendarsControllerTest < ActionDispatch::IntegrationTest
             delete calendar_url(@calendar.id)
         end
     end
-
-    test "should get selector" do
-        get selector_calendars_url
-        assert_response :success
-    end
-
-    test "should select calendar" do
-        post select_calendar_calendars_url, params: { calendar: { calendar_id: @calendar.id } }
-        assert_redirected_to new_calendar_post_path(@calendar)
-    end
 end

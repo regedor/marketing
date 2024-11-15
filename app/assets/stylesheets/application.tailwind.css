@@ -11,60 +11,91 @@
   .Btn-primary {
     @apply flex justify-center rounded-md bg-yellow-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-yellow-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow-600 cursor-pointer;
   }
+
   .Btn-secondary {
     @apply flex justify-center rounded-md bg-gray-300 px-3 py-1.5 text-sm font-semibold leading-6 text-gray-700 shadow-sm hover:bg-gray-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-400;
   }
+
   .Btn-delete {
     @apply flex justify-center rounded-md bg-red-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600;
   }
+
   .Btn-google {
     @apply flex items-center w-full justify-center rounded-md bg-red-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600;
   }
+
   .Container {
     @apply flex flex-col bg-gray-100 text-gray-200 border border-gray-300 p-6 shadow-lg max-w-2xl rounded-lg;
   }
+
+  .Container2 {
+    @apply bg-gray-100 text-gray-200 border border-gray-300 p-6 shadow-lg rounded-lg;
+  }
+
   .HeaderContainer {
     @apply sm:mx-auto sm:w-full sm:max-w-sm flex items-center justify-center;
   }
+
   .ContainerHeaderText {
     @apply mt-10 text-2xl font-bold leading-9 tracking-tight text-gray-900;
   }
+
   .Sidebar {
-   @apply bg-white text-gray-700 w-64 h-full shadow-lg flex flex-col;
+    @apply bg-white text-gray-700 w-64 h-full shadow-lg flex flex-col;
   }
+
   .SidebarLink {
     @apply block py-2 px-4 hover:bg-yellow-400 transition flex items-center;
   }
+
   .SidebarIcon {
     @apply w-6 h-6;
   }
+
   .TableHeader {
     @apply px-4 py-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider bg-gray-300 border-b border-gray-200;
   }
+
   .TableEntry {
     @apply px-4 py-4 whitespace-nowrap text-sm text-gray-600 border-b border-gray-200;
   }
+
+  .TableEntry2 {
+    @apply px-4 py-4 text-sm text-gray-600 border-b border-gray-200;
+  }
+
   .InputField {
     @apply block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-yellow-600 sm:text-sm sm:leading-6;
   }
+
+  .InputField2 {
+    @apply block rounded-md text-gray-900 shadow-sm border-0 py-1.5 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-yellow-600 sm:text-sm sm:leading-6;
+  }
+
   .TextArea {
     @apply block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-yellow-600;
   }
+
   .Comment {
     @apply block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-yellow-600 bg-white pl-4 pr-4;
   }
+
   .GenericFormLabel {
     @apply block text-gray-700;
   }
+
   .FileSelectButton {
     @apply flex justify-center rounded-md bg-gray-300 px-3 py-1.5 text-sm font-semibold leading-6 text-gray-700 shadow-sm hover:bg-gray-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-400 cursor-pointer;
   }
+
   .FileSelect {
     display: none;
   }
+
   #file-name {
     @apply text-gray-500;
   }
+
   .Separator {
     @apply my-1 h-px bg-gray-600;
   }
@@ -74,6 +105,7 @@
   .Bottom-right {
     @apply flex justify-end;
   }
+
   .SmallText {
     @apply text-gray-500;
   }

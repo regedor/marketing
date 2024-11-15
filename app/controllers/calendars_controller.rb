@@ -7,12 +7,29 @@ class CalendarsController < ApplicationController
   # GET /calendars
   def index
     @start_date = params[:start_date] ? Date.parse(params[:start_date]) : Date.today
-    selected_calendar_ids = params[:calendar_ids] || @calendars.pluck(:id)
+    pcids = params[:calendar_ids].present? ? params[:calendar_ids].map { |id| id.to_i } : []
+    selected_calendar_ids = pcids.empty? ? @calendars.map { |c| c.id } : @calendars.select { |c| pcids.include?(c.id) }.map { |c| c.id }
+
+    @only_1 = selected_calendar_ids.length == 1 ? selected_calendar_ids.first : nil
+
     @posts = Post.where(calendar_id: selected_calendar_ids).where(
       publish_date: @start_date.beginning_of_month.beginning_of_week..@start_date.end_of_month.end_of_week
     )
+
+    @default_attachments = @posts.map do |post|
+      default_perspective = post.perspectives.find_by(socialplatform: nil)
+      default_attachment = default_perspective&.attachments&.reject { |a| a.type_content == "cloud" }&.first
+      {
+        post: post.id,
+        default_attachment_content_url: default_attachment ? calendar_post_perspective_attachment_path(post.calendar, post, default_perspective, default_attachment) : nil
+      }
+    end
+    @attachments_by_post_id = @default_attachments.index_by { |attachment| attachment[:post] }
+
     @permitted_params = permitted_params
   end
+
+
 
   def new
     @calendar = current_user.organization.calendars.new
@@ -54,17 +71,6 @@ class CalendarsController < ApplicationController
   def destroy
     @calendar.destroy
     redirect_to dashboard_path, notice: "Calendar was successfully destroyed."
-  end
-
-  def selector
-  end
-
-  def select_calendar
-    if params[:calendar][:calendar_id].present?
-      redirect_to new_calendar_post_path(Calendar.find(params[:calendar][:calendar_id]))
-    else
-      redirect_to selector_calendars_path, alert: "Select a calendar."
-    end
   end
 
   private

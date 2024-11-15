@@ -14,39 +14,59 @@
             <% @perspectives.each do |p| %>
               <tr class="<% if @perspective.id == p.id %> bg-gray-200 <% else %> hover:bg-gray-100 <% end %>">
                 <td class="text-center">
-                  <div class="relative inline-block">
-                    <input 
-                      type="checkbox" 
-                      class="socialplatformcb <% if p.socialplatform.nil? %> default-checkbox pointer-events-none opacity-50 <% end %>" 
-                      data-social-id="<%= p.socialplatform.present? ? p.socialplatform.id : "null" %>" 
-                      <% if p.socialplatform.nil? || @publishplatform.include?(p.socialplatform) %> checked <% end %>
-                    >
-                  </div>
+                  <input 
+                    type="checkbox" 
+                    class="socialplatformcb <% if p.socialplatform.nil? %> default-checkbox pointer-events-none opacity-50 <% end %>" 
+                    data-social-id="<%= p.socialplatform.present? ? p.socialplatform.id : "null" %>" 
+                    <% if p.socialplatform.nil? || @publishplatform.include?(p.socialplatform) %> checked <% end %>
+                  >
                 </td>
                 <td class="TableEntry border-r text-sm">
-                  <strong>
-                    <% if p.id.present? %>
-                      <%= link_to p.socialplatform.present? ? p.socialplatform.name : "Default", calendar_post_perspective_path(@calendar, @post, p), class: "hover:underline" %>
-                    <% else %>
-                      <%= button_to p.socialplatform.name, calendar_post_perspectives_path(@calendar, @post),
-                        method: :post, 
-                        params: { perspective: { socialplatform_id: p.socialplatform.id } },
-                        class: "hover:underline" %>
+                  <div class="flex items-center justify-between">
+                    <strong class="flex items-center gap-2">
+                      <% if p.id.present? %>
+                        <%= link_to calendar_post_perspective_path(@calendar, @post, p), class: "hover:underline flex items-center gap-2" do %>
+                          <% if p.socialplatform.present? %>
+                            <%= image_tag "platforms/#{p.socialplatform.name.downcase}.svg", class: "w-4 h-4", alt: p.socialplatform.name %>
+                            <%= p.socialplatform.name %>
+                          <% else %>
+                            <span>Default</span>
+                          <% end %>
+                        <% end %>
+                      <% else %>
+                        <%= button_to calendar_post_perspectives_path(@calendar, @post),
+                          method: :post, 
+                          params: { perspective: { socialplatform_id: p.socialplatform.id } },
+                          class: "hover:underline flex items-center gap-2" do %>
+                          <%= image_tag "platforms/#{p.socialplatform.name.downcase}.svg", class: "w-4 h-4", alt: p.socialplatform.name %>
+                          <%= p.socialplatform.name %>
+                        <% end %>
+                      <% end %>
+                    </strong>
+                    
+                    <% if p.id.present? && p.socialplatform.present? %>
+                      <%= link_to calendar_post_perspective_path(@calendar, @post, p),
+                          data: { turbo_method: :delete, turbo_confirm: "Are you sure?" },
+                          class: "text-red-500 hover:text-red-700" do %>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                          <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                        </svg>
+                      <% end %>
                     <% end %>
-                  </strong>
+                  </div>
                 </td>
                 <td class="TableEntry border-r text-sm w-1/4 text-center">
-                  <div class="w-4 h-4 mx-auto rounded-md <%= 
-                    if p.id.present?
-                      case p.status
-                        when 'approved' then 'bg-green-600'
-                        when 'in_analysis' then 'bg-yellow-500'
-                        else 'bg-red-600'
-                      end 
-                    else
-                      'bg-gray-400' 
-                    end %>">
-                  </div>
+                  <% if p.id.present? %>
+                    <%= form_with url: update_status_calendar_post_perspective_path(@calendar, @post, p), method: :patch, local: true, id: "status-form-#{dom_id(p)}" do %>
+                      <select name="perspective[status]" id="selector_perspective_<%= dom_id(p) %>"class="InputField2 text-sm select-circle-option" onchange="this.form.submit()">
+                        <option value="approved" <% if p.status == "approved" %> selected <% end %>>🟢</option>
+                        <option value="in_analysis" <% if p.status == "in_analysis" %> selected <% end %>>🟡</option>
+                        <option value="rejected" <% if p.status == "rejected" %> selected <% end %>>🔴</option>
+                      </select>
+                    <% end %>
+                  <% else %>
+                    <span class="text-gray-400 italic">Not Created</span>
+                  <% end %>
                 </td>
               </tr>
             <% end %>
@@ -55,15 +75,15 @@
       </div>
     </div>
     <div class="flex flex-col w-full md:w-2/3 min-h-full">
-      <label class="GenericFormLabel flex">Copy: <p id="savedCopy" class ="ml-auto"></p></label>
+      <label class="GenericFormLabel flex">Copy: <p id="savedCopy" class="ml-auto"></p></label>
       <div class="TextArea bg-white overflow-y-auto h-60 p-4 rounded-md flex-grow relative">
-        <div id="copy" contenteditable="true" class="border-none outline-none focus:outline-none">
+        <div id="copy" contenteditable="true" class="border-none outline-none focus:outline-noe">
           <% perspective.copy.split("\n").each do |newline| %>
             <p><%= newline %></p>
           <% end %>
         </div>
         <div class="absolute top-2 right-2 flex items-center">
-          <button id="copy-button" class="relative p-2 hover:bg-gray-100 rounded transition-all duration-200 ease-in-out" data-copy-text="<%= perspective.copy %>">
+          <button id="copy-button" class="relative p-2 hover:bg-gray-100 rounded transnition-all duration-200 ease-in-out" data-copy-text="<%= perspective.copy %>">
             <img src="<%= asset_path('copy.svg') %>" alt="Copy" class="w-4 h-4"/>
           </button>
           <span id="copy-message" class="mr-2 text-green-600 bg-gray-100 px-2 py-1 rounded-md text-xs absolute font-bold right-full top-2 invisible">Copied!</span>
@@ -72,6 +92,7 @@
     </div>
   </div>
 </div>
+
 
 <script>
   $(document).ready(function() {

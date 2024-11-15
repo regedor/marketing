@@ -1,9 +1,9 @@
 socialplatform_one:
-  name: MyString
-  link: MyString
-  link_form: MyString
+  name: Facebook
+  link: Facebook
+  link_form: Facebook
 
 socialplatform_two:
-  name: MyString
-  link: MyString
-  link_form: MyString
+  name: Instagram
+  link: Instagram
+  link_form: Instagram
