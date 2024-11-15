@@ -2,7 +2,7 @@
   <div class="p-6 relative flex flex-col h-full">
     <button id="sidebar-close" class="absolute top-4 right-4 text-gray-600 text-xl cursor-pointer">&times;</button>
     <ul class="flex-grow overflow-y-auto">
-      <% if user_signed_in? %>
+      <% if user_signed_in? %>   
         <li class="mt-8 mb-2 <%= 'bg-yellow-400' if current_page?(root_path) %>">
           <%= link_to root_path, class: "SidebarLink flex items-center" do %>
             <%= image_tag 'home-icon.svg', class: 'SidebarIcon' %>
@@ -13,33 +13,35 @@
           <li class="mb-2 <%= 'bg-yellow-400' if current_page?(dashboard_path) %>">
             <%= link_to dashboard_path, class: "SidebarLink flex items-center" do %>
               <%= image_tag 'dashboard-icon.svg', class: 'SidebarIcon' %>
-              <span class="ml-2">Dashboard</span>
+              <span class="ml-2">Settings</span>
             <% end %>
           </li>
         <% end %>
+        <div class="Separator"></div>
         <li class="mb-2 <%= 'bg-yellow-400' if current_page?(calendars_path) %>">
           <%= link_to calendars_path, class: "SidebarLink flex items-center" do %>
             <%= image_tag 'posts-icon.svg', class: 'SidebarIcon' %>
-            <span class="ml-2">Posts</span>
+            <span class="ml-2">Calendar</span>
           <% end %>
         </li>
-        <li class="mb-2 <%= 'bg-yellow-400' if current_page?(calendars_path) %>">
+        <div class="Separator"></div>
+        <li class="mb-2 <%= 'bg-yellow-400' if current_page?(people_path) %>">
           <%= link_to people_path, class: "SidebarLink flex items-center" do %>
-            <%= image_tag 'posts-icon.svg', class: 'SidebarIcon' %>
+            <%= image_tag 'people-icon.svg', class: 'SidebarIcon' %>
             <span class="ml-2">People</span>
           <% end %>
         </li>
-        <li class="mb-2 <%= 'bg-yellow-400' if current_page?(calendars_path) %>">
+        <li class="mb-2 <%= 'bg-yellow-400' if current_page?(companies_path) %>">
           <%= link_to companies_path, class: "SidebarLink flex items-center" do %>
-            <%= image_tag 'posts-icon.svg', class: 'SidebarIcon' %>
+            <%= image_tag 'company-icon.svg', class: 'SidebarIcon' %>
             <span class="ml-2">Companies</span>
           <% end %>
         </li>
         <% @sidebar_pipelines.each do |pipeline|%>
-          <li class="mb-2 <%= 'bg-yellow-400' if current_page?(calendars_path) %>">
+          <li class="mb-2 <%= 'bg-yellow-400' if current_page?(pipeline_path(pipeline)) %>">
             <%= link_to pipeline_path(pipeline), class: "SidebarLink flex items-center" do %>
-              <%= image_tag 'posts-icon.svg', class: 'SidebarIcon' %>
-              <span class="ml-2">Pipe <%= pipeline.name %></span>
+              <%= image_tag 'pipeline-icon.svg', class: 'SidebarIcon' %>
+              <span class="ml-2"><%= pipeline.name %></span>
             <% end %>
           </li>
         <% end %>
@@ -54,6 +56,7 @@
     </ul>
 
     <% if user_signed_in? %>
+      <div class="Separator"></div>
       <ul class="mt-auto w-full">
         <li class="mb-2">
           <%= link_to destroy_user_session_path, data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to log out?" }, class: "SidebarLink flex items-center" do %>

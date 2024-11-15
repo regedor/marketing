@@ -1,7 +1,7 @@
-@import "login.css";
-@import "posts.css";
-@import "home.css";
-@import "perspective.css";
+@import "./login.css";
+@import "./posts.css";
+@import "./home.css";
+@import "./perspective.css";
 
 @tailwind base;
 @tailwind components;
@@ -64,6 +64,9 @@
   }
   #file-name {
     @apply text-gray-500;
+  }
+  .Separator {
+    @apply my-1 h-px bg-gray-600;
   }
 }
 

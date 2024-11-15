@@ -22,9 +22,13 @@ class AttachmentsController < ApplicationController
 
     if @attachment.save
       redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Attachment was successfully created."
+
+      LogEntry.create_log("Attachment has been created by #{current_user.email}. [#{attachment_params}]")
     else
       error_messages = @attachment.errors.full_messages.join(", ")
       redirect_to calendar_post_perspective_path(@calendar, @post, @perspective),  alert: "Failed to create attachment: #{error_messages}"
+
+      LogEntry.create_log("#{current_user.email} attempted to create attachment but failed (error: #{error_messages}). [#{attachment_params}]")
     end
   end
 
@@ -50,8 +54,12 @@ class AttachmentsController < ApplicationController
     end
     if @attachment.update(data)
       redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Attachment was successfully updated."
+
+      LogEntry.create_log("Attachment has been updated by #{current_user.email}. [#{attachment_params}]")
     else
       render :edit, status: :unprocessable_entity
+
+      LogEntry.create_log("#{current_user.email} attempted to update attachment but failed (unprocessable_entity). [#{attachment_params}]")
     end
   end
 
@@ -59,6 +67,8 @@ class AttachmentsController < ApplicationController
   def destroy
     @attachment.destroy
     redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Attachment was successfully destroyed."
+
+    LogEntry.create_log("Attachment #{@attachment.filename} has been destroyed by #{current_user.email}.")
   end
 
   # GET /calendars/:calendar_id/posts/:post_id/perspectives/:perspective_id/attachments/:id/download
@@ -74,6 +84,8 @@ class AttachmentsController < ApplicationController
   def update_status
     @attachment.update(attachment_params_status)
     redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Attachment status updated."
+
+    LogEntry.create_log("Attachment #{@attachment.id} status has been updated by #{current_user.email}. [#{attachment_params_status}]")
   end
 
   # PATCH /calendars/:calendar_id/posts/:post_id/perspectives/:perspective_id/attachments/:id/like
@@ -82,6 +94,8 @@ class AttachmentsController < ApplicationController
     @attachmentcounter.aproved = !@attachmentcounter.aproved
     @attachmentcounter.rejected = false
     save_counter(@attachmentcounter)
+
+    LogEntry.create_log("Attachment #{@attachment.id} has been liked by #{current_user.email}.")
   end
 
   # PATCH /calendars/:calendar_id/posts/:post_id/perspectives/:perspective_id/attachments/:id/dislike
@@ -90,6 +104,8 @@ class AttachmentsController < ApplicationController
     @attachmentcounter.aproved = false
     @attachmentcounter.rejected = !@attachmentcounter.rejected
     save_counter(@attachmentcounter)
+
+    LogEntry.create_log("Attachment #{@attachment.id} has been disliked by #{current_user.email}.")
   end
 
   private

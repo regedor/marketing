@@ -1,15 +1,19 @@
 #!/bin/bash
 
+EXPORT RAILS_ENV=production 
+
 # Precompile the assets
 echo "Precompiling assets..."
-rails assets:precompile
+bundle exec rails cache:clear
+bundle exec rails assets:clobber --trace
+bundle exec rails assets:precompile --trace
 
 # Check if precompilation was successful
 if [ $? -eq 0 ]; then
   echo "Assets precompiled successfully."
   echo "Starting Rails server..."
-  # Start the Rails server
-  rails s
+  
+  bundle exec rails server
 else
   echo "Asset precompilation failed. Rails server not started."
 fi

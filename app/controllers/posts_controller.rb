@@ -29,8 +29,12 @@ class PostsController < ApplicationController
 
     if @post.save
       redirect_to calendar_post_path(@calendar, @post), notice: "Post was successfully created."
+
+      LogEntry.create_log("Post has been created by #{current_user.email}. [#{post_params}]")
     else
       render :new, status: :unprocessable_entity
+
+      LogEntry.create_log("#{current_user.email} attempted to create post but failed (unprocessable_entity). [#{post_params}]")
     end
   end
 
@@ -42,8 +46,12 @@ class PostsController < ApplicationController
   def update
     if @post.update(post_params)
       redirect_to calendar_post_path(@calendar, @post), notice: "Post was successfully updated."
+
+      LogEntry.create_log("Post has been updated by #{current_user.email}. [#{post_params}]")
     else
       render :edit, status: :unprocessable_entity
+
+      LogEntry.create_log("#{current_user.email} attempted to update post but failed (unprocessable_entity). [#{post_params}]")
     end
   end
 
@@ -51,11 +59,14 @@ class PostsController < ApplicationController
   def destroy
     @post.destroy
     redirect_to calendars_path(), notice: "Post was successfully deleted."
+
+    LogEntry.create_log("Post #{@post.title} has been destroyed by #{current_user.email}.")
   end
 
   # PATCH /calendars/:calendar_id/posts/:id/update_design_idea
   def update_design_idea
     @post.update(perspective_params_design_idea)
+    LogEntry.create_log("Post design idea has been updated to In Analysis by #{current_user.email}. [#{perspective_params_design_idea}]")
   end
 
   # GET /calendars/:calendar_id/posts/:id/download

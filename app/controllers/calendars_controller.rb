@@ -6,7 +6,6 @@ class CalendarsController < ApplicationController
 
   # GET /calendars
   def index
-    @calendar = Calendar.new
     @start_date = params[:start_date] ? Date.parse(params[:start_date]) : Date.today
     selected_calendar_ids = params[:calendar_ids] || @calendars.pluck(:id)
     @posts = Post.where(calendar_id: selected_calendar_ids).where(
@@ -15,15 +14,23 @@ class CalendarsController < ApplicationController
     @permitted_params = permitted_params
   end
 
+  def new
+    @calendar = current_user.organization.calendars.new
+  end
+
   # POST /calendars
   def create
     @calendar = Calendar.new(calendar_params)
     @calendar.organization = current_user.organization
 
     if @calendar.save
-      redirect_to "/calendars", notice: "Calendar was successfully created."
+      redirect_to dashboard_path, notice: "Calendar was successfully created."
+
+      LogEntry.create_log("Calendar has been created by #{current_user.email}. [#{calendar_params}]")
     else
       render :index, status: :unprocessable_entity
+
+      LogEntry.create_log("Failed to create calendar by #{current_user.email}. [#{calendar_params}]")
     end
   end
 
@@ -35,16 +42,18 @@ class CalendarsController < ApplicationController
   def update
     @calendar.organization = current_user.organization
     if @calendar.update(calendar_params)
-      redirect_to "/calendars", notice: "Calendar was successfully updated."
+      redirect_to dashboard_path, notice: "Calendar was successfully updated."
     else
       render :edit, status: :unprocessable_entity
+
+      LogEntry.create_log("#{current_user.email} attempted to update calendar (unprocessable_entity). [#{calendar_params}]")
     end
   end
 
   # DELETE /calendars/:id
   def destroy
     @calendar.destroy
-    redirect_to calendars_url, notice: "Calendar was successfully destroyed."
+    redirect_to dashboard_path, notice: "Calendar was successfully destroyed."
   end
 
   def selector
