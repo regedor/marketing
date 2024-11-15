@@ -32,22 +32,23 @@ class StagesControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  # test "should update stage" do
-  #   patch pipeline_stage_url(@pipeline, @stage), params: { stage: { name: "Updated Stage" } }
-  #   assert_redirected_to pipeline_path(@pipeline)
-  #   assert_equal "Stage was successfully updated.", flash[:notice]
-  # end
+  test "should update stage" do
+    patch pipeline_stage_url(@pipeline, @stage), params: { stage: { name: "Updated Stage" } }
+    assert_redirected_to pipeline_path(@pipeline)
+    assert_equal "Stage was successfully updated.", flash[:notice]
+  end
 
   test "should not update stage with invalid data" do
     patch pipeline_stage_url(@pipeline, @stage), params: { stage: { name: "" } }
     assert_response :unprocessable_entity
   end
 
-  # test "should update index of stage" do
-  #   patch pipeline_stage_update_index_stage(@pipeline, @stage), params: { stage: { index: 2 } }
-  #   assert_redirected_to pipeline_url(@pipeline)
-  #   assert_equal "Stage was successfully updated.", flash[:notice]
-  # end
+  test "should update index stage" do
+    patch pipeline_stage_update_index_stage_path(@pipeline, @stage), params: { stage: { index: "2" } }
+    assert_redirected_to pipeline_path(@pipeline)
+    @stage.reload
+    assert_equal 2, @stage.index
+  end
 
   test "should destroy stage" do
     assert_difference('Stage.count', -1) do

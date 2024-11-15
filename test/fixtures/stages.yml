@@ -2,8 +2,10 @@ stage_one:
   name: Stage One
   is_final: false
   pipeline: pipeline_one
+  index: 1
 
 stage_two:
   name: Stage Two
   is_final: true
   pipeline: pipeline_two
+  index: 1
