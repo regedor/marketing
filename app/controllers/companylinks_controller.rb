@@ -26,9 +26,6 @@ class CompanylinksController < ApplicationController
 
   # DELETE /companies/:company_id/companylinks/:id/destroy_content
   def destroy_content
-    puts "\n==CONTROLLER=="
-    puts "company: ", @company.id
-    puts "companylink: ", @companylink
     if @companylink.destroy
       redirect_to company_path(@company), notice: "Content removed successfully."
     else

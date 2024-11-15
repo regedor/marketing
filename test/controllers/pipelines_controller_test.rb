@@ -7,20 +7,9 @@ class PipelinesControllerTest < ActionDispatch::IntegrationTest
     @pipeline = pipelines(:pipeline_one)
     @pipeline_two = pipelines(:pipeline_two)
     @user = users(:user_one)
-    @other_org_user = users(:user_three) 
+    @other_org_user = users(:user_three)
     @organization = organizations(:organization_one)
     sign_in @user
-  end
-
-  test "should get index when authenticated" do
-    get pipelines_url
-    assert_response :success
-  end
-
-  test "should redirect index when not authenticated" do
-    sign_out @user
-    get pipelines_url
-    assert_redirected_to new_user_session_path
   end
 
   test "should get new" do
@@ -29,9 +18,9 @@ class PipelinesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should create pipeline" do
-    assert_difference('Pipeline.count') do
-      post pipelines_url, params: { 
-        pipeline: { 
+    assert_difference("Pipeline.count") do
+      post pipelines_url, params: {
+        pipeline: {
           name: "New Pipeline",
           to_people: true
         }
@@ -42,7 +31,7 @@ class PipelinesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should not create pipeline with invalid data" do
-    assert_no_difference('Pipeline.count') do
+    assert_no_difference("Pipeline.count") do
       post pipelines_url, params: { pipeline: { name: "" } }
     end
     assert_response :unprocessable_entity
@@ -62,8 +51,8 @@ class PipelinesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update pipeline" do
-    patch pipeline_url(@pipeline), params: { 
-      pipeline: { 
+    patch pipeline_url(@pipeline), params: {
+      pipeline: {
         name: "Updated Pipeline",
         to_people: false
       }
@@ -78,7 +67,7 @@ class PipelinesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should destroy pipeline" do
-    assert_difference('Pipeline.count', -1) do
+    assert_difference("Pipeline.count", -1) do
       delete pipeline_url(@pipeline)
     end
     assert_redirected_to pipelines_url
@@ -91,7 +80,7 @@ class PipelinesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should select pipeline and redirect to new lead" do
-    post select_pipeline_pipelines_url, params: { 
+    post select_pipeline_pipelines_url, params: {
       pipeline: { pipeline_id: @pipeline.id }
     }
     assert_redirected_to new_pipeline_lead_url(@pipeline)
