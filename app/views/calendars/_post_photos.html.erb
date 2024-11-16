@@ -1,0 +1,22 @@
+<div id="myModal" class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-50 ">
+  <div class="modal-content Container text-gray-900">
+    <button class="close-btn text-2xl absolute top-0 right-0 p-4 cursor-pointe">&times;</button>
+    <h2 class="text-2xl font-semibold mb-4">All Photos</h2>
+    <div class="grid grid-cols-3 gap-4 overflow-y-auto max-h-96" id="photos-display">
+    </div>
+  </div>
+</div>
+
+<script>
+  $(document).ready(function() {
+    $('.close-btn').on('click', function() {
+      $('#myModal').removeClass('flex').addClass('hidden');
+    });
+
+    $(window).on('click', function(event) {
+      if ($(event.target).is('#myModal')) {
+        $('#myModal').removeClass('flex').addClass('hidden');
+      }
+    });
+  })
+</script>

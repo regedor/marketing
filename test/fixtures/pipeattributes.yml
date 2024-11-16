@@ -1,9 +1,7 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+pipe_one_attribute_one:
+  name: Pipeline One Attribute One
+  pipeline: pipeline_one
 
-one:
-  name: MyString
-  pipeline: one
-
-two:
-  name: MyString
-  pipeline: two
+pipe_one_attribute_two:
+  name: Pipeline One Attribute Two
+  pipeline: pipeline_one

@@ -2,12 +2,17 @@
   <div id="form_post" class="Container w-full max-w-5xl px-8 mx-auto mt-16">
   
     <div class="HeaderContainer mb-8">
-      <h2 class="ContainerHeaderText"><%= @post.title %></h2>
+      <div class="flex items-center gap-2">
+        <div id="post_date_time" contenteditable="true" 
+             class="ContainerHeaderText border-none outline-none focus:outline-none">
+          <%= @post.publish_date.strftime("%Y-%m-%d %H:%M") %>
+        </div>
+        <span id="savedDT" class="text-sm text-gray-500"></span>
+      </div>
     </div>
   
     <div id="perspective_info"> 
       <%= render "posts/info"%> 
-      <%= render "posts/perspectives/perspectives", perspective: @perspective , post: @post %> 
       <%= render @perspective, post: @post %> 
       <%= render @post %>
       
@@ -32,3 +37,72 @@
     </div>
   </div>
 </div>
+
+<%= content_tag :div, "", 
+    data: { 
+      calendar_id: @calendar.id,
+      post_id: @post.id 
+    },
+    style: "display: none;" 
+%>
+
+<script>
+  $(document).ready(function() {
+    const calendarId = $('[data-calendar-id]').data('calendar-id');
+    const postId = $('[data-post-id]').data('post-id');
+    let originalDateTime = $('#post_date_time').text().trim();
+    let updateTimer = null;
+    let retryCount = 1;
+    let isUpdating = false;
+
+    // Initializes axios with CSRF token
+    function setupAxios() {
+      axios.defaults.headers.common['X-CSRF-Token'] = $('meta[name="csrf-token"]').attr('content');
+    }
+
+    // Function to update the publish date
+    function updateDateTime() {
+      const newDateTime = $('#post_date_time').text().trim();
+
+      if (newDateTime !== originalDateTime && newDateTime.length > 0) {
+        console.log("Attempting to update date:", newDateTime);
+        setupAxios();
+        
+        axios.patch(`/calendars/${calendarId}/posts/${postId}/update_date_time`, { datetime: newDateTime })
+          .then(response => {
+            console.log("Date updated successfully");
+            $('#savedDT').text("(saved)");
+            originalDateTime = newDateTime;
+            retryCount = 1;
+            isUpdating = false;
+          })
+          .catch(error => {
+            console.error("Failed to update date:", error);
+            $('#savedDT').text(`(failed ${retryCount} times, retrying...)`);
+            retryCount++;
+            isUpdating = false;
+          });
+      } else if (newDateTime.length === 0) {
+        $('#savedDT').text("Date cannot be blank");
+      } else {
+        $('#savedDT').text("No changes detected");
+      }
+    }
+
+    // Event listener with delayed execution to avoid rapid updates
+    $('#post_date_time').on('input', function() {
+      $('#savedDT').text("(saving...)");
+
+      if (updateTimer) {
+        clearTimeout(updateTimer);
+      }
+
+      updateTimer = setTimeout(function() {
+        if (!isUpdating) {
+          isUpdating = true;
+          updateDateTime();
+        }
+      }, 3000);
+    });
+  });
+</script>

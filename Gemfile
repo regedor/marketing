@@ -60,6 +60,7 @@ group :test do
   gem "selenium-webdriver"
   gem "rails-controller-testing"
   gem "minitest"
+  gem 'mocha'
 end
 
 gem "devise"
@@ -73,3 +74,4 @@ gem "omniauth-google-oauth2"
 gem "omniauth-rails_csrf_protection"
 gem "tailwindcss-rails"
 gem "foreman"
+gem 'font-awesome-sass'

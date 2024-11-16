@@ -117,7 +117,7 @@ class AttachmentsController < ApplicationController
     end
 
     def set_attachment
-      @attachment = @perspective.attachments.find(params[:id])
+      @attachment = @post.perspectives.map { |p| p.attachments }.flatten.select { |a| a.id == params[:id].to_i }.first
     end
 
     def attachment_params
@@ -137,7 +137,6 @@ class AttachmentsController < ApplicationController
         redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Reaction was successfully saved."
       else
         error_message = attachmentcounter.errors.full_messages.join(", ")
-        puts error_message
         redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), alert: "There was an error saving the reaction." + error_message
       end
     end

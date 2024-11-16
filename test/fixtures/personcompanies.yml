@@ -1,11 +1,9 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+person_companies_one:
+  is_working: true
+  person: person_one
+  company: company_one
 
-one:
+person_companies_two:
   is_working: false
-  person: one
-  company: one
-
-two:
-  is_working: false
-  person: two
-  company: two
+  person: person_two
+  company: company_two
