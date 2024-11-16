@@ -7,7 +7,6 @@ class AttachmentsController < ApplicationController
   # POST /calendars/:calendar_id/posts/:post_id/perspectives/:perspective_id/attachments
   def create
     @attachment = @perspective.attachments.new(attachment_params)
-
     if params[:attachment][:content].present?
       @attachment.content = params[:attachment][:content].read
       @attachment.filename = generate_unique_filename(params[:attachment][:content].original_filename)
@@ -22,7 +21,7 @@ class AttachmentsController < ApplicationController
 
     if @attachment.save
       redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Attachment was successfully created."
-
+      send_notification("created", 0)
       LogEntry.create_log("Attachment has been created by #{current_user.email}. [#{attachment_params}]")
     else
       error_messages = @attachment.errors.full_messages.join(", ")
@@ -53,8 +52,9 @@ class AttachmentsController < ApplicationController
       data["filename"] = generate_unique_filename(data["filename"])
     end
     if @attachment.update(data)
-      redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Attachment was successfully updated."
 
+      redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Attachment was successfully updated."
+      send_notification("updated", 1)
       LogEntry.create_log("Attachment has been updated by #{current_user.email}. [#{attachment_params}]")
     else
       render :edit, status: :unprocessable_entity
@@ -67,7 +67,7 @@ class AttachmentsController < ApplicationController
   def destroy
     @attachment.destroy
     redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Attachment was successfully destroyed."
-
+    send_notification("destroyed", 2)
     LogEntry.create_log("Attachment #{@attachment.filename} has been destroyed by #{current_user.email}.")
   end
 
@@ -84,7 +84,7 @@ class AttachmentsController < ApplicationController
   def update_status
     @attachment.update(attachment_params_status)
     redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Attachment status updated."
-
+    send_notification("changed status", 3)
     LogEntry.create_log("Attachment #{@attachment.id} status has been updated by #{current_user.email}. [#{attachment_params_status}]")
   end
 
@@ -162,5 +162,13 @@ class AttachmentsController < ApplicationController
       uri.is_a?(URI::HTTP) || uri.is_a?(URI::HTTPS)
     rescue URI::InvalidURIError
       false
+    end
+
+    def send_notification(action, action_type)
+      if @perspective.socialplatform.nil?
+        Notification.create(description: "The attachment #{@attachment.id}, that belongs to the default perspective, has been #{action} by #{current_user.email}. <#{calendar_post_perspective_url(@calendar, @post, @perspective)}|Link>", type_notification: action_type, organization: current_user.organization, title: "Post #{@post.title}, default perspective, attachment #{@attachment.filename} Notification")
+      else
+        Notification.create(description: "The attachment #{@attachment.id}, that belongs to the perspective `#{@perspective.socialplatform.name}`, has been #{action} by #{current_user.email}. <#{calendar_post_perspective_url(@calendar, @post, @perspective)}|Link>", type_notification: action_type, organization: current_user.organization, title: "Post #{@post.title}, #{@perspective.socialplatform.name} perspective, attachment #{@attachment.filename} Notification")
+      end
     end
 end

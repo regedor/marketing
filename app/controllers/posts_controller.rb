@@ -3,7 +3,7 @@ class PostsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_calendar
   before_action :check_organization!
-  before_action :set_post, only: [ :show, :edit, :update, :destroy, :update_design_idea, :update_categories, :download, :update_day, :update_date_time, :update_status_post, :json ]
+  before_action :set_post, only: [ :show, :edit, :update, :destroy, :update_design_idea, :update_categories, :download, :update_day, :update_date_time, :json ]
   before_action :check_author!, only: [ :edit, :update, :destroy ]
   before_action :sanitize_categories, only: [ :create, :update ]
 
@@ -34,8 +34,8 @@ class PostsController < ApplicationController
     @post.user = current_user
 
     if @post.save
-      send_notification("created", 0)
       redirect_to calendar_post_path(@calendar, @post), notice: "Post was successfully created."
+      send_notification("created", 0)
 
       LogEntry.create_log("Post has been created by #{current_user.email}. [#{post_params}]")
     else
@@ -52,8 +52,8 @@ class PostsController < ApplicationController
   # PATCH /calendars/:calendar_id/posts/:id
   def update
     if @post.update(post_params)
-      send_notification("updated", 1)
       redirect_to calendar_post_path(@calendar, @post), notice: "Post was successfully updated."
+      send_notification("updated", 1)
 
       LogEntry.create_log("Post has been updated by #{current_user.email}. [#{post_params}]")
     else
@@ -66,8 +66,8 @@ class PostsController < ApplicationController
   # DELETE /calendars/:calendar_id/posts/:id
   def destroy
     @post.destroy
-    send_notification("destroyed", 2)
     redirect_to calendars_path(), notice: "Post was successfully deleted."
+    send_notification("destroyed", 2)
 
     LogEntry.create_log("Post #{@post.title} has been destroyed by #{current_user.email}.")
   end
@@ -82,6 +82,7 @@ class PostsController < ApplicationController
   def update_categories
     @post.update(categories: params[:post][:categories])
     head :ok
+    send_notification("updated", 1)
     LogEntry.create_log("Post categories have been updated by #{current_user.email}. [#{params[:post][:categories]}]")
   end
 
@@ -91,6 +92,7 @@ class PostsController < ApplicationController
       new_date = Date.parse(params[:date])
       @post.publish_date = DateTime.new(new_date.year, new_date.month, new_date.day, @post.publish_date.hour, @post.publish_date.min, @post.publish_date.sec)
       if @post.save
+        send_notification("updated", 1)
         LogEntry.create_log("Publish date for post ID #{@post.id} has been updated to #{new_date} by #{current_user.email}.")
 
         render json: { success: true, new_publish_date: @post.publish_date.to_date, message: "Publish date updated to #{new_date}." }, status: :ok
@@ -108,6 +110,7 @@ class PostsController < ApplicationController
       new_date = DateTime.parse(params[:datetime])
       @post.publish_date = DateTime.new(new_date.year, new_date.month, new_date.day, new_date.hour, new_date.min, @post.publish_date.sec)
       if @post.save
+        send_notification("updated", 1)
         LogEntry.create_log("Publish datetime for post ID #{@post.id} has been updated to #{new_date} by #{current_user.email}.")
 
         render json: { success: true, new_publish_date: @post.publish_date, message: "Publish date updated to #{new_date}." }, status: :ok
@@ -116,16 +119,6 @@ class PostsController < ApplicationController
       end
     rescue => e
       render json: { success: false, error: e.message }, status: :bad_request
-    end
-  end
-
-  # app/controllers/posts_controller.rb
-  def update_status_post
-    @post = Post.find(params[:id])
-    if @post.update(status: params[:post][:status])
-      redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Status updated successfully"
-    else
-      redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), alert: "Failed to update status"
     end
   end
 
@@ -223,6 +216,6 @@ class PostsController < ApplicationController
     end
 
     def send_notification(action, action_type)
-      Notification.create(description: "The post #{@post.id}, with title `#{@post.title}`, has been #{action} by #{current_user.email}.", type_notification: action_type, organization: current_user.organization, title: "Post #{@post.title} Notification")
+      Notification.create(description: "The post #{@post.id}, with title `#{@post.title}`, has been #{action} by #{current_user.email}. <#{calendar_post_url(@calendar, @post)}|Link>.", type_notification: action_type, organization: current_user.organization, title: "Post #{@post.title} Notification")
     end
 end

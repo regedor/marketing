@@ -71,5 +71,13 @@ rails server
 ```
 Then, visit `http://localhost:3000` in your browser.
 
+# Slack Notifications
+
+Each organization must give the workspace token and the channel so that the application is able to send notifications through slack. The notification have 4 different types:
+- 0 - Create something
+- 1 - Updated something
+- 2 - Destroy something
+- 3 - Updated status on something 
+
 # Authors
  ...
