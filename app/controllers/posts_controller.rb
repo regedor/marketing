@@ -4,7 +4,8 @@ class PostsController < ApplicationController
   before_action :set_calendar
   before_action :check_organization!
   before_action :set_post, only: [ :show, :edit, :update, :destroy, :update_design_idea, :update_categories, :download, :update_day, :update_date_time, :json ]
-  before_action :check_author!, only: [ :edit, :update, :destroy ]
+  before_action :check_author!, only: [ :edit, :update ]
+  before_action :check_leader!, only: [ :destroy ]
   before_action :sanitize_categories, only: [ :create, :update ]
 
   # GET /calendars/:calendar_id/posts/:id
@@ -217,5 +218,9 @@ class PostsController < ApplicationController
 
     def send_notification(action, action_type)
       Notification.create(description: "The post #{@post.id}, with title `#{@post.title}`, has been #{action} by #{current_user.email}. <#{calendar_post_url(@calendar, @post)}|Link>.", type_notification: action_type, organization: current_user.organization, title: "Post #{@post.title} Notification")
+    end
+
+    def check_leader!
+      check_author! unless current_user.isLeader
     end
 end
