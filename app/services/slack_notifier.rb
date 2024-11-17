@@ -1,6 +1,6 @@
 class SlackNotifier
   def self.post_message(organization, title, body)
-    if organization.slack_workspace_token.blank?
+    if organization.slack_workspace_token.nil? || organization.slack_channel.nil? || organization.slack_workspace_token.blank?
       false
     else
       begin
