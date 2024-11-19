@@ -1,4 +1,5 @@
 class AttachmentsController < ApplicationController
+  include ActionView::RecordIdentifier
   before_action :authenticate_user!
   before_action :set_data
   before_action :check_organization!
@@ -83,7 +84,7 @@ class AttachmentsController < ApplicationController
   # PATCH /calendars/:calendar_id/posts/:post_id/perspectives/:perspective_id/attachments/:id/update_status
   def update_status
     @attachment.update(attachment_params_status)
-    redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Attachment status updated."
+    redirect_to calendar_post_perspective_path(@calendar, @post, @perspective, anchor: dom_id(@attachment)), notice: "Attachment status updated."
 
     LogEntry.create_log("Attachment #{@attachment.id} status has been updated by #{current_user.email}. [#{attachment_params_status}]")
   end
@@ -134,7 +135,7 @@ class AttachmentsController < ApplicationController
 
     def save_counter(attachmentcounter)
       if attachmentcounter.save
-        redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Reaction was successfully saved."
+        redirect_to calendar_post_perspective_url(@calendar, @post, @perspective, anchor: dom_id(attachmentcounter.attachment)), notice: "Reaction was successfully saved."
       else
         error_message = attachmentcounter.errors.full_messages.join(", ")
         redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), alert: "There was an error saving the reaction." + error_message
