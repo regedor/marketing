@@ -1,11 +1,11 @@
 <%= form_with(model: [company, companylink], class: "contents") do |form| %>
   <div class="mb-4">
-    <%= form.label :name, class: "GenericFormLabel" %>
+    <%= form.label "Name:", class: "GenericFormLabel" %>
     <%= form.text_field :name, class: "InputField block mt-2 w-full" %>
   </div>
 
   <div class="mb-4">
-    <%= form.label :link, class: "GenericFormLabel" %>
+    <%= form.label "URL:", class: "GenericFormLabel" %>
     <%= form.text_field :link, class: "InputField block mt-2 w-full" %>
   </div>
 

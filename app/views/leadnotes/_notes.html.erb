@@ -1,4 +1,5 @@
-<div id="notes">
+<div id="notes" class="mt-4">
+  <h2 class="ContainerHeaderText">Notes</h2>
   <%= render "leadnotes/form", pipeline: @pipeline, lead: @lead, leadnote: @new_lead_note %>
 
   <% @notes.each do |note| %>

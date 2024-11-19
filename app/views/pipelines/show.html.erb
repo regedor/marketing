@@ -93,11 +93,12 @@
         <tbody class="bg-white divide-y divide-gray-200">
           <% @pipeline.leads.each do |lead| %>
             <tr class="hover:bg-gray-100">
-              <td class="TableEntry border-r border-gray-200"><%= lead.name %> </td>
+              <td class="TableEntry border-r border-gray-200">
+                <strong><%= link_to lead.name, pipeline_lead_path(@pipeline,lead), class: "hover:underline" %></strong>
+              </td>
               <td class="TableEntry border-r border-gray-200"><%= lead.start_date %> </td>
               <td class="TableEntry border-r border-gray-200"><%= lead.end_date %> </td>
               <td class="TableEntry border-r border-gray-200">
-                <%= link_to "Show", pipeline_lead_path(@pipeline,lead), class: "text-blue-600 hover:underline inline-block mr-2" %>
                 <%= link_to "Delete", pipeline_lead_path(@pipeline, lead), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "text-red-600 hover:text-red-500 hover:underline" %>
               </td>
             </tr>

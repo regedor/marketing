@@ -2,7 +2,7 @@
   <%= form_with(url: create_by_company_personcompanies_path(company),model: personcompany, class: "contents") do |form| %>
     <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-5">
       <div class="mb-4">
-        <%= form.label :person_id, class: "GenericFormLabel" %>
+        <%= form.label "Select a person to add to the company:", class: "GenericFormLabel" %>
         <%= form.select :person_id, options_for_select(@people.map { |p| [p[:name], p[:id]] }), { prompt: 'Person' }, class: "InputField border-0" %>
       </div>
 
