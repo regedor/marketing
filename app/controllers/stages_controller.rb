@@ -7,14 +7,14 @@ class StagesController < ApplicationController
 
   # POST /pipeline/:pipeline_id/stage
   def create
-    if @last_stage
-      @last_stage.update(is_final: false)
-    end
     @stage = @pipeline.stages.new(stage_params)
     @stage.is_final = true
     @stage.index = @pipeline.stages.length
 
     if @stage.save
+      if @last_stage
+        @last_stage.update(is_final: false)
+      end 
       redirect_to pipeline_path(@pipeline), notice: "Stage was successfully created."
     else
       error_messages = @stage.errors.full_messages.join(", ")
