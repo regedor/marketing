@@ -127,16 +127,25 @@ class PostsController < ApplicationController
 
   # GET /calendars/:calendar_id/posts/:id/download
   def download
-    attachments = @post.perspectives.map { |p| p.attachments }.flatten.select { |a| a.status == "approved" }.reject { |a| a.type_content == "cloud" }
-    zip_filename = "#{@post.id}_attachments.zip"
+    attachments = @post.perspectives.map { |p| p.attachments }.flatten
+                      .select { |a| a.status == "approved" }
+                      .reject { |a| a.type_content == "cloud" }
+                      
+    formatted_date = @post.publish_date.strftime("%Y-%m-%d_(%Hh-%Mm)")
+    zip_filename = "calendar#{@calendar.id}-#{formatted_date}.zip"
+    
     zip_data = Zip::OutputStream.write_buffer do |zip|
       attachments.each do |attachment|
         zip.put_next_entry(attachment.filename)
         zip.print attachment.content
       end
     end
+    
     zip_data.rewind
-    send_data zip_data.read, filename: zip_filename, type: "application/zip", disposition: "attachment"
+    send_data zip_data.read, 
+              filename: zip_filename, 
+              type: "application/zip", 
+              disposition: "attachment"
   end
 
   # GET /calendars/:calendar_id/posts/:id/json

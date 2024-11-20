@@ -57,9 +57,9 @@
                 <td class="TableEntry2 border-r border-gray-200">
                   <span id="copy"></span>
                   <button id="copy-button" class="relative p-2 hover:bg-gray-100 rounded transition-all duration-200 ease-in-out">
-                    <%= image_tag "copy.svg", class: "w-4 h-4", alt: "Copy" %>
+                    <img src="<%= asset_path('copy.svg') %>" alt="Copy" class="w-4 h-4"/>
                   </button>
-                  <span id="info-copy-message" class="mr-2 text-green-600 bg-gray-100 px-2 py-1 rounded-md text-xs invisible absolute font-bold right-full top-2">
+                  <span id="copy-message" class="mr-2 text-green-600 bg-gray-100 px-2 py-1 rounded-md text-xs absolute font-bold right-full top-2 invisible">
                     Copied!
                   </span>
                 </td>
@@ -81,14 +81,16 @@
       axios.defaults.headers.common['X-CSRF-Token'] = csrfToken;
     }
 
+    var array_attachments = [];
     function showPhotos(attachments) {
-      attachments.slice(0, 4).forEach((attachment, index) => {
-        const num = index + 1;
-        $(`#attachments_${num}`).attr("href", attachment.content_url).removeClass('hidden');
-        $(`#img_${num}`).attr("src", attachment.content_url);
-      });
+      for(var num = 0; num < attachments.length; num++) {
+        $('#attachments_' + (num+1)).attr("href", attachments[num].content_url);
+        $('#attachments_' + (num+1)).find('#img_' + (num + 1)).attr("src", attachments[num].content_url);
+        $('#attachments_' + (num+1)).removeClass('hidden')
+      }
       if (attachments.length > 4) {
         $('#more-photos').removeClass('hidden');
+        array_attachments = attachments;
       }
     }
 
@@ -169,5 +171,28 @@
         alert('No text to copy.');
       }
     });
+  });
+
+  // Add this JavaScript to application.js or relevant js file
+  document.addEventListener('DOMContentLoaded', function() {
+    const copyButton = document.getElementById('info-copy-button');
+    const copyMessage = document.getElementById('info-copy-message');
+
+    if (copyButton) {
+      copyButton.addEventListener('click', function() {
+        const textToCopy = this.dataset.copyText;
+        
+        // Copy text to clipboard
+        navigator.clipboard.writeText(textToCopy).then(() => {
+          // Show success message
+          copyMessage.classList.remove('invisible');
+          
+          // Hide after 1 second
+          setTimeout(() => {
+            copyMessage.classList.add('invisible');
+          }, 1000);
+        });
+      });
+    }
   });
 </script>
