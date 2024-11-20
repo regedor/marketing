@@ -1,35 +1,38 @@
-<div class="w-full">
-  <% if notice.present? %>
-    <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-lg inline-block" id="notice"><%= notice %></p>
-  <% end %>
+<div class="flex items-center justify-center min-h-screen">
+  <div class="Container w-full max-w-5xl px-8 mx-auto mt-16">
 
-  <% content_for :title, "People" %>
+    <div class="HeaderContainer mb-8">
+      <h1 class="ContainerHeaderText">People</h1>
+    </div>
 
-  <div class="flex justify-between items-center">
-    <h1 class="font-bold text-4xl">People</h1>
-    <%= link_to "New person", new_person_path, class: "rounded-lg py-3 px-5 bg-blue-600 text-white block font-medium" %>
-  </div>
-
-  <div id="people" class="min-w-full">
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Birthdate</th>
-          <th>Private</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @people.each do |person| %>
+    <div id="people" class="overflow-x-auto mb-4">
+      <table class="min-w-full bg-white shadow-md rounded-lg border border-gray-200">
+        <thead>
           <tr>
-            <td><%= person.name %></td>
-            <td><%= person.birthdate %></td>
-            <td><%= person.is_private %></td>
-            <td><%= link_to "Show this person", person, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %></td>
+            <th class="TableHeader border-r border-gray-200"> Name </th>
+            <th class="TableHeader border-r border-gray-200"> Birthdate </th>
+            <th class="TableHeader border-r border-gray-200"> Private </th>
+            <th class="TableHeader border-r border-gray-200"> Action </th>
           </tr>
-        <% end %>
-      </tbody>
-    </table>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <% @people.each do |person| %>
+            <tr class="hover:bg-gray-100">
+              <td class="TableEntry border-r border-gray-200">
+                <strong><%= link_to person.name, person, class: "hover:underline" %></strong>
+              </td>
+              <td class="TableEntry border-r border-gray-200"><%= person.birthdate %></td>
+              <td class="TableEntry border-r border-gray-200"><%= person.is_private ? "Yes" : "No" %></td>
+              <td class="TableEntry border-r border-gray-200">
+                <%= link_to "Show", person, class: "Btn-primary ml-2" %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+    <div class="Bottom-right">
+      <%= link_to "New person", new_person_path, class: "Btn-primary" %>
+    </div>
   </div>
 </div>
