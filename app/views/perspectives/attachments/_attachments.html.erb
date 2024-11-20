@@ -19,17 +19,15 @@
         <% @attachments.each do |attachment| %>
           <tr class="hover:bg-gray-100" id="<%= dom_id(attachment)%>">
             <td class="TableEntry border-r border-gray-200 relative">
-              <strong class="pr-6 flex items-center">
+              <strong class="pr-6 flex items-center space-x-2">
+                <% if attachment.type_content != "cloud" %>
+                    <%= image_tag calendar_post_perspective_attachment_path(@calendar, @post, @perspective, attachment), class: "w-16 h-16 object-cover border rounded", alt: attachment.filename %>
+                <% end %>
                 <% if attachment.perspective.socialplatform.present? %>
                   <%= image_tag "platforms/#{attachment.perspective.socialplatform.name.downcase}.svg", class: "w-6 h-6", alt: attachment.perspective.socialplatform.name %>
                 <% end %>
                 <%= link_to (attachment.type_content == "cloud" ? "Link id: " + attachment.id.to_s : attachment.filename), attachment.type_content == "cloud" ? attachment.filename : calendar_post_perspective_attachment_path(@calendar, @post, @perspective, attachment), class: "hover:underline", target: :_blank  %>
               </strong>
-              <% if attachment.type_content != "cloud" %>
-                <div class="mt-2">
-                  <%= image_tag calendar_post_perspective_attachment_path(@calendar, @post, @perspective, attachment), class: "w-20 h-20 object-cover border rounded", alt: attachment.filename %>
-                </div>
-              <% end %>
               <%= link_to edit_calendar_post_perspective_attachment_path(@calendar, @post, @perspective, attachment), class: "absolute mr-2 right-0 top-1/2 transform -translate-y-1/2" do %>
                 <%= image_tag('pencil.svg', alt: 'Edit', class: 'h-5 w-5') %>
               <% end %>
