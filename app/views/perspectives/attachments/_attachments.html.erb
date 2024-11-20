@@ -1,4 +1,4 @@
-<div id="attachments_info">
+<div id="attachments_info"> 
   <h2 class="ContainerHeaderText">Attachments</h2>
   <%= render "attachments/formurl", calendar: @calendar, post: @post, perspective: @perspective, attachment: Attachment.new %>
   <%= render "attachments/formfile", calendar: @calendar, post: @post, perspective: @perspective, attachment: Attachment.new %>
@@ -25,6 +25,11 @@
                 <% end %>
                 <%= link_to (attachment.type_content == "cloud" ? "Link id: " + attachment.id.to_s : attachment.filename), attachment.type_content == "cloud" ? attachment.filename : calendar_post_perspective_attachment_path(@calendar, @post, @perspective, attachment), class: "hover:underline", target: :_blank  %>
               </strong>
+              <% if attachment.type_content != "cloud" %>
+                <div class="mt-2">
+                  <%= image_tag calendar_post_perspective_attachment_path(@calendar, @post, @perspective, attachment), class: "w-20 h-20 object-cover border rounded", alt: attachment.filename %>
+                </div>
+              <% end %>
               <%= link_to edit_calendar_post_perspective_attachment_path(@calendar, @post, @perspective, attachment), class: "absolute mr-2 right-0 top-1/2 transform -translate-y-1/2" do %>
                 <%= image_tag('pencil.svg', alt: 'Edit', class: 'h-5 w-5') %>
               <% end %>
@@ -32,9 +37,9 @@
             <td class="TableEntry border-r border-gray-200">
               <%= form_with url: update_status_calendar_post_perspective_attachment_path(@calendar, @post, attachment.perspective, attachment), method: :patch, local: true, id: "status-form-#{dom_id(attachment)}" do %>
                 <select name="attachment[status]" id="selector_<%= dom_id(attachment) %>" class="selector_status_attachment InputField text-sm'" onchange="this.form.submit()">
-                  <option value="approved" class= "text-green-600" <% if attachment.status == "approved" %> selected <% end %>>Approved</option>
-                  <option value="in_analysis" class= "text-yellow-600" <% if attachment.status == "in_analysis" %> selected <% end %>>In Analysis</option>
-                  <option value="rejected" class= "text-red-600" <% if attachment.status == "rejected" %> selected <% end %>>Rejected</option>
+                  <option value="approved" class="text-green-600" <% if attachment.status == "approved" %> selected <% end %>>Approved</option>
+                  <option value="in_analysis" class="text-yellow-600" <% if attachment.status == "in_analysis" %> selected <% end %>>In Analysis</option>
+                  <option value="rejected" class="text-red-600" <% if attachment.status == "rejected" %> selected <% end %>>Rejected</option>
                 </select>
               <% end %>
             </td>
