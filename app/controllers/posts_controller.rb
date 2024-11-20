@@ -163,6 +163,8 @@ class PostsController < ApplicationController
         post: {
           publish_date: @post.publish_date.strftime("%H:%M"),
           calendar: @post.calendar.name,
+          calendar_id: @post.calendar.id,
+          post_id: @post.id,
           author:  @post.user.email,
           status: @post.status,
           design_idea: @post.design_idea,
