@@ -54,14 +54,16 @@
               </tr>
               <tr class="hover:bg-gray-100">
                 <th class="TableHeader border-r border-gray-200">Default Copy</th>
-                <td class="TableEntry2 border-r border-gray-200">
-                  <span id="copy"></span>
-                  <button id="copy-button" class="relative p-2 hover:bg-gray-100 rounded transition-all duration-200 ease-in-out">
-                    <img src="<%= asset_path('copy.svg') %>" alt="Copy" class="w-4 h-4"/>
-                  </button>
-                  <span id="copy-message" class="mr-2 text-green-600 bg-gray-100 px-2 py-1 rounded-md text-xs absolute font-bold right-full top-2 invisible">
-                    Copied!
-                  </span>
+                <td class="TableEntry2 border-r border-gray-200 relative">
+                  <div class="flex items-center">
+                    <span id="copy"></span>
+                    <div class="absolute top-0 right-0 flex items-center justify-center">
+                      <button id="copy-button" class="relative p-2 hover:bg-gray-100 rounded transition-all duration-200 ease-in-out">
+                        <img src="<%= asset_path('copy.svg') %>" alt="Copy" class="w-4 h-4"/>
+                      </button>
+                      <span id="copy-message" class="mr-2 text-green-600 bg-gray-100 px-2 py-1 rounded-md text-xs absolute font-bold right-full top-2 invisible">Copied!</span>
+                    </div>
+                  </div>
                 </td>
               </tr>
             </tbody>
