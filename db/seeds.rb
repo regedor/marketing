@@ -248,7 +248,7 @@ def create_pipelines(organization, people_from_organization, companies_from_orga
   end
 end
 
-if Rails.env.development?
+def test_seed
   create_social_platforms
 
   puts "Creating Organizations and related data"
@@ -264,5 +264,108 @@ if Rails.env.development?
     create_pipelines(organization, people_from_organization, companies_from_organization, all_users_from_organization)
   end
   puts "Seeding complete."
+end
 
+def demo_binary_img(path)
+  read_image_as_binary(path)
+end
+
+def demo_create_calendar_jmf(organization, userJMF, userREG, userSTD)
+  x = 1
+  instagram = 3
+  facebook = 4
+  linkedin = 5
+
+  calendarJMF = Calendar.find_or_create_by!(name: "JMF", organization_id: organization.id)
+
+  postPI = Post.create!(title: "PI", user: userJMF, design_idea: "Escola de engenharia da universidade do minho e departamento de informática", calendar: calendarJMF, publish_date: DateTime.new(2024, 11, 29), status: "in_analysis", categories: [ "PI", "UMinho" ])
+  Comment.create!(content: "A design Idea não está clara",  post: postPI, user: userJMF)
+  Comment.create!(content: "O segundo attachment é bonito", post: postPI, user: userREG)
+  Publishplatform.create!(socialplatform_id: x, post: postPI)
+  Publishplatform.create!(socialplatform_id: instagram, post: postPI)
+  Publishplatform.create!(socialplatform_id: linkedin, post: postPI)
+  postPIDefault = Perspective.create!(copy: "Fazer um documento de requisitos, um relatório e um sistema genérico pensando num modelo de negócio.", post: postPI)
+  postPIInstagram = Perspective.create!(copy: "Doc Requisitos, Relatório, Negócio", post: postPI, socialplatform_id: instagram)
+  Attachment.create!(filename: File.basename(Rails.root.join('db', 'images', 'sample1.jpg')), content: demo_binary_img(Rails.root.join('db', 'images', 'sample1.jpg')), perspective: postPIDefault, type_content: "image/jpeg")
+  Attachment.create!(filename: File.basename(Rails.root.join('db', 'images', 'sample2.jpg')), content: demo_binary_img(Rails.root.join('db', 'images', 'sample2.jpg')),  perspective: postPIInstagram, type_content: "image/jpeg")
+
+  postWW = Post.create!(title: "WW", user: userREG, design_idea: "Startup, Amarelo", calendar: calendarJMF, publish_date: DateTime.new(2024, 11, 25), status: "in_analysis", categories: [ "Rails", "Startup" ])
+  Comment.create!(content: "Falta criar um video para este post", post: postWW, user: userSTD)
+  Comment.create!(content: "Submeti um attachment gerado por IA", post: postWW, user: userREG)
+  Publishplatform.create!(socialplatform_id: facebook, post: postWW)
+  Publishplatform.create!(socialplatform_id: x, post: postWW)
+  postWWDefault = Perspective.create!(copy: "Temos de fazer uma aplicacao web para a gestão de campanhas de marketing e CRM internos.", post: postPI)
+  Attachment.create!(filename: File.basename(Rails.root.join('db', 'images', 'engagelogo.png')), content: demo_binary_img(Rails.root.join('db', 'images', 'engagelogo.png')), perspective: postWWDefault, type_content: "image/png")
+  Attachment.create!(filename: File.basename(Rails.root.join('db', 'images', 'react.png')), content: demo_binary_img(Rails.root.join('db', 'images', 'react.png')), perspective: postWWDefault, type_content: "image/png")
+
+  postSU = Post.create!(title: "StartUp", user: userSTD, design_idea: "Projetos inovadores e criativos", calendar: calendarJMF, publish_date: DateTime.new(2025, 11, 19), status: "in_analysis", categories: [ "Tese", "Entrega" ])
+  Comment.create!(content: "Adicionei uma categoria", post: postSU, user: userSTD)
+  Comment.create!(content: "Melhorei o Copy",         post: postSU, user: userJMF)
+  Publishplatform.create!(socialplatform_id: linkedin, post: postSU)
+  postSUDefault = Perspective.create!(copy: "Ideia bastante inovadora com IA", post: postSU)
+  Attachment.create!(filename: $video_links[0], perspective: postSUDefault, type_content: "cloud")
+end
+
+
+def demo_create_calendar_ww(organization, userJMF, userREG, userSTD)
+  x = 1
+  telegram = 2
+  instagram = 3
+  facebook = 4
+  linkedin = 5
+
+  calendarWW = Calendar.find_or_create_by!(name: "Wellbeing Warrior", organization_id: organization.id)
+
+  post4 = Post.create!(title: "UMinho", user: userJMF, design_idea: "Um diagrama UML de sequência moderno.", calendar: calendarWW, publish_date: DateTime.new(2024, 11, 12), status: "in_analysis", categories: [ "RAS", "UMinho" ])
+  Comment.create!(content: "Excelente ideia, adorei RAS!", post: post4, user_id: userREG.id)
+  Comment.create!(content: "Bom sim de facto é uma ideia interessante.", post: post4, user_id: userSTD.id)
+  Publishplatform.create!(socialplatform_id: x, post: post4)
+  Publishplatform.create!(socialplatform_id: linkedin, post: post4)
+  Perspective.create!(copy: "Isto sim é engenharia, modelar software.", post: post4)
+  Perspective.create!(copy: "Que experiencia boa!!", post: post4, socialplatform_id: linkedin)
+  Perspective.create!(copy: "Incrivel diagramas, são simplesmente inacreditaveis!", post: post4, socialplatform_id: x)
+
+  post5 = Post.create!(title: "Viagem Alemanha",  user: userREG, design_idea: "Pôr uma foto do Portão de Brandemburgo.", calendar: calendarWW, publish_date: DateTime.new(2024, 11, 13), status: "in_analysis", categories: [ "Alemanha", "Startup" ])
+  Comment.create!(content: "Muito Bonito, é quase tão como o arco da porta nova :).", post: post5, user_id: userJMF.id)
+  Comment.create!(content: "Espetacular a Alemanha parece ser muito bonita!", post: post5, user_id: userSTD.id)
+  Publishplatform.create!(socialplatform_id: telegram, post: post5)
+  Publishplatform.create!(socialplatform_id: instagram, post: post5)
+  post5Default = Perspective.create!(copy: "Esta viagem à Alemanha foi fenomenal", post: post5)
+  Attachment.create!(filename: File.basename(Rails.root.join('db', 'images', 'sample1.jpg')), content: demo_binary_img(Rails.root.join('db', 'images', 'sample1.jpg')), perspective: post5Default, type_content: "image/jpeg")
+  Attachment.create!(filename: File.basename(Rails.root.join('db', 'images', 'sample4.jpg')), content: demo_binary_img(Rails.root.join('db', 'images', 'sample4.jpg')), perspective: post5Default, type_content: "image/jpeg")
+  Attachment.create!(filename: $video_links[1], perspective: post5Default, type_content: "cloud")
+  post5Instagram = Perspective.create!(copy: "Alemanha? EXCELENTEEEE!", post: post5, socialplatform_id: instagram)
+  Attachment.create!(filename: File.basename(Rails.root.join('db', 'images', 'sample5.jpg')), content: demo_binary_img(Rails.root.join('db', 'images', 'sample5.jpg')), perspective: post5Instagram, type_content: "image/jpeg")
+  Attachment.create!(filename: $video_links[0], perspective: post5Instagram, type_content: "cloud")
+  Attachment.create!(filename: $video_links[1], perspective: post5Instagram, type_content: "cloud")
+
+
+  post6 = Post.create!(title: "Compras", user: userSTD, design_idea: "Mostrar uma foto dos preços dos pacotes de leite.", calendar: calendarWW, publish_date: DateTime.new(2025, 11, 5), status: "in_analysis", categories: [ "Inflação", "Super mercado" ])
+  Comment.create!(content: "Deverias estar a estudar RAS!!!", post: post6, user_id: userJMF.id)
+  Comment.create!(content: "De facto os preços estão loucos!", post: post6, user_id: userREG.id)
+  Publishplatform.create!(socialplatform_id: facebook, post: post6)
+  Publishplatform.create!(socialplatform_id: linkedin, post: post6)
+  Publishplatform.create!(socialplatform_id: instagram, post: post6)
+  post6Default = Perspective.create!(copy: "A inflação está a afetar de forma drástica os preços dos laticínios.", post: post6)
+  Attachment.create!(filename: File.basename(Rails.root.join('db', 'images', 'sample3.jpg')), content: demo_binary_img(Rails.root.join('db', 'images', 'sample3.jpg')), perspective: post6Default, type_content: "image/jpeg")
+  Attachment.create!(filename: File.basename(Rails.root.join('db', 'images', 'sample4.jpg')), content: demo_binary_img(Rails.root.join('db', 'images', 'sample4.jpg')), perspective: post6Default, type_content: "image/jpeg")
+  Attachment.create!(filename: $video_links[0], perspective: post6Default, type_content: "cloud")
+end
+
+def demo_seed
+  create_social_platforms
+
+  organization = Organization.find_or_create_by!(name: "Demo PI UMinho")
+
+  userJMF = User.create!(email: "jmf@di.uminho.pt", password: "1234567", password_confirmation: "1234567", isLeader: true, organization_id: organization.id)
+  userREG = User.create!(email: "miguelregedor@ww.c", password: "1234567", password_confirmation: "1234567", isLeader: true, organization_id: organization.id)
+  userSTD = User.create!(email: "user_std@ww.com", password: "1234567", password_confirmation: "1234567", isLeader: false, organization_id: organization.id)
+
+  demo_create_calendar_jmf(organization, userJMF, userREG, userSTD)
+  demo_create_calendar_ww(organization, userJMF, userREG, userSTD)
+end
+
+if Rails.env.development?
+  # test_seed
+  demo_seed
 end
