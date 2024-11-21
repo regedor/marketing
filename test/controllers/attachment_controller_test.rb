@@ -21,7 +21,7 @@ class AttachmentsControllerTest < ActionDispatch::IntegrationTest
       }
       post calendar_post_perspective_attachments_url(@calendar, @post, @perspective), params: { attachment: attachment_params }
     end
-    assert_redirected_to calendar_post_perspective_path(@calendar, @post, @perspective)
+    assert_redirected_to calendar_post_perspective_path(@calendar, @post, @perspective, anchor: dom_id(Attachment.last))
   end
 
   # test "should get edit" do
