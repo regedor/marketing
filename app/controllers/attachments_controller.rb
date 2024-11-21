@@ -15,19 +15,19 @@ class AttachmentsController < ApplicationController
       @attachment.type_content = params[:attachment][:content].content_type
     else
       if !url?(params[:attachment][:filename])
-        redirect_to calendar_post_perspective_path(@calendar, @post, @perspective),  alert: "Not a valid URL"
+        redirect_to calendar_post_perspective_path(@calendar, @post, @perspective, anchor: "attachments_info"),  alert: "Not a valid URL"
         return
       end
       @attachment.type_content = "cloud"
     end
 
     if @attachment.save
-      redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Attachment was successfully created."
+      redirect_to calendar_post_perspective_path(@calendar, @post, @perspective, anchor: dom_id(@attachment)), notice: "Attachment was successfully created."
 
       LogEntry.create_log("Attachment has been created by #{current_user.email}. [#{attachment_params}]")
     else
       error_messages = @attachment.errors.full_messages.join(", ")
-      redirect_to calendar_post_perspective_path(@calendar, @post, @perspective),  alert: "Failed to create attachment: #{error_messages}"
+      redirect_to calendar_post_perspective_path(@calendar, @post, @perspective, anchor: "attachments_info"),  alert: "Failed to create attachment: #{error_messages}"
 
       LogEntry.create_log("#{current_user.email} attempted to create attachment but failed (error: #{error_messages}). [#{attachment_params}]")
     end
@@ -47,14 +47,14 @@ class AttachmentsController < ApplicationController
     data = attachment_params
     if @attachment.type_content == "cloud"
       if !url?(params[:attachment][:filename])
-        redirect_to edit_calendar_post_perspective_attachment_path(@calendar, @post, @perspective, @attachment), alert: "Not valid URL."
+        redirect_to edit_calendar_post_perspective_attachment_path(@calendar, @post, @perspective, @attachment, anchor: "attachments_info"), alert: "Not valid URL."
         return
       end
     else
       data["filename"] = generate_unique_filename(data["filename"])
     end
     if @attachment.update(data)
-      redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Attachment was successfully updated."
+      redirect_to calendar_post_perspective_path(@calendar, @post, @perspective, anchor: dom_id(@attachment)), notice: "Attachment was successfully updated."
 
       LogEntry.create_log("Attachment has been updated by #{current_user.email}. [#{attachment_params}]")
     else
@@ -67,7 +67,7 @@ class AttachmentsController < ApplicationController
   # DELETE /calendars/:calendar_id/posts/:post_id/perspectives/:perspective_id/attachments/:id
   def destroy
     @attachment.destroy
-    redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Attachment was successfully destroyed."
+    redirect_to calendar_post_perspective_path(@calendar, @post, @perspective, anchor: "attachments_info"), notice: "Attachment was successfully destroyed."
 
     LogEntry.create_log("Attachment #{@attachment.filename} has been destroyed by #{current_user.email}.")
   end
@@ -135,7 +135,7 @@ class AttachmentsController < ApplicationController
 
     def save_counter(attachmentcounter)
       if attachmentcounter.save
-        redirect_to calendar_post_perspective_url(@calendar, @post, @perspective, anchor: dom_id(attachmentcounter.attachment)), notice: "Reaction was successfully saved."
+        redirect_to calendar_post_perspective_path(@calendar, @post, @perspective, anchor: dom_id(attachmentcounter.attachment)), notice: "Reaction was successfully saved."
       else
         error_message = attachmentcounter.errors.full_messages.join(", ")
         redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), alert: "There was an error saving the reaction." + error_message
