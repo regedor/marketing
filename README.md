@@ -49,9 +49,12 @@ SMTP_DOMAIN=your_smtp_domain
 SMTP_USERNAME=your_smtp_username
 SMTP_PASSWORD=your_smtp_password
 
+# Google OAuth credentials
+GOOGLE_OAUTH_CLIENT_ID=your_client_id
+GOOGLE_OAUTH_CLIENT_SECRET=your_client_secret
 
-GOOGLE_OAUTH_CLIENT_ID='your_client_id'
-GOOGLE_OAUTH_CLIENT_SECRET='your_client_secret'
+# Slack Workspace token (for seed)
+BOT_TOKEN=your_bot_token
 ```
 
 4. Create the database
@@ -67,6 +70,14 @@ To start the server, run:
 rails server
 ```
 Then, visit `http://localhost:3000` in your browser.
+
+# Slack Notifications
+
+Each organization must give the workspace token and the channel so that the application is able to send notifications through slack. The notification have 4 different types:
+- 0 - Create something
+- 1 - Updated something
+- 2 - Destroy something
+- 3 - Updated status on something 
 
 # Authors
  ...

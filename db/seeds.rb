@@ -254,7 +254,7 @@ def test_seed
   puts "Creating Organizations and related data"
   1.upto(4) do |o|
     puts "Creating Org #{o}:"
-    organization = Organization.find_or_create_by!(name: "Org #{o}")
+    organization = Organization.find_or_create_by!(name: "Org #{o}", slack_workspace_token: ENV['BOT_TOKEN'], slack_channel:"pei-test")
 
     all_users_from_organization = create_users(o, organization)
     create_calendar(o, organization, all_users_from_organization)

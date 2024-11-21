@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  description: MyText
+  type_notification: 1
+  organization: organization_one
+  sent: false
+
+two:
+  description: MyText
+  type_notification: 1
+  organization: organization_one
+  sent: false
