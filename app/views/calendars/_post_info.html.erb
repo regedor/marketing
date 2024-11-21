@@ -6,19 +6,21 @@
     <div id="have-info" class="hidden">
       <div>
         <div class="grid grid-cols-2 mb-4 gap-0.5">
-          <% (1..4).each do |num| %>
-            <%= link_to "", id:"attachments_#{num}", class:"hidden", target: :_blank do %>
-              <%= image_tag "", id:"img_#{num}", class: "rounded-lg w-full h-36 object-cover" %>
-            <% end %>
+          <%= link_to "", id:"attachments_1", class:"hidden", target: :_black do %> 
+            <%= image_tag "", id:"img_1", class: "rounded-lg w-full h-36 object-cover" %>
+          <% end %>
+          <%= link_to "", id:"attachments_2", class: "hidden", target: :_black do %> 
+            <%= image_tag "", id:"img_2", class: "rounded-lg w-full h-36 object-cover" %>
+          <% end %>
+          <%= link_to "", id:"attachments_3", class:"hidden", target: :_black do %> 
+            <%= image_tag "", id:"img_3", class: "rounded-lg w-full h-36 object-cover" %>
+          <% end %>
+          <%= link_to "", id:"attachments_4", class:"hidden", target: :_black do %> 
+            <%= image_tag "", id:"img_4", class: "rounded-lg w-full h-36 object-cover" %>
           <% end %>
         </div>
-        <div class="flex justify-between mb-4">
-          <div class="Bottom-left">
-            <%= link_to "Download Images", "", class: "Btn-download", id: "download-images" %>
-          </div>
-          <div class="Bottom-right">
-            <button class="Btn-primary hidden" id="more-photos">See More Photos</button>
-          </div>
+        <div class="Bottom-right">
+          <button class="Btn-primary hidden mb-4" id="more-photos" >See More Photos</button>
         </div>
         <div class="overflow-y-auto relative">
           <table class="min-w-full bg-white shadow-md rounded-lg border border-gray-200">
@@ -28,9 +30,11 @@
                 <td class="TableEntry2 border-r border-gray-200">
                   <div class="flex">
                     <div class="flex" id="social_platforms">
-                      <% ["facebook", "instagram", "x", "linkedin", "telegram"].each do |platform| %>
-                        <%= image_tag "platforms/#{platform}.svg", class: "hidden w-6 h-6", id: platform, alt: platform %>
-                      <% end %>
+                      <%= image_tag "platforms/facebook.svg", class: "hidden w-6 h-6", id: "facebook", alt: "facebook" %>
+                      <%= image_tag "platforms/instagram.svg",class: "hidden w-6 h-6", id: "instagram", alt: "instagram" %>
+                      <%= image_tag "platforms/x.svg",        class: "hidden w-6 h-6", id: "x", alt: "x" %>
+                      <%= image_tag "platforms/linkedin.svg", class: "hidden w-6 h-6", id: "linkedin", alt: "linkedin" %>
+                      <%= image_tag "platforms/telegram.svg", class: "hidden w-6 h-6", id: "telegram", alt: "telegram" %>
                     </div>
                     <div class="ml-auto" id="status"></div>
                   </div>
@@ -53,148 +57,91 @@
                 <td class="TableEntry2 border-r border-gray-200" id="design_idea"></td>
               </tr>
               <tr class="hover:bg-gray-100">
-                <th class="TableHeader border-r border-gray-200">Default Copy</th>
-                <td class="TableEntry2 border-r border-gray-200 relative">
-                  <div class="flex items-center">
-                    <span id="copy"></span>
-                    <div class="absolute top-0 right-0 flex items-center justify-center">
-                      <button id="copy-button" class="relative p-2 hover:bg-gray-100 rounded transition-all duration-200 ease-in-out">
-                        <img src="<%= asset_path('copy.svg') %>" alt="Copy" class="w-4 h-4"/>
-                      </button>
-                      <span id="copy-message" class="mr-2 text-green-600 bg-gray-100 px-2 py-1 rounded-md text-xs absolute font-bold right-full top-2 invisible">Copied!</span>
-                    </div>
-                  </div>
-                </td>
+                <th class="TableHeader border-r border-gray-200">Copy</th>
+                <td class="TableEntry2 border-r border-gray-200"id="copy"></td>
               </tr>
             </tbody>
           </table>
-        </div>
+        </div>       
       </div>
     </div>
   </div>
 </div>
-<script>
-  $(document).ready(function () {
-    $('.draggable').hover(fillPostInfo, () => {});
 
-    function buildAxios() {
+<script>
+  $(document).ready(function() {
+    $('.draggable').hover(fill_post_info, () => {})
+    function build_axios() {
       axios.defaults.withCredentials = true;
       const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
       axios.defaults.headers.common['X-CSRF-Token'] = csrfToken;
     }
-
-    var array_attachments = [];
-    function showPhotos(attachments) {
-      for(var num = 0; num < attachments.length; num++) {
-        $('#attachments_' + (num+1)).attr("href", attachments[num].content_url);
-        $('#attachments_' + (num+1)).find('#img_' + (num + 1)).attr("src", attachments[num].content_url);
-        $('#attachments_' + (num+1)).removeClass('hidden')
+    var array_attachments = []
+    function show_photos(attachments) {
+      for(var num = 0; num < 5 && num < attachments.length; num ++){
+        $('#attachments_' + (num+1)).attr("href",attachments[num].content_url);
+        $('#attachments_' + (num+1)).find('#img_' + (num+1)).attr("src",attachments[num].content_url);
+        $('#attachments_' + (num+1)).removeClass('hidden');
       }
-      if (attachments.length > 4) {
+      if(attachments.length > 4) {
         $('#more-photos').removeClass('hidden');
-        array_attachments = attachments;
       }
     }
 
-    const statusToIcon = {
+    const status_to_icon = {
       "approved": "🟢",
       "in_analysis": "🟡",
       "rejected": "🔴"
-    };
+    }
 
-    function fillInfo(data) {
+    function fill_info(data) {
       $('#design_idea').text(data.design_idea);
       $('#calendar').text(data.calendar);
       $('#author').text(data.author);
-      $('#status').text(statusToIcon[data.status] || '');
+      $('#status').text(status_to_icon[data.status]);
       $('#copy').text(data.perspective_default_copy);
       $('#publish_date').text(data.publish_date);
-      data.socialplatforms.forEach(sp => $(`#${sp.name}`).removeClass('hidden'));
+      data.socialplatforms.map(sp => sp.name).forEach((src) => $(`#${src}`).removeClass("hidden"));
       $('#no-info').addClass('hidden');
       $('#have-info').removeClass('hidden');
-      showPhotos(data.attachments);
-      $('#download-images').removeClass('hidden').attr('href', `/calendars/${data.calendar_id}/posts/${data.post_id}/download`);
+      array_attachments = data.attachments
+      show_photos(data.attachments)
     }
 
-    function clearPostInfo() {
-      $('#social_platforms').children().addClass('hidden');
-      ['#design_idea', '#calendar', '#author', '#status', '#copy', '#publish_date'].forEach(id => $(id).text(''));
-      $('#no-info').text('Hover a Post').removeClass('hidden');
-      $('#have-info').addClass('hidden');
-      [1, 2, 3, 4].forEach(num => {
-        $(`#attachments_${num}`).addClass('hidden').attr("href", "");
-        $(`#img_${num}`).attr("src", "");
-      });
-      $('#more-photos').addClass('hidden');
-      $('#download-images').addClass('hidden');
-    }
-
-    function fillPostInfo() {
+    function fill_post_info() {
       const postId = $(this).data("post-id");
       const calendarId = $(this).data("calendar-id");
-      const url = `/calendars/${calendarId}/posts/${postId}/json`;
-
-      clearPostInfo();
-      $('#no-info').text('Loading...');
-      buildAxios();
+      const url = `/calendars/${calendarId}/posts/${postId}/json`
+      clear_post_info()
+      $('#no-info').text('Loading');
+      build_axios()
       axios.get(url)
-        .then(response => response.data.post)
-        .then(data => fillInfo(data))
-        .catch(() => $('#no-info').text('Error'));
+      .then(response => response.data.post)
+      .then(data => fill_info(data))
+      .catch(err => {
+        $('#no-info').text('Error');
+      })
     }
 
-    $('#more-photos').on('click', function () {
+    function clear_post_info() {
+      $('#social_platforms').children().addClass('hidden');
+      ["#design_idea", "#calendar", "#author", "#status", "#copy", "#publish_date"].forEach(id => $(id).text(''));
+      $('#no-info').text('Hover a Post');
+      $('#no-info').removeClass('hidden');
+      $('#have-info').addClass('hidden');
+      [1,2,3,4].forEach(id => $("#attachments_" + id).attr("href",""));
+      [1,2,3,4].forEach(id => $("#attachments_" + id).find("#img_"+id).attr("str",""));
+      [1,2,3,4].forEach(id => $("#attachments_" + id).addClass('hidden'));
+      $('#more-photos').addClass('hidden');
+    }
+
+    $('#more-photos').on('click', function() {
       $('#myModal').removeClass('hidden').addClass('flex');
       $('#photos-display').empty();
-      array_attachments.forEach(attachment => {
-        $('<img>')
-          .attr('src', attachment.content_url)
-          .addClass('w-full h-36 object-cover rounded-lg mb-4')
-          .appendTo('#photos-display');
+      array_attachments.map((a) => a.content_url).forEach(function(imageSrc) {
+        var imgElement = $('<img>').attr('src', imageSrc).addClass('w-full h-36 object-cover rounded-lg mb-4');
+        $('#photos-display').append(imgElement);
       });
     });
-
-    // Copy functionality
-    $('#copy-button').on('click', function() {
-      const copyText = $('#copy').text().trim();
-      if (copyText) {
-        navigator.clipboard.writeText(copyText)
-          .then(() => {
-            $('#copy-message').removeClass('invisible');
-            setTimeout(function() {
-              $('#copy-message').addClass('invisible');
-            }, 1000);
-          })
-          .catch(err => {
-            console.error('Error copying text: ', err);
-            alert('Failed to copy text. Please try again.');
-          });
-      } else {
-        alert('No text to copy.');
-      }
-    });
-  });
-
-  // Add this JavaScript to application.js or relevant js file
-  document.addEventListener('DOMContentLoaded', function() {
-    const copyButton = document.getElementById('info-copy-button');
-    const copyMessage = document.getElementById('info-copy-message');
-
-    if (copyButton) {
-      copyButton.addEventListener('click', function() {
-        const textToCopy = this.dataset.copyText;
-        
-        // Copy text to clipboard
-        navigator.clipboard.writeText(textToCopy).then(() => {
-          // Show success message
-          copyMessage.classList.remove('invisible');
-          
-          // Hide after 1 second
-          setTimeout(() => {
-            copyMessage.classList.add('invisible');
-          }, 1000);
-        });
-      });
-    }
-  });
+  })
 </script>

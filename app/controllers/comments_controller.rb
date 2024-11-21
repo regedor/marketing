@@ -1,5 +1,4 @@
 class CommentsController < ApplicationController
-  include ActionView::RecordIdentifier
   before_action :authenticate_user!
   before_action :set_data
   before_action :check_organization!
@@ -13,12 +12,12 @@ class CommentsController < ApplicationController
     @comment.user_id = current_user.id
 
     if @comment.save
-      redirect_to calendar_post_path(@calendar, @post, anchor: dom_id(@comment)), notice: "Comment was successfully created."
+      redirect_back(fallback_location: calendar_post_path(@calendar, @post), notice: "Comment was successfully created.")
 
       LogEntry.create_log("Comment has been created by #{current_user.email}. [#{comment_params}]")
     else
       error_messages = @comment.errors.full_messages.join(", ")
-      redirect_to calendar_post_path(@calendar, @post, anchor: "comments_info"), alert: "Failed to create comment: #{error_messages}"
+      redirect_back(fallback_location: calendar_post_path(@calendar, @post), alert: "Failed to create comment: #{error_messages}")
 
       LogEntry.create_log("#{current_user.email} attempted to create comment but failed (error: #{error_messages}). [#{comment_params}]")
     end
@@ -31,7 +30,7 @@ class CommentsController < ApplicationController
   # PATCH /calendars/:calendar_id/posts/:post_id/comments/:id
   def update
     if @comment.update(comment_params)
-      redirect_to calendar_post_path(@calendar, @post, anchor: dom_id(@comment)), notice: "Comment was successfully updated."
+      redirect_to calendar_post_path(@calendar, @post), notice: "Comment was successfully updated."
 
       LogEntry.create_log("Comment has been updated by #{current_user.email}. [#{comment_params}]")
     else
@@ -44,7 +43,7 @@ class CommentsController < ApplicationController
   # DELETE /calendars/:calendar_id/posts/:post_id/comments/:id
   def destroy
     @comment.destroy
-    redirect_to calendar_post_path(@calendar, @post, anchor: "comments_info"),  notice: "Comment was successfully deleted."
+    redirect_to calendar_post_path(@calendar, @post),  notice: "Comment was successfully deleted."
 
     LogEntry.create_log("Comment #{@comment.id} has been destroyed by #{current_user.email}.")
   end

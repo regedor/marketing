@@ -5,7 +5,6 @@ ActiveAdmin.register Socialplatform do
   # Uncomment all parameters which should be permitted for assignment
   #
   permit_params :name, :link, :link_form
-  remove_filter :publishplatforms
   #
   # or
   #
