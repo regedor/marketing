@@ -1,4 +1,6 @@
-# pi-ww
+# Projeto Informática - Wellbeing Warrior
+
+Customer Relationship Management and Marketing Campaigns Management web application.
 
 # Requirements
  - PostgreSQL *15 or later (check installation guide [here](https://www.postgresql.org/download/))
@@ -53,8 +55,9 @@ SMTP_PASSWORD=your_smtp_password
 GOOGLE_OAUTH_CLIENT_ID=your_client_id
 GOOGLE_OAUTH_CLIENT_SECRET=your_client_secret
 
-# Slack Workspace token (for seed)
+# Slack Workspace Token and channel id (for seed / development test porpuses)
 BOT_TOKEN=your_bot_token
+BOT_CHANNEL=your_channel_notifications
 ```
 
 4. Create the database
@@ -77,7 +80,19 @@ Each organization must give the workspace token and the channel so that the appl
 - 0 - Create something
 - 1 - Updated something
 - 2 - Destroy something
-- 3 - Updated status on something 
+- 3 - Updated status on something
+
+In order to send slack notifications, **before** starting the server, for development run the 1st command, for production run the 2nd command:
+```bash
+whenever --update-crontab --set environment=development
+whenever --update-crontab
+```
 
 # Authors
- ...
+- [Abhimanyu Aryan](https://github.com/AbhimanyuAryan)
+- [André Freitas](https://github.com/justAndre02)
+- [José Barbosa](https://github.com/zeisalone)
+- [José Carvalho](https://github.com/JoseBambora)
+- [Miguel Silva](https://github.com/MiguelCidadeSilva)
+- [Pedro Braga](https://github.com/PeRaDi)
+- [Tiago Moreira](https://github.com/AdrianoFeixa)

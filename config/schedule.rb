@@ -20,7 +20,6 @@
 # Learn more: http://github.com/javan/whenever
 #
 # 20, 20 minutes
-set :environment, "development"
 env :PATH, ENV["PATH"]
 env :GEM_PATH, ENV["GEM_PATH"]
 every 1.minutes do
