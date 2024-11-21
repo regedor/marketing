@@ -9,7 +9,7 @@
       </div>
       <div class="Bottom-right">
         <%= link_to 'Cancel', 'javascript:void(0)', class: "Btn-secondary", id: "cancel_link_file" %>
-        <%= form.submit "Save", class: "Btn-primary ml-2" %>
+        <%= form.submit "Save", class: "Btn-primary ml-2", data: {turbo: false} %>
       </div>
     <% end %>
   </div>
