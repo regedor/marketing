@@ -5,11 +5,14 @@
   <div id="comments_info">
     <% @post.comments.order(created_at: :asc).each do |comment| %>
       <% if comment.id.present? %>
-        <div id='<%= dom_id(comment) %>_info' class="comment">
+        <div id='<%= dom_id(comment) %>' class="comment">
           <%= render comment %>
           <div id='<%= dom_id(comment) %>_actions' class="comment Bottom-right mb-4">
             <%= link_to "Edit", edit_calendar_post_comment_path(calendar, post, comment), class: "Btn-secondary", method: :get %>
-            <%= link_to "Delete", calendar_post_comment_path(calendar, post, comment), data: { turbo_method: :delete, turbo_confirm: "Are you sure you wish to delete this comment?" }, class: "Btn-delete ml-2" %>
+            <%= button_to "Delete", 
+                          calendar_post_comment_path(calendar, post, comment),
+                          data: { turbo: false }, :method => :delete, class: 'Btn-delete ml-2',
+                          onclick: "return confirm('Are you sure you wish to delete this comment?');"  %>
           </div>
         </div>
       <% end %>
