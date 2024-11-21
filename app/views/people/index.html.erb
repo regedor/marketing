@@ -12,7 +12,6 @@
             <th class="TableHeader border-r border-gray-200"> Name </th>
             <th class="TableHeader border-r border-gray-200"> Birthdate </th>
             <th class="TableHeader border-r border-gray-200"> Private </th>
-            <th class="TableHeader border-r border-gray-200"> Action </th>
           </tr>
         </thead>
         <tbody class="bg-white divide-y divide-gray-200">
@@ -22,9 +21,8 @@
                 <strong><%= link_to person.name, person, class: "hover:underline" %></strong>
               </td>
               <td class="TableEntry border-r border-gray-200"><%= person.birthdate %></td>
-              <td class="TableEntry border-r border-gray-200"><%= person.is_private ? "Yes" : "No" %></td>
-              <td class="TableEntry border-r border-gray-200">
-                <%= link_to "Show", person, class: "Btn-primary ml-2" %>
+              <td class="TableEntry border-r border-gray-200 text-center">
+                <%= person.is_private ? "✅" : "❌" %>
               </td>
             </tr>
           <% end %>
