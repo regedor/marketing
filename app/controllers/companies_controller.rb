@@ -101,7 +101,9 @@ class CompaniesController < ApplicationController
     end
 
     def url?(string)
-      if string.empty?
+      if string.nil?
+        false
+      elsif string.empty?
          true
       else
         begin

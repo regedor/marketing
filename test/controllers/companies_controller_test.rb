@@ -29,8 +29,8 @@ class CompaniesControllerTest < ActionDispatch::IntegrationTest
 
   test "should create company with valid data" do
     assert_difference("Company.count") do
-      post companies_url, params: { 
-        company: { 
+      post companies_url, params: {
+        company: {
           name: "New Company",
           phone_number: "1234567890",
           url_site: "https://example.com",
@@ -76,7 +76,7 @@ class CompaniesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update company with valid data" do
-    patch company_url(@company), params: { 
+    patch company_url(@company), params: {
       company: {
         name: "Updated Company",
         url_site: "https://example.com",
@@ -93,7 +93,7 @@ class CompaniesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should not update company with invalid URLs" do
-    patch company_url(@company), params: { 
+    patch company_url(@company), params: {
       company: {
         url_site: "invalid-url",
         linkedin_link: "invalid-url"

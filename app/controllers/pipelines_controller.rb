@@ -16,9 +16,7 @@ class PipelinesController < ApplicationController
 
   # GET /pipeline/:pipeline_id/edit
   def edit
-     @new_pipeattribute = @pipeline.pipeattributes.new
-     @new_stage = @pipeline.stages.new
-     @indexs = @pipeline.stages.order(:index).map { |s| s.index }
+    set_form_params
   end
 
   # POST /pipelines
@@ -38,6 +36,7 @@ class PipelinesController < ApplicationController
     if @pipeline.update(pipeline_params)
       redirect_to pipeline_path(@pipeline), notice: "Pipeline was successfully updated."
     else
+      set_form_params
       render :edit, status: :unprocessable_entity
     end
   end
@@ -82,5 +81,11 @@ class PipelinesController < ApplicationController
 
     def check_leader!
       redirect_to request.referrer || root_path, alert: "Access Denied" unless current_user.isLeader
+    end
+
+    def set_form_params
+      @new_pipeattribute = @pipeline.pipeattributes.new
+      @new_stage = @pipeline.stages.new
+      @indexs = @pipeline.stages.order(:index).map { |s| s.index }
     end
 end

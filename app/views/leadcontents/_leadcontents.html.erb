@@ -5,6 +5,7 @@
       <tr>
         <th class="TableHeader border-r border-gray-200">Extra Attributes</th>
         <th class="TableHeader border-r border-gray-200">Value</th>
+        <th class="TableHeader border-r border-gray-200">Actions</th>
       </tr>
     </thead>
     <tbody>
@@ -13,6 +14,9 @@
           <td class="TableEntry border-r border-gray-200 text-center"><strong><%= leadcontent.pipeattribute.name %></strong></td>
           <td class="TableEntry border-r border-gray-200 text-center">
             <%= leadcontent.value.present? ? leadcontent.value : "<em>Empty</em>".html_safe %>
+          </td>
+          <td class="TableEntry border-r border-gray-200 text-center">
+            <%= link_to "Edit", edit_pipeline_lead_leadcontent_path(@pipeline, @lead, leadcontent), class: "text-yellow-600 hover:text-yellow-500 hover:underline", form_class: "inline" %>
           </td>
         </tr>
       <% end %>
