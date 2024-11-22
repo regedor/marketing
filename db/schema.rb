@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_11_03_155239) do
+ActiveRecord::Schema[7.2].define(version: 2024_11_14_162813) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -166,10 +166,23 @@ ActiveRecord::Schema[7.2].define(version: 2024_11_03_155239) do
     t.datetime "created_at", null: false
   end
 
+  create_table "notifications", force: :cascade do |t|
+    t.text "description"
+    t.bigint "organization_id", null: false
+    t.integer "type_notification"
+    t.boolean "sent", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.text "title"
+    t.index ["organization_id"], name: "index_notifications_on_organization_id"
+  end
+
   create_table "organizations", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "slack_workspace_token"
+    t.string "slack_channel"
   end
 
   create_table "people", force: :cascade do |t|
@@ -328,6 +341,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_11_03_155239) do
   add_foreign_key "leads", "people"
   add_foreign_key "leads", "pipelines"
   add_foreign_key "leads", "stages"
+  add_foreign_key "notifications", "organizations"
   add_foreign_key "people", "organizations"
   add_foreign_key "people", "users"
   add_foreign_key "personcompanies", "companies"

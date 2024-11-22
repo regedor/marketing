@@ -1,4 +1,12 @@
-# pi-ww
+# Projeto Informática - [Wellbeing Warrior](https://www.wellbeing-warrior.com/welcome)
+
+Customer Relationship Management and Marketing Campaigns Management web application. 
+
+Used Technologies:
+- Back-end: Ruby on Rails, PostgreSQL
+- Front-end: JQuery, JQuery UI, HTML, CSS, Tailwind
+- Notifications: Slack
+- Deployment: Heroku
 
 # Requirements
  - PostgreSQL *15 or later (check installation guide [here](https://www.postgresql.org/download/))
@@ -49,24 +57,58 @@ SMTP_DOMAIN=your_smtp_domain
 SMTP_USERNAME=your_smtp_username
 SMTP_PASSWORD=your_smtp_password
 
+# Google OAuth credentials
+GOOGLE_OAUTH_CLIENT_ID=your_client_id
+GOOGLE_OAUTH_CLIENT_SECRET=your_client_secret
 
-GOOGLE_OAUTH_CLIENT_ID='your_client_id'
-GOOGLE_OAUTH_CLIENT_SECRET='your_client_secret'
+# Slack Workspace Token and channel id (for seed / development test porpuses)
+BOT_TOKEN=your_bot_token
+BOT_CHANNEL=your_channel_notifications
 ```
 
-4. Create the database
+4. Create the database and seed it by running one of the following options:
 ```bash
 rails db:create
 rails db:migrate
 rails db:seed
 ```
+```bash
+sh seed.sh
+```
 
 # Usage
-To start the server, run:
+To start the server, run one of the following options:
 ```bash
+rails assets:precompile
 rails server
 ```
+```bash
+sh run.sh
+```
+
 Then, visit `http://localhost:3000` in your browser.
 
+# Slack Notifications
+
+Each organization must give the workspace token and the channel so that the application is able to send notifications through slack. The notification have 4 different types:
+- 0 - Create something
+- 1 - Updated something
+- 2 - Destroy something
+- 3 - Updated status on something
+
+In order to send slack notifications, **before** starting the server for development run the 1st command, for production run the 2nd command:
+```bash
+whenever --update-crontab --set environment=development
+```
+```bash
+whenever --update-crontab
+```
+
 # Authors
- ...
+- [Abhimanyu Aryan](https://github.com/AbhimanyuAryan)
+- [André Freitas](https://github.com/justAndre02)
+- [José Barbosa](https://github.com/zeisalone)
+- [José Carvalho](https://github.com/JoseBambora)
+- [Miguel Silva](https://github.com/MiguelCidadeSilva)
+- [Pedro Braga](https://github.com/PeRaDi)
+- [Tiago Moreira](https://github.com/AdrianoFeixa)

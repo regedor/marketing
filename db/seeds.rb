@@ -248,13 +248,13 @@ def create_pipelines(organization, people_from_organization, companies_from_orga
   end
 end
 
-if Rails.env.development?
+def test_seed
   create_social_platforms
 
   puts "Creating Organizations and related data"
   1.upto(4) do |o|
     puts "Creating Org #{o}:"
-    organization = Organization.find_or_create_by!(name: "Org #{o}")
+    organization = Organization.find_or_create_by!(name: "Org #{o}", slack_workspace_token: ENV['BOT_TOKEN'], slack_channel: "pei-test")
 
     all_users_from_organization = create_users(o, organization)
     create_calendar(o, organization, all_users_from_organization)
@@ -264,5 +264,195 @@ if Rails.env.development?
     create_pipelines(organization, people_from_organization, companies_from_organization, all_users_from_organization)
   end
   puts "Seeding complete."
+end
 
+def demo_binary_img(path)
+  read_image_as_binary(path)
+end
+
+def demo_create_calendar_jmf(organization, userJMF, userREG, userSTD)
+  x = 1
+  instagram = 3
+  facebook = 4
+  linkedin = 5
+
+  calendarJMF = Calendar.find_or_create_by!(name: "JMF", organization_id: organization.id)
+
+  postPI = Post.create!(title: "PI", user: userJMF, design_idea: "Escola de engenharia da universidade do minho e departamento de informática", calendar: calendarJMF, publish_date: DateTime.new(2024, 11, 29, 13, 30), status: "in_analysis", categories: [ "PI", "UMinho" ])
+  Comment.create!(content: "A design Idea não está clara",  post: postPI, user: userJMF)
+  Comment.create!(content: "O segundo attachment é bonito", post: postPI, user: userREG)
+  Publishplatform.create!(socialplatform_id: x, post: postPI)
+  Publishplatform.create!(socialplatform_id: instagram, post: postPI)
+  Publishplatform.create!(socialplatform_id: linkedin, post: postPI)
+  postPIDefault = Perspective.create!(copy: "Fazer um documento de requisitos, um relatório e um sistema genérico pensando num modelo de negócio.", post: postPI)
+  postPIInstagram = Perspective.create!(copy: "Doc Requisitos, Relatório, Negócio", post: postPI, socialplatform_id: instagram)
+  Attachment.create!(filename: File.basename(Rails.root.join('db', 'images', 'sample1.jpg')), content: demo_binary_img(Rails.root.join('db', 'images', 'sample1.jpg')), perspective: postPIDefault, type_content: "image/jpeg")
+  Attachment.create!(filename: File.basename(Rails.root.join('db', 'images', 'sample2.jpg')), content: demo_binary_img(Rails.root.join('db', 'images', 'sample2.jpg')),  perspective: postPIInstagram, type_content: "image/jpeg")
+
+  postWW = Post.create!(title: "WW", user: userREG, design_idea: "Startup, Amarelo", calendar: calendarJMF, publish_date: DateTime.new(2024, 11, 25, 17, 15), status: "in_analysis", categories: [ "Rails", "Startup" ])
+  Comment.create!(content: "Falta criar um video para este post", post: postWW, user: userSTD)
+  Comment.create!(content: "Submeti um attachment gerado por IA", post: postWW, user: userREG)
+  Publishplatform.create!(socialplatform_id: facebook, post: postWW)
+  Publishplatform.create!(socialplatform_id: x, post: postWW)
+  postWWDefault = Perspective.create!(copy: "Temos de fazer uma aplicacao web para a gestão de campanhas de marketing e CRM internos.", post: postPI)
+  Attachment.create!(filename: File.basename(Rails.root.join('db', 'images', 'engagelogo.png')), content: demo_binary_img(Rails.root.join('db', 'images', 'engagelogo.png')), perspective: postWWDefault, type_content: "image/png")
+  Attachment.create!(filename: File.basename(Rails.root.join('db', 'images', 'react.png')), content: demo_binary_img(Rails.root.join('db', 'images', 'react.png')), perspective: postWWDefault, type_content: "image/png")
+
+  postSU = Post.create!(title: "StartUp", user: userSTD, design_idea: "Projetos inovadores e criativos", calendar: calendarJMF, publish_date: DateTime.new(2024, 11, 19, 14, 45), status: "in_analysis", categories: [ "Tese", "Entrega" ])
+  Comment.create!(content: "Adicionei uma categoria", post: postSU, user: userSTD)
+  Comment.create!(content: "Melhorei o Copy",         post: postSU, user: userJMF)
+  Publishplatform.create!(socialplatform_id: linkedin, post: postSU)
+  postSUDefault = Perspective.create!(copy: "Ideia bastante inovadora com IA", post: postSU)
+  Attachment.create!(filename: $video_links[0], perspective: postSUDefault, type_content: "cloud")
+end
+
+
+def demo_create_calendar_ww(organization, userJMF, userREG, userSTD)
+  x = 1
+  telegram = 2
+  instagram = 3
+  facebook = 4
+  linkedin = 5
+
+  calendarWW = Calendar.find_or_create_by!(name: "Wellbeing Warrior", organization_id: organization.id)
+
+  post4 = Post.create!(title: "UMinho", user: userJMF, design_idea: "Um diagrama UML de sequência moderno.", calendar: calendarWW, publish_date: DateTime.new(2024, 11, 12, 9, 30), status: "in_analysis", categories: [ "RAS", "UMinho" ])
+  Comment.create!(content: "Excelente ideia, adorei RAS!", post: post4, user_id: userREG.id)
+  Comment.create!(content: "Bom sim de facto é uma ideia interessante.", post: post4, user_id: userSTD.id)
+  Publishplatform.create!(socialplatform_id: x, post: post4)
+  Publishplatform.create!(socialplatform_id: linkedin, post: post4)
+  Perspective.create!(copy: "Isto sim é engenharia, modelar software.", post: post4)
+  Perspective.create!(copy: "Que experiencia boa!!", post: post4, socialplatform_id: linkedin)
+  Perspective.create!(copy: "Incrivel diagramas, são simplesmente inacreditaveis!", post: post4, socialplatform_id: x)
+
+  post5 = Post.create!(title: "Viagem Alemanha",  user: userREG, design_idea: "Pôr uma foto do Portão de Brandemburgo.", calendar: calendarWW, publish_date: DateTime.new(2024, 11, 13, 23, 44), status: "in_analysis", categories: [ "Alemanha", "Startup" ])
+  Comment.create!(content: "Muito Bonito, é quase tão como o arco da porta nova :).", post: post5, user_id: userJMF.id)
+  Comment.create!(content: "Espetacular a Alemanha parece ser muito bonita!", post: post5, user_id: userSTD.id)
+  Publishplatform.create!(socialplatform_id: telegram, post: post5)
+  Publishplatform.create!(socialplatform_id: instagram, post: post5)
+  post5Default = Perspective.create!(copy: "Esta viagem à Alemanha foi fenomenal", post: post5)
+  Attachment.create!(filename: File.basename(Rails.root.join('db', 'images', 'sample4.jpg')), content: demo_binary_img(Rails.root.join('db', 'images', 'sample4.jpg')), perspective: post5Default, type_content: "image/jpeg")
+  Attachment.create!(filename: $video_links[1], perspective: post5Default, type_content: "cloud")
+  post5Instagram = Perspective.create!(copy: "Alemanha? EXCELENTEEEE!", post: post5, socialplatform_id: instagram)
+  Attachment.create!(filename: File.basename(Rails.root.join('db', 'images', 'sample5.jpg')), content: demo_binary_img(Rails.root.join('db', 'images', 'sample5.jpg')), perspective: post5Instagram, type_content: "image/jpeg")
+  Attachment.create!(filename: $video_links[0], perspective: post5Instagram, type_content: "cloud")
+  Attachment.create!(filename: $video_links[1], perspective: post5Instagram, type_content: "cloud")
+
+
+  post6 = Post.create!(title: "Compras", user: userSTD, design_idea: "Mostrar uma foto dos preços dos pacotes de leite.", calendar: calendarWW, publish_date: DateTime.new(2024, 11, 5, 22, 00), status: "in_analysis", categories: [ "Inflação", "Super mercado" ])
+  Comment.create!(content: "De facto os preços estão loucos!", post: post6, user_id: userREG.id)
+  Publishplatform.create!(socialplatform_id: facebook, post: post6)
+  Publishplatform.create!(socialplatform_id: linkedin, post: post6)
+  Publishplatform.create!(socialplatform_id: instagram, post: post6)
+  post6Default = Perspective.create!(copy: "A inflação está a afetar de forma drástica os preços dos laticínios.", post: post6)
+  Attachment.create!(filename: File.basename(Rails.root.join('db', 'images', 'sample3.jpg')), content: demo_binary_img(Rails.root.join('db', 'images', 'sample3.jpg')), perspective: post6Default, type_content: "image/jpeg")
+  Attachment.create!(filename: File.basename(Rails.root.join('db', 'images', 'sample4.jpg')), content: demo_binary_img(Rails.root.join('db', 'images', 'sample4.jpg')), perspective: post6Default, type_content: "image/jpeg")
+  Attachment.create!(filename: File.basename(Rails.root.join('db', 'images', 'engagelogo.png')), content: demo_binary_img(Rails.root.join('db', 'images', 'engagelogo.png')), perspective: post6Default, type_content: "image/png")
+  Attachment.create!(filename: File.basename(Rails.root.join('db', 'images', 'react.png')), content: demo_binary_img(Rails.root.join('db', 'images', 'react.png')), perspective: post6Default, type_content: "image/png")
+  Attachment.create!(filename: File.basename(Rails.root.join('db', 'images', 'sample4.jpg')), content: demo_binary_img(Rails.root.join('db', 'images', 'sample5.jpg')), perspective: post6Default, type_content: "image/jpeg")
+  Attachment.create!(filename: $video_links[0], perspective: post6Default, type_content: "cloud")
+end
+
+def demo_create_pipeline_sells(organization, userJMF, userREG, userSTD, company1)
+  pipeline1 = Pipeline.create!(name: "Vendas", organization: organization, to_people: false)
+  stages1 = [
+    Stage.create!(name: "Primeiro Contacto", is_final: false, pipeline: pipeline1, index: 1),
+    Stage.create!(name: "Mensagem Enviada", is_final: false, pipeline: pipeline1, index: 2),
+    Stage.create!(name: "Testar", is_final: false, pipeline: pipeline1, index: 3),
+    Stage.create!(name: "Fechado", is_final: true, pipeline: pipeline1, index: 4)
+  ]
+  pipeattributes1 = [
+    Pipeattribute.create!(name: "Dados", pipeline: pipeline1),
+    Pipeattribute.create!(name: "Conhecimento", pipeline: pipeline1),
+    Pipeattribute.create!(name: "Dinheiro", pipeline: pipeline1),
+    Pipeattribute.create!(name: "Informação Basica", pipeline: pipeline1)
+  ]
+  leads1 = [
+    Lead.create!(name: "Pingo Doce", start_date: DateTime.new(2024, 11, 8, 9, 30), end_date: DateTime.new(2024, 11, 12, 9, 30), pipeline: pipeline1, company: company1, description: "Venda muito importante", stage: stages1[0])
+  ]
+  Leadcontent.create!(value: "Hiper mercado Portuguesa", lead: leads1[0], pipeattribute: pipeattributes1[0])
+  Leadcontent.create!(value: "Excelentes Promoções", lead: leads1[0], pipeattribute: pipeattributes1[1])
+  Leadcontent.create!(value: "10 000 000€", lead: leads1[0], pipeattribute: pipeattributes1[2])
+  Leadcontent.create!(value: "", lead: leads1[0], pipeattribute: pipeattributes1[3])
+  Leadnote.create!(note: "Empresa muito conhecida no mercado nacional. Não podemos falhar.", lead: leads1[0], user: userSTD)
+end
+
+def demo_create_pipeline_buy(organization, userJMF, userREG, userSTD, person1, person2, person3)
+  pipeline2 = Pipeline.create!(name: "Compras", organization: organization, to_people: true)
+  stages2 = [
+    Stage.create!(name: "Primeira Venda", is_final: false, pipeline: pipeline2, index: 1),
+    Stage.create!(name: "Email Enviado", is_final: false, pipeline: pipeline2, index: 2),
+    Stage.create!(name: "Testar", is_final: false, pipeline: pipeline2, index: 3),
+    Stage.create!(name: "Fechado", is_final: true, pipeline: pipeline2, index: 4)
+  ]
+  pipeattributes2 = [
+    Pipeattribute.create!(name: "Dinheiro", pipeline: pipeline2),
+    Pipeattribute.create!(name: "Informação Basica", pipeline: pipeline2)
+  ]
+  leads2 = [
+    Lead.create!(name: "WW", start_date: DateTime.new(2024, 11, 12, 9, 30), end_date: DateTime.new(2024, 11, 12, 9, 30), pipeline: pipeline2, person: person3, description: "Empreendedor português ajuda alemães a serem mais felizes no trabalho", stage: stages2[0]),
+    Lead.create!(name: "UM", start_date: DateTime.new(2024, 11, 19, 14, 40), end_date: DateTime.new(2024, 11, 24, 12, 45), pipeline: pipeline2, person: person2, description: "Excelente universidade", stage: stages2[0]),
+    Lead.create!(name: "SCB", start_date: DateTime.new(2024, 11, 21, 15, 10), end_date: DateTime.new(2024, 11, 30, 18, 00), pipeline: pipeline2, person: person1, description: "Clube do norte de Portugual, mais precisamente da cidade de Braga", stage: stages2[2])
+  ]
+
+  Leadcontent.create!(value: "1 000 000€", lead: leads2[0], pipeattribute: pipeattributes2[0])
+  Leadcontent.create!(value: "Startup de Braga", lead: leads2[0], pipeattribute: pipeattributes2[1])
+
+  Leadcontent.create!(value: "", lead: leads2[1], pipeattribute: pipeattributes2[0])
+  Leadcontent.create!(value: "Univesidade Portuguesa", lead: leads2[1], pipeattribute: pipeattributes2[1])
+
+  Leadcontent.create!(value: "127 000 000€", lead: leads2[2], pipeattribute: pipeattributes2[0])
+  Leadcontent.create!(value: "Cidade Desportiva, Dume, Braga", lead: leads2[2], pipeattribute: pipeattributes2[1])
+
+  Leadnote.create!(note: "Empresa do responsavel pelo Projeto", lead: leads2[0], user: userJMF)
+  Leadnote.create!(note: "Universidade que frequento", lead: leads2[1], user: userJMF)
+  Leadnote.create!(note: "#RicardoHorta21", lead: leads2[0], user: userSTD)
+end
+
+def demo_seed
+  create_social_platforms
+
+  organization = Organization.find_or_create_by!(name: "Demo PI UMinho", slack_workspace_token: ENV['BOT_TOKEN'], slack_channel: ENV['BOT_CHANNEL'])
+
+  userJMF = User.create!(email: "jmf@di.uminho.pt", password: "1234567", password_confirmation: "1234567", isLeader: true, organization_id: organization.id)
+  userREG = User.create!(email: "miguelregedor@ww.c", password: "1234567", password_confirmation: "1234567", isLeader: true, organization_id: organization.id)
+  userSTD = User.create!(email: "user_std@ww.com", password: "1234567", password_confirmation: "1234567", isLeader: false, organization_id: organization.id)
+  userZBPT = User.create!(email: "zebragapt@gmail.com", password: "1234567", password_confirmation: "1234567", isLeader: true, organization_id: organization.id)
+
+  demo_create_calendar_jmf(organization, userJMF, userREG, userSTD)
+  demo_create_calendar_ww(organization, userJMF, userREG, userSTD)
+
+  company1 = Company.create!(name: "Universidade do Minho", employers_min: 500, employers_max: 1500, phone_number: "253 604 110", url_site: "https://www.uminho.pt/PT", organization: organization, description: $lorem, linkedin_link: "https://www.linkedin.com/school/universidade-do-minho/posts/?feedView=all")
+  company2 = Company.create!(name: "SC Braga", employers_min: 2500, employers_max: 500, phone_number: "253 261 259", url_site: "https://sc-braga.00.pt", organization: organization, description: $lorem, linkedin_link: "https://www.linkedin.com/company/scbraga/?originalSubdomain=pt")
+  Companynote.create!(note: "Universidade do Norte do pais", company: company1, user: userSTD)
+  Companynote.create!(note: "Clube fundado a 19/01/21", company: company2, user: userSTD)
+  Companylink.create!(name: "Facebook", link: "https://www.facebook.com/uminhooficial/?locale=pt_PT", company: company1)
+  Companylink.create!(name: "Instagram", link: "https://www.instagram.com/sportingclubedebraga/", company: company2)
+
+
+  person1 = Person.create!(name: "António Salvador", birthdate: Date.new(1970, 12, 29), description: "Presidente com muitos titúlos", is_private: true, linkedin_link: "https://www.linkedin.com/in/antonio-salvador-37943b99/", user: userJMF, organization: organization)
+  person2 = Person.create!(name: "João M. Fernandes", birthdate:  Date.new(1991, 7, 7), description: "Gerente do PI", is_private: false, linkedin_link: "https://www.linkedin.com/in/jmfuminho/?originalSubdomain=pt", user: userSTD, organization: organization)
+  person3 = Person.create!(name: "Miguel Regedor", birthdate: Date.new(2000, 1, 1), description: "Wellbeing Warrior, Medgical CEO", is_private: false, linkedin_link: "https://www.linkedin.com/in/regedor/", user: userREG, organization: organization)
+  Personnote.create!(note: "Anunciou filme egipcio o outro dia", person: person1, user: userJMF)
+  Personnote.create!(note: "Professor Catedratico", person: person2, user: userSTD)
+  Personnote.create!(note: "Tive em contacto com ele o outro dia", person: person3, user: userJMF)
+
+  Email.create!(email: "jmf@di.uminho.pt", current: true, is_active: true, person: person2)
+  Phonenumber.create!(number: "966 666 666", current: true, is_active: true, person: person2)
+  Email.create!(email: "scbraga@gmail.com", current: true, is_active: true, person: person1)
+  Phonenumber.create!(number: "921 191 000", current: false, is_active: false, person: person1)
+  Email.create!(email: "mr@regedor.com", current: true, is_active: true, person: person3)
+
+  Personcompany.create!(person: person1, company: company2, is_working: true, is_my_contact: true)
+  Personcompany.create!(person: person2, company: company2, is_working: false, is_my_contact: false)
+  Personcompany.create!(person: person2, company: company1, is_working: true, is_my_contact: true)
+  Personcompany.create!(person: person3, company: company1, is_working: false, is_my_contact: false)
+
+  demo_create_pipeline_sells(organization, userJMF, userREG, userSTD, company1)
+  demo_create_pipeline_buy(organization, userJMF, userREG, userSTD, person1, person2, person3)
+end
+
+if Rails.env.development?
+  # test_seed
+  demo_seed
 end

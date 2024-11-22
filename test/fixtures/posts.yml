@@ -4,7 +4,7 @@ post_one:
   title: MyString
   user: user_one
   calendar: calendar_one
-  status: draft
+  status: approved
   publish_date: 2024-10-16 20:57:39.921952000 +0000
   design_idea: MyString
   categories:
@@ -14,7 +14,7 @@ post_two:
   title: MyString
   user: user_two
   calendar: calendar_two
-  status: draft
+  status: rejected
   publish_date: 2024-10-16 20:57:39.921952000 +0000
   design_idea: MyString
   categories:
