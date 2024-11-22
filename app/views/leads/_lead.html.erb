@@ -1,18 +1,36 @@
 <div id="<%= dom_id lead %>">
-  <p class="mb-4">
-    <label class="GenericFormLabel">Name:</label>
-    <input class="InputFieldReadOnly text-gray-900" type="text" value="<%= lead.name %>" readonly>
-  </p>
+  <div class="flex items-center justify-center space-x-4 mb-4 w-full">
+    <p class="w-full md:w-1/2">
+      <label class="GenericFormLabel">Name:</label>
+      <input class="InputFieldReadOnly text-gray-900" type="text" value="<%= lead.name %>" readonly>
+    </p>
 
-  <p class="mb-4">
-    <label class="GenericFormLabel">Start date:</label>
-    <input class="InputFieldReadOnly text-gray-900" type="text" value="<%= lead.start_date %>" readonly>
-  </p>
+    <div class="w-full md:w-1/2">
+      <%= form_with url: update_stage_pipeline_lead_path(@pipeline, @lead), method: :patch, local: true, id: "stage-form-#{dom_id(@lead)}" do %>
+          <label class="GenericFormLabel">Stage:</label>
+          <select name="lead[stage_id]" id="selector_<%= dom_id(@lead) %>" class="InputField text-sm" onchange="this.form.submit()">
+            <% @pipeline.stages.each do |stage| %>
+              <option value="<%= stage.id%>" <% if @lead.stage == stage %> selected <% end %>><%= stage.name %></option>
+            <% end %>
+          </select>
+        <% end %>
+    </div>
+  </div>
 
-  <p class="mb-4">
-    <label class="GenericFormLabel">End date:</label>
-    <input class="InputFieldReadOnly text-gray-900" type="text" value="<%= lead.end_date %>" readonly>
-  </p>
+  <div class="flex items-center justify-center space-x-4 mb-4 w-full">
+    <div class="w-full md:w-1/2">
+      <p class="mb-4">
+        <label class="GenericFormLabel">Start date:</label>
+        <input class="InputFieldReadOnly text-gray-900" type="text" value="<%= lead.start_date %>" readonly>
+      </p>
+    </div>
+    <div class="w-full md:w-1/2">    
+      <p class="mb-4">
+        <label class="GenericFormLabel">End date:</label>
+        <input class="InputFieldReadOnly text-gray-900" type="text" value="<%= lead.end_date %>" readonly>
+      </p>
+    </div>
+  </div>
 
   <div class="mb-4">
     <label class="GenericFormLabel">Description:</label>

@@ -1,24 +1,19 @@
-<div id="<%= dom_id company %>">
-  <p class="my-4">
-    <label class="GenericFormLabel">Name:</label>    
-    <input class="InputFieldReadOnly text-gray-900" type="text" value="<%= company.name %>" readonly>
-  </p>
-
-  <p class="my-4">
-    <label class="GenericFormLabel">Employers min:</label> 
-    <input class="InputFieldReadOnly text-gray-900" type="text" value="<%= company.employers_min %>" readonly>
-  </p>
-
-  <p class="my-4">
-    <label class="GenericFormLabel">Employers max:</label> 
-    <input class="InputFieldReadOnly text-gray-900" type="text" value="<%= company.employers_max %>" readonly>
-  </p>
-
-  <p class="my-4">
-    <label class="GenericFormLabel">Phone number:</label> 
-    <input class="InputFieldReadOnly text-gray-900" type="text" value="<%= company.phone_number %>" readonly>
-  </p>
-
+<div id="<%= dom_id company %>" >
+  <div class="flex items-center justify-center space-x-4 mb-4 w-full">
+    <p class="w-full md:w-1/3">
+      <label class="GenericFormLabel">Name:</label>    
+      <input class="InputFieldReadOnly text-gray-900 w-full" type="text" value="<%= company.name %>" readonly>
+    </p>
+    <p class="w-full md:w-1/3">
+      <label class="GenericFormLabel">Phone number:</label> 
+      <input class="InputFieldReadOnly text-gray-900 w-full" type="text" value="<%= company.phone_number %>" readonly>
+    </p>
+    <p class="w-full md:w-1/3">
+      <label class="GenericFormLabel">Employees range:</label> 
+      <input class="InputFieldReadOnly text-gray-900 w-full" type="text" value="<%= company.employers_min %> - <%= company.employers_max %>" readonly>
+    </p>
+</div>
+  
   <div id="<%= dom_id company %>">
   <p class="my-4" data-url="<%= company.url_site %>">
     <label class="GenericFormLabel">Url site:</label>

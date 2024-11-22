@@ -14,63 +14,43 @@
       </div>
     </div>
 
-    <!-- Stages Section -->
+   <!-- Stages Section -->
     <h2 class="ContainerHeaderText">Stages</h2>
     <div id="stages">
-      <%= render "stages/form", pipeline: @pipeline, stage:@new_stage  %>
-      <div id = "stagetable" class="overflow-x-auto mb-4">
+      <div id="stagetable" class="overflow-x-auto mb-4">
         <table class="min-w-full bg-white shadow-md rounded-lg border border-gray-200">
           <thead>
             <tr>
               <th class="TableHeader border-r border-gray-200">Order</th>
               <th class="TableHeader border-r border-gray-200">Name</th>
-              <th class="TableHeader border-r border-gray-200">Actions</th>
             </tr>
           </thead>
           <tbody class="bg-white divide-y divide-gray-200">
-            <% @pipeline.stages.order(:index).select{ |stage| stage.id.present? }.each do |stage| %>
+            <% @pipeline.stages.order(:index).select { |stage| stage.id.present? }.each do |stage| %>
               <tr class="hover:bg-gray-100">
-                <td class="TableEntry border-r border-gray-200">
-                  <%= form_with url: pipeline_stage_update_index_stage_path(@pipeline, stage), method: :patch, local: true, id: "stage-form-#{dom_id(stage)}" do %>
-                    <select name="stage[index]" id="selector_<%= dom_id(stage) %>" class="InputField text-sm" onchange="this.form.submit()">
-                      <% @indexs.each do |index| %>
-                        <option value="<%= index%>" <% if stage.index == index %> selected <% end %>><%= index %></option>
-                      <% end %>
-                    </select>
-                  <% end %>
-                </td>
+                <td class="TableEntry border-r border-gray-200"><%= stage.index %></td>
                 <td class="TableEntry border-r border-gray-200"><%= stage.name %><strong><%=" (final)" if stage.is_final %></strong></td>
-                <td class="TableEntry border-r border-gray-200">
-                  <%= link_to "Edit", edit_pipeline_stage_path(@pipeline, stage), class: "text-yellow-600 hover:text-yellow-500 hover:underline" %>
-                  <%= link_to "Delete", pipeline_stage_path(@pipeline, stage), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "text-red-600 hover:text-red-500 hover:underline"%>
-                </td>
               </tr>
             <% end %>
           </tbody>
         </table>
-      </div>  
+      </div>
     </div>
 
     <!-- Pipeattributes Section -->
     <h2 class="ContainerHeaderText">Extra Attributes</h2>
     <div id="pipeattributes">
-      <%= render "pipeattributes/form", pipeline: @pipeline, pipeattribute: @new_pipeattribute %>
       <div id="attibutetable" class="overflow-x-auto mb-4">
         <table class="min-w-full bg-white shadow-md rounded-lg border border-gray-200">
           <thead>
             <tr>
               <th class="TableHeader border-r border-gray-200">Name</th>
-              <th class="TableHeader border-r border-gray-200">Actions</th>
             </tr>
           </thead>
           <tbody>
-            <% @pipeline.pipeattributes.select{ |pa| pa.id.present? }.each do |pipeattribute| %>
+            <% @pipeline.pipeattributes.select { |pa| pa.id.present? }.each do |pipeattribute| %>
               <tr>
                 <td class="TableEntry border-r border-gray-200"><%= pipeattribute.name %></td>
-                <td class="TableEntry border-r border-gray-200">
-                  <%= link_to "Edit", edit_pipeline_pipeattribute_path(@pipeline, pipeattribute), class: "text-yellow-600 hover:text-yellow-500 hover:underline" %>
-                  <%= link_to "Delete", pipeline_pipeattribute_path(@pipeline, pipeattribute), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "text-red-600 hover:text-red-500 hover:underline" %>
-                </td>
               </tr>
             <% end %>
           </tbody>

@@ -8,6 +8,5 @@ class Person < ApplicationRecord
   has_many :personlinks, dependent: :destroy
   has_many :personcompanies, dependent: :destroy
 
-  validates :birthdate, presence: true
   validates :name, presence: true
 end

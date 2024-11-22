@@ -98,9 +98,15 @@ class PeopleController < ApplicationController
     end
 
     def url?(string)
-      uri = URI.parse(string)
-      uri.is_a?(URI::HTTP) || uri.is_a?(URI::HTTPS)
-    rescue URI::InvalidURIError
-      false
+      if string.empty?
+         true
+      else
+        begin
+          uri = URI.parse(string)
+          uri.is_a?(URI::HTTP) || uri.is_a?(URI::HTTPS)
+        rescue URI::InvalidURIError
+          false
+        end
+      end
     end
 end

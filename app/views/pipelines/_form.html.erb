@@ -9,14 +9,16 @@
     </div>
   <% end %>
 
-  <div class="mb-4">
-    <%= form.label :name, class: "GenericFormLabel" %>
-    <%= form.text_field :name, class: "InputField" %>
-  </div>
+  <div class="flex items-center justify-center space-x-4 mb-4 w-full">
+    <p class="w-full md:w-1/2">
+      <%= form.label :name, class: "GenericFormLabel" %>
+      <%= form.text_field :name, class: "InputField" %>
+    </p>
 
-  <div class="mb-4 flex items-center">
-    <%= form.label :to_people, "Pipeline originates from people in the CRM?", class: "GenericFormLabel mr-2" %>
-    <%= form.check_box :to_people, class: "CheckboxField" %>
+    <p class="w-full md:w-1/2">
+      <%= form.label :to_people, "Pipeline originates from people in the CRM?", class: "GenericFormLabel mr-2" %>
+      <%= form.check_box :to_people, class: "CheckboxField" %>
+    </p>
   </div>
 
   <div class="Bottom-right">

@@ -42,6 +42,34 @@
     </div>
   <% end %>
 
+
+  <div id="leadcontent" class="overflow-x-auto mb-4">
+    <h2 class="ContainerHeaderText">Extra Attributes</h2>
+    <table class="min-w-full bg-white shadow-md rounded-lg border border-gray-200">
+      <thead>
+        <tr>
+          <th class="TableHeader border-r border-gray-200">Attribute</th>
+          <th class="TableHeader border-r border-gray-200">Value</th>
+          <th class="TableHeader border-r border-gray-200">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% lead.leadcontents.each do |leadcontent| %>
+          <tr>
+            <td class="TableEntry border-r border-gray-200 text-center"><strong><%= leadcontent.pipeattribute.name %></strong></td>
+            <td class="TableEntry border-r border-gray-200 text-center">
+              <%= leadcontent.value.present? ? leadcontent.value : "<em>Empty</em>".html_safe %>
+            </td>
+            <td class="TableEntry border-r border-gray-200 text-center">
+              <%= link_to "Edit", edit_pipeline_lead_leadcontent_path(@pipeline, @lead, leadcontent), class: "text-yellow-600 hover:text-yellow-500 hover:underline", form_class: "inline" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+
   <div class="Bottom-right">
     <%= link_to "Cancel", 'javascript:history.back()', class: "Bottom-right Btn-secondary" %>
     <%= form.submit class: "Btn-primary ml-2" %>

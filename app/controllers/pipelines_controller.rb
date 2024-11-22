@@ -7,9 +7,6 @@ class PipelinesController < ApplicationController
 
   # GET /pipeline/:pipeline_id
   def show
-    @new_pipeattribute = @pipeline.pipeattributes.new
-    @new_stage = @pipeline.stages.new
-    @indexs = @pipeline.stages.order(:index).map { |s| s.index }
   end
 
   # GET /pipelines/new
@@ -19,6 +16,9 @@ class PipelinesController < ApplicationController
 
   # GET /pipeline/:pipeline_id/edit
   def edit
+     @new_pipeattribute = @pipeline.pipeattributes.new
+     @new_stage = @pipeline.stages.new
+     @indexs = @pipeline.stages.order(:index).map { |s| s.index }
   end
 
   # POST /pipelines
