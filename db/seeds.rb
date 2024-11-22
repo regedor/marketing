@@ -353,7 +353,7 @@ def demo_create_calendar_ww(organization, userJMF, userREG, userSTD)
   Attachment.create!(filename: $video_links[0], perspective: post6Default, type_content: "cloud")
 end
 
-def demo_create_pipeline_sells(organization, userJMF, userREG, userSTD,company1)
+def demo_create_pipeline_sells(organization, userJMF, userREG, userSTD, company1)
   pipeline1 = Pipeline.create!(name: "Vendas", organization: organization, to_people: false)
   stages1 = [
     Stage.create!(name: "Primeiro Contacto", is_final: false, pipeline: pipeline1, index: 1),
@@ -368,7 +368,7 @@ def demo_create_pipeline_sells(organization, userJMF, userREG, userSTD,company1)
     Pipeattribute.create!(name: "Informação Basica", pipeline: pipeline1)
   ]
   leads1 = [
-    Lead.create!(name: "Pingo Doce", start_date: DateTime.new(2024, 11, 8, 9, 30), end_date: DateTime.new(2024, 11, 12, 9, 30), pipeline: pipeline1, company: company1, description: "Venda muito importante", stage: stages1[0]),
+    Lead.create!(name: "Pingo Doce", start_date: DateTime.new(2024, 11, 8, 9, 30), end_date: DateTime.new(2024, 11, 12, 9, 30), pipeline: pipeline1, company: company1, description: "Venda muito importante", stage: stages1[0])
   ]
   Leadcontent.create!(value: "Hiper mercado Portuguesa", lead: leads1[0], pipeattribute: pipeattributes1[0])
   Leadcontent.create!(value: "Excelentes Promoções", lead: leads1[0], pipeattribute: pipeattributes1[1])
@@ -377,7 +377,7 @@ def demo_create_pipeline_sells(organization, userJMF, userREG, userSTD,company1)
   Leadnote.create!(note: "Empresa muito conhecida no mercado nacional. Não podemos falhar.", lead: leads1[0], user: userSTD)
 end
 
-def demo_create_pipeline_buy(organization, userJMF, userREG, userSTD,person1, person2, person3)
+def demo_create_pipeline_buy(organization, userJMF, userREG, userSTD, person1, person2, person3)
   pipeline2 = Pipeline.create!(name: "Compras", organization: organization, to_people: true)
   stages2 = [
     Stage.create!(name: "Primeira Venda", is_final: false, pipeline: pipeline2, index: 1),
@@ -394,16 +394,16 @@ def demo_create_pipeline_buy(organization, userJMF, userREG, userSTD,person1, pe
     Lead.create!(name: "UM", start_date: DateTime.new(2024, 11, 19, 14, 40), end_date: DateTime.new(2024, 11, 24, 12, 45), pipeline: pipeline2, person: person2, description: "Excelente universidade", stage: stages2[0]),
     Lead.create!(name: "SCB", start_date: DateTime.new(2024, 11, 21, 15, 10), end_date: DateTime.new(2024, 11, 30, 18, 00), pipeline: pipeline2, person: person1, description: "Clube do norte de Portugual, mais precisamente da cidade de Braga", stage: stages2[2])
   ]
-  
+
   Leadcontent.create!(value: "1 000 000€", lead: leads2[0], pipeattribute: pipeattributes2[0])
   Leadcontent.create!(value: "Startup de Braga", lead: leads2[0], pipeattribute: pipeattributes2[1])
-  
+
   Leadcontent.create!(value: "", lead: leads2[1], pipeattribute: pipeattributes2[0])
   Leadcontent.create!(value: "Univesidade Portuguesa", lead: leads2[1], pipeattribute: pipeattributes2[1])
-  
+
   Leadcontent.create!(value: "127 000 000€", lead: leads2[2], pipeattribute: pipeattributes2[0])
   Leadcontent.create!(value: "Cidade Desportiva, Dume, Braga", lead: leads2[2], pipeattribute: pipeattributes2[1])
-  
+
   Leadnote.create!(note: "Empresa do responsavel pelo Projeto", lead: leads2[0], user: userJMF)
   Leadnote.create!(note: "Universidade que frequento", lead: leads2[1], user: userJMF)
   Leadnote.create!(note: "#RicardoHorta21", lead: leads2[0], user: userSTD)
@@ -417,7 +417,7 @@ def demo_seed
   userJMF = User.create!(email: "jmf@di.uminho.pt", password: "1234567", password_confirmation: "1234567", isLeader: true, organization_id: organization.id)
   userREG = User.create!(email: "miguelregedor@ww.c", password: "1234567", password_confirmation: "1234567", isLeader: true, organization_id: organization.id)
   userSTD = User.create!(email: "user_std@ww.com", password: "1234567", password_confirmation: "1234567", isLeader: false, organization_id: organization.id)
-  userJMB = User.create!(email: "jmbarbosa2002@gmail.com", password: "1234567", password_confirmation: "1234567", isLeader: true, organization_id: organization.id)
+  userZBPT = User.create!(email: "zebragapt@gmail.com", password: "1234567", password_confirmation: "1234567", isLeader: true, organization_id: organization.id)
 
   demo_create_calendar_jmf(organization, userJMF, userREG, userSTD)
   demo_create_calendar_ww(organization, userJMF, userREG, userSTD)
@@ -428,7 +428,7 @@ def demo_seed
   Companynote.create!(note: "Clube fundado a 19/01/21", company: company2, user: userSTD)
   Companylink.create!(name: "Facebook", link: "https://www.facebook.com/uminhooficial/?locale=pt_PT", company: company1)
   Companylink.create!(name: "Instagram", link: "https://www.instagram.com/sportingclubedebraga/", company: company2)
-  
+
 
   person1 = Person.create!(name: "António Salvador", birthdate: Date.new(1970, 12, 29), description: "Presidente com muitos titúlos", is_private: true, linkedin_link: "https://www.linkedin.com/in/antonio-salvador-37943b99/", user: userJMF, organization: organization)
   person2 = Person.create!(name: "João M. Fernandes", birthdate:  Date.new(1991, 7, 7), description: "Gerente do PI", is_private: false, linkedin_link: "https://www.linkedin.com/in/jmfuminho/?originalSubdomain=pt", user: userSTD, organization: organization)
@@ -448,8 +448,8 @@ def demo_seed
   Personcompany.create!(person: person2, company: company1, is_working: true, is_my_contact: true)
   Personcompany.create!(person: person3, company: company1, is_working: false, is_my_contact: false)
 
-  demo_create_pipeline_sells(organization, userJMF, userREG, userSTD,company1)
-  demo_create_pipeline_buy(organization, userJMF, userREG, userSTD,person1,person2,person3)
+  demo_create_pipeline_sells(organization, userJMF, userREG, userSTD, company1)
+  demo_create_pipeline_buy(organization, userJMF, userREG, userSTD, person1, person2, person3)
 end
 
 if Rails.env.development?
