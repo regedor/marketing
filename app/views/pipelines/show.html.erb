@@ -14,57 +14,15 @@
       </div>
     </div>
 
-   <!-- Stages Section -->
-    <h2 class="ContainerHeaderText">Stages</h2>
-    <div id="stages">
-      <div id="stagetable" class="overflow-x-auto mb-4">
-        <table class="min-w-full bg-white shadow-md rounded-lg border border-gray-200">
-          <thead>
-            <tr>
-              <th class="TableHeader border-r border-gray-200">Order</th>
-              <th class="TableHeader border-r border-gray-200">Name</th>
-            </tr>
-          </thead>
-          <tbody class="bg-white divide-y divide-gray-200">
-            <% @pipeline.stages.order(:index).select { |stage| stage.id.present? }.each do |stage| %>
-              <tr class="hover:bg-gray-100">
-                <td class="TableEntry border-r border-gray-200"><%= stage.index %></td>
-                <td class="TableEntry border-r border-gray-200"><%= stage.name %><strong><%=" (final)" if stage.is_final %></strong></td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-      </div>
-    </div>
 
-    <!-- Pipeattributes Section -->
-    <h2 class="ContainerHeaderText">Extra Attributes</h2>
-    <div id="pipeattributes">
-      <div id="attibutetable" class="overflow-x-auto mb-4">
-        <table class="min-w-full bg-white shadow-md rounded-lg border border-gray-200">
-          <thead>
-            <tr>
-              <th class="TableHeader border-r border-gray-200">Name</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% @pipeline.pipeattributes.select { |pa| pa.id.present? }.each do |pipeattribute| %>
-              <tr>
-                <td class="TableEntry border-r border-gray-200"><%= pipeattribute.name %></td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- Leads Section -->
-    <h2 class="ContainerHeaderText">Leads</h2>
+    <!-- Items Section -->
+    <h2 class="ContainerHeaderText">Items</h2>
     <div id="leads" class="overflow-x-auto my-4">
       <table class="min-w-full bg-white shadow-md rounded-lg border border-gray-200">
         <thead>
           <tr>
             <th class="TableHeader border-r border-gray-200">Name</th>
+            <th class="TableHeader border-r border-gray-200">Stage</th>
             <th class="TableHeader border-r border-gray-200">Start Date</th>
             <th class="TableHeader border-r border-gray-200">End Date</th>
             <th class="TableHeader border-r border-gray-200">Actions</th>
@@ -76,6 +34,7 @@
               <td class="TableEntry border-r border-gray-200">
                 <strong><%= link_to lead.name, pipeline_lead_path(@pipeline,lead), class: "hover:underline" %></strong>
               </td>
+              <td class="TableEntry border-r border-gray-200"><%= lead.stage.name %> </td>
               <td class="TableEntry border-r border-gray-200"><%= lead.start_date %> </td>
               <td class="TableEntry border-r border-gray-200"><%= lead.end_date %> </td>
               <td class="TableEntry border-r border-gray-200">

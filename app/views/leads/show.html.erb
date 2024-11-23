@@ -9,7 +9,7 @@
     <div class="overflow-x-auto my-4">
       <div class="flex flex-nowrap md:justify-end space-x-2 text-sm mb-2 whitespace-nowrap min-w-full">
         <%= link_to "Back to pipeline", pipeline_path(@pipeline), class:"Btn-secondary block" %>
-        <%= link_to "Edit lead", edit_pipeline_lead_path(@pipeline, @lead), class:"Btn-primary block" %>
+        <%= link_to "Edit item", edit_pipeline_lead_path(@pipeline, @lead), class:"Btn-primary block" %>
         <%= link_to "Delete", pipeline_lead_path(@pipeline, @lead), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class:"Btn-delete block" %>
       </div>
     </div>
