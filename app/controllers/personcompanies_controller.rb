@@ -106,7 +106,9 @@ class PersoncompaniesController < ApplicationController
     end
 
     def check_person_contact_2!
-      person = Person.find(params[:personcompany][:person_id])
-      redirect_to request.referrer || root_path, alert: "Access Denied" unless person.is_private == false || person.user == current_user
+      if Person.where(id: params[:personcompany][:person_id]).any?
+        person = Person.find(params[:personcompany][:person_id])
+        redirect_to request.referrer || root_path, alert: "Access Denied" unless person.is_private == false || person.user == current_user
+      end
     end
 end
