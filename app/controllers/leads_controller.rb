@@ -53,17 +53,15 @@ class LeadsController < ApplicationController
 
   # PATCH /pipeline/:pipeline_id/leads/:id
   def update
-    if check_company_people(:edit)
-      if @pipeline.to_people
-        b = @lead.update(lead_person_params)
-      else
-        b = @lead.update(lead_company_params)
-      end
-      if b
-        redirect_to pipeline_lead_path(@pipeline, @lead), notice: "Lead was successfully updated."
-      else
-        render :edit, status: :unprocessable_entity
-      end
+    if @pipeline.to_people
+      b = @lead.update(lead_person_params)
+    else
+      b = @lead.update(lead_company_params)
+    end
+    if b
+      redirect_to pipeline_lead_path(@pipeline, @lead), notice: "Lead was successfully updated."
+    else
+      render :edit, status: :unprocessable_entity
     end
   end
 
