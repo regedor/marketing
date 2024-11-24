@@ -11,22 +11,24 @@
     </div>
   <% end %>
 
-  <div class="my-5">
-    <%= form.label :number %>
-    <%= form.text_field :number, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
+  <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-5">
+    <div class="mb-4">
+      <%= form.label :number, class: "GenericFormLabel" %>
+      <%= form.text_field :number, class: "InputField block mt-2 w-full" %>
+    </div>
+
+    <div class="ml-6 mt-1 flex items-center space-x-2">
+      <%= form.label :current, class: "GenericFormLabel" %>
+      <%= form.check_box :current, class: "h-5 w-5" %>
+    </div>
+
+    <div class="mt-1 flex items-center space-x-2">
+      <%= form.label :is_active, class: "GenericFormLabel" %>
+      <%= form.check_box :is_active, class: "h-5 w-5" %>
+    </div>
   </div>
 
-  <div class="my-5">
-    <%= form.label :current %>
-    <%= form.check_box :current, class: "block mt-2 h-5 w-5" %>
-  </div>
-
-  <div class="my-5">
-    <%= form.label :is_active %>
-    <%= form.check_box :is_active, class: "block mt-2 h-5 w-5" %>
-  </div>
-
-  <div class="inline">
-    <%= form.submit class: "rounded-lg py-3 px-5 bg-blue-600 text-white inline-block font-medium cursor-pointer" %>
+  <div class="Bottom-right mb-4">
+    <%= form.submit "Save Phone Number", class: "Btn-primary ml-2" %>
   </div>
 <% end %>
