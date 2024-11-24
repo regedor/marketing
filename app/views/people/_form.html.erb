@@ -24,9 +24,9 @@
     <%= form.text_area :description, class: "TextArea h-40 block mt-2 w-full" %>
   </div>
 
-  <div class="mb-4">
-    <%= form.label :is_private, class: "GenericFormLabel" %>
-    <%= form.check_box :is_private, class: "InputField block mt-2" %>
+  <div class="mb-4 flex items-center">
+    <%= form.label :is_private, "Private Contact?", class: "GenericFormLabel mr-2" %>
+    <%= form.check_box :is_private, class: "CheckboxField" %>
   </div>
 
   <div class="mb-4">

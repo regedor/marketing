@@ -1,4 +1,4 @@
-<%= form_with(model: [person, email], class: "contents", id: "email_form") do |form| %>
+<%= form_with(model: [person, email], class: "contents") do |form| %>
   <% if email.errors.any? %>
     <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-lg mt-3">
       <h2><%= pluralize(email.errors.count, "error") %> prohibited this email from being saved:</h2>
@@ -20,22 +20,13 @@
     <%= form.label :current, "Current Email?", class: "GenericFormLabel" %>
     <%= form.check_box :current, class: "CheckboxField" %>
   </div>
-  
   <div class="mb-4">
     <%= form.label :is_active, "Is this Email Active?", class: "GenericFormLabel" %>
     <%= form.check_box :is_active, class: "CheckboxField" %>
   </div>
 
   <div class="Bottom-right mb-4">
-    <%= link_to "Cancel", 'javascript:void(0)', class: "Btn-secondary", id: "cancel_link_email" %>
+    <%= link_to "Cancel", 'javascript:history.back()', class: "Btn-secondary" %>
     <%= form.submit "Submit", class: "Btn-primary ml-2" %>
   </div>
 <% end %>
-
-<script>
-  $(document).ready(function() {
-    $('#cancel_link_email').on('click', function() {
-      $('#email_form')[0].reset();
-    });
-  });
-</script>

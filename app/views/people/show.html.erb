@@ -14,6 +14,8 @@
       <%= link_to "Delete", @person, data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class:"Btn-delete block" %>
     </div>
     </div>
+    
+    <h2 class="ContainerHeaderText">Useful Links</h2>
     <!-- Personlinks Section -->
     <div id="personlinks">
       <%= render "personlinks/form", person:@person, person_link: @new_person_link%>
@@ -45,6 +47,7 @@
     </div>
 
     <!-- Personcompanies Section -->
+    <h2 class="ContainerHeaderText">Companies</h2>
     <div id="companies">
       <%= render "personcompanies/formperson", person: @person, personcompany: @new_person_company %>
       <table class="min-w-full bg-white rounded-lg border border-gray-200">
@@ -91,6 +94,7 @@
     </div>
 
     <!-- Emails Section -->
+    <h2 class="ContainerHeaderText">Emails</h2>
     <div id="emails">
       <%= render "emails/form", person: @person, email: @new_email %>
       <table class="min-w-full bg-white rounded-lg border border-gray-200">
@@ -122,6 +126,7 @@
     </div>
 
     <!-- Phone Numbers Section -->
+    <h2 class="ContainerHeaderText">Phone Numbers</h2>
     <div id="numbers">
       <%= render "phonenumbers/form", person: @person, phonenumber: @new_phone_number %>
       <table class="min-w-full bg-white rounded-lg border border-gray-200">

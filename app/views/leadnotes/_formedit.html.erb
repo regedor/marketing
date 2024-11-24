@@ -1,8 +1,8 @@
-<%= form_with(model: [person, personnote], class: "contents") do |form| %>
-  <% if personnote.errors.any? %>
+<%= form_with(model: [pipeline, lead, leadnote], class: "contents") do |form| %>
+  <% if leadnote.errors.any? %>
     <div class="text-red-500 mb-1">
       <ol class="list-decimal list-inside">
-        <% personnote.errors.each do |error| %>
+        <% leadnote.errors.each do |error| %>
           <li><%= error.full_message %></li>
         <% end %>
       </ol>
@@ -14,7 +14,7 @@
   </div>
 
   <div class="Bottom-right mb-2">
-    <%= button_tag "Cancel", type: "reset", class: "Btn-secondary ml-2" %>
-    <%= form.submit "Submit Note", class: "Btn-primary ml-2" %>
+    <%= link_to 'Cancel', 'javascript:history.back()', class: "Btn-secondary" %>
+    <%= form.submit "Submit", class: "Btn-primary ml-2" %>
   </div>
 <% end %>
