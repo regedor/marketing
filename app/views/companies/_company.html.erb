@@ -12,23 +12,24 @@
       <label class="GenericFormLabel">Employees range:</label> 
       <input class="InputFieldReadOnly text-gray-900 w-full" type="text" value="<%= company.employers_min %> - <%= company.employers_max %>" readonly>
     </p>
-</div>
-  
-  <div id="<%= dom_id company %>">
-  <p class="my-4" data-url="<%= company.url_site %>">
-    <label class="GenericFormLabel">Url site:</label>
-    <input class="InputFieldReadOnly text-blue-400 underline" type="text" value="<%= company.url_site %>" readonly>
-  </p>
-
-  <p class="my-4" data-url="<%= company.linkedin_link %>">
-    <label class="GenericFormLabel">Linkedin link:</label>
-    <input class="InputFieldReadOnly text-blue-400 underline" type="text" value="<%= company.linkedin_link %>" readonly>
-  </p>
   </div>
-
-  <p class="my-4">
+  <div class="my-4 space-y-2">
+    <div>
+      <label class="GenericFormLabel">Url site:</label>
+      <div class="InputField bg-white text-blue-400 underline w-full p-2">
+        <%= link_to company.url_site, company.url_site, target: :blank %>
+      </div>
+    </div>
+    <div>
+      <label class="GenericFormLabel">Linkedin link:</label>
+      <div class="InputField bg-white text-blue-400 underline w-full p-2">
+        <%= link_to company.linkedin_link, company.linkedin_link, target: :blank %>
+      </div>
+    </div>
+  </div>
+  <div>
     <label class="GenericFormLabel">Description:</label>
-     <div class="Comment">
+    <div class="Comment">
       <% if company.description.strip.empty? %>
         <p> No Description</p>
       <% else %>
@@ -37,25 +38,5 @@
         <% end %>
       <% end %>
     </div>
-  </p>
+  </div>
 </div>
-
-<script>
-$(document).ready(function() {
-  $('p[data-url]').hover(
-    function() {
-      $(this).css('cursor', 'pointer');
-    },
-    function() {
-      $(this).css('cursor', 'default');
-    }
-  );
-
-  $('p[data-url]').on('click', function() {
-    const url = $(this).data('url');
-    window.open(url, '_blank');
-  });
-});
-</script>
-
-

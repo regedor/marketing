@@ -97,7 +97,7 @@ class PersoncompaniesController < ApplicationController
         redirect_to path,  notice: "Person Company was successfully updated."
       else
         error_messages = @personcompany.errors.full_messages.join(", ")
-        redirect_back(fallback_location: path, alert: "Failed: #{error_messages}")
+        redirect_to path,  alert: "Failed: #{error_messages}"
       end
     end
 
