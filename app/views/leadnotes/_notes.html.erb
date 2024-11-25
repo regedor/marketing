@@ -8,7 +8,7 @@
         <div class="icon-placeholder mr-2"></div>
         
         <p class="GenericFormLabel pl-4">
-          <strong>From: <%= note[:author] %> To: <%= link_to note[:to], note[:link] %></strong>
+          <strong>From: <%= note[:author] %> To: <%= link_to note[:to], note[:link], class: 'hover:underline' %></strong>
         </p>
         <p class="flex-grow"></p>
         <p class="SmallText text-right pr-4"><%= time_ago_in_words(note[:datetime]) %> ago</p>

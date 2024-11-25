@@ -1,9 +1,15 @@
 <div id="<%= dom_id lead %>">
   <div class="flex items-center justify-center space-x-4 mb-4 w-full">
-    <p class="w-full md:w-1/2">
-      <label class="GenericFormLabel">Name:</label>
-      <input class="InputFieldReadOnly text-gray-900" type="text" value="<%= lead.name %>" readonly>
-    </p>
+    <div class="w-full md:w-1/2">
+      <label class="GenericFormLabel">Associated to:</label>
+      <p class="Comment">
+        <% if lead.pipeline.to_people %>
+          <%= lead.person.name %>
+        <% else %>
+          <%= lead.company.name %> 
+        <% end %>
+      </p>  
+    </div>
 
     <div class="w-full md:w-1/2">
       <%= form_with url: update_stage_pipeline_lead_path(@pipeline, @lead), method: :patch, local: true, id: "stage-form-#{dom_id(@lead)}" do %>
@@ -31,16 +37,7 @@
       </p>
     </div>
   </div>
-  <div class="mb-4">
-    <label class="GenericFormLabel">Associated to:</label>
-    <p class="Comment mb-4">
-      <% if lead.pipeline.to_people %>
-        <%= lead.person.name %>
-      <% else %>
-        <%= lead.company.name %> 
-      <% end %>
-    </p>
-  </div>
+  
   <div class="mb-4">
     <label class="GenericFormLabel">Description:</label>
     <div class="Comment mb-4">
