@@ -1,30 +1,44 @@
-<div class="mx-auto md:w-2/3 w-full flex">
-  <div class="mx-auto">
+<div class="flex items-center justify-center min-h-screen">
+  <div class="Container w-full max-w-5xl px-8 mx-auto mt-16">
+
+    <div class="HeaderContainer mb-8">
+      <h2 class="ContainerHeaderText"><%= @person.name %></h2>
+    </div>
+
     <%= render @person %>
 
-    <%= link_to "Edit this person", edit_person_path(@person), class: "mt-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
-    <%= link_to "Back to people", people_path, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
-    <%= link_to "Delete", @person, data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
-
+    <div class="overflow-x-auto mt-4">
+    <div class="flex flex-nowrap md:justify-end space-x-2 text-sm mb-2 whitespace-nowrap min-w-full">
+      <%= link_to "Back to people", people_path, class:"Btn-secondary block" %>
+      <%= link_to "Edit this person", edit_person_path(@person), class:"Btn-primary block" %>
+      <%= link_to "Delete", @person, data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class:"Btn-delete block" %>
+    </div>
+    </div>
+    
+    <h2 class="ContainerHeaderText">Useful Links</h2>
     <!-- Personlinks Section -->
-    <div id="<%= dom_id(@new_person_link) %>">
+    <div id="personlinks">
       <%= render "personlinks/form", person:@person, person_link: @new_person_link%>
-
-      <table>
+      <table class="min-w-full bg-white border border-gray-200 my-4">
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Link</th>
-            <th>Actions</th>
+            <th class="TableHeader border-r border-gray-200">Name</th>
+            <th class="TableHeader border-r border-gray-200">Actions</th>
           </tr>
         </thead>
         <tbody>
           <% @person.personlinks.select{ |pl| pl.name.present? }.each do |personlink| %>
-            <tr>
-              <td><%= personlink.name %></td>
-              <td><%= personlink.link %></td>
-              <td>
-               <%= button_to "Delete link", destroy_content_person_personlink_path(@person, personlink, name: personlink.name), method: :delete, data: { confirm: "Are you sure?" } %>
+            <tr class="hover:bg-gray-100">
+              <td class="TableEntry border-r border-gray-200">
+                <strong>
+                  <%= link_to personlink.name, personlink.link, target: "_blank", rel: "noopener", class: "hover:underline" %>
+                </strong>
+              </td>
+              <td class="TableEntry border-r border-gray-200">
+                <%= link_to "Delete", destroy_content_person_personlink_path(@person, personlink, name: personlink.name), 
+                  data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, 
+                  class: "text-red-600 hover:text-red-500 hover:underline", 
+                  form_class: "inline" %>
               </td>
             </tr>
           <% end %>
@@ -33,27 +47,37 @@
     </div>
 
     <!-- Personcompanies Section -->
+    <h2 class="ContainerHeaderText">Companies</h2>
     <div id="companies">
       <%= render "personcompanies/formperson", person: @person, personcompany: @new_person_company %>
-      <table>
+      <table class="min-w-full bg-white rounded-lg border border-gray-200">
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Is Working</th>
-            <th>Is My Company contact</th>
-            <th>Actions</th>
+            <th class="TableHeader border-r border-gray-200">Name</th>
+            <th class="TableHeader border-r border-gray-200">Is Working</th>
+            <th class="TableHeader border-r border-gray-200">Is My Company contact</th>
+            <th class="TableHeader border-r border-gray-200">Actions</th>
           </tr>
         </thead>
-        <tbody>
-          <% @person.personcompanies.select{ |pc| pc.company.present? }.each do |pc| %>
-            <tr>
-              <td><%= link_to pc.company.name, company_path(pc.company) %></td>
-              <td><%= pc.is_working %></td>
-              <td><%= pc.is_my_contact %></td>
-              <td>
-                <%= link_to "Delete", destroy_by_person_personcompanies_path(@person, pc.company), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
-                <%= link_to "Update Is Working", update_is_working_by_person_personcompanies_path(@person, pc.company), data: { turbo_method: :patch } %>
-                <%= link_to "Update Main Contact", update_is_my_contact_by_person_personcompanies_path(@person, pc.company), data: { turbo_method: :patch } %>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <% @person.personcompanies.select { |pc| pc.company.present? }.each do |pc| %>
+            <tr class="hover:bg-gray-100">
+              <td class="TableEntry border-r border-gray-200">
+                <strong><%= link_to pc.company.name, company_path(pc.company), class: "hover:underline" %></strong>
+              </td>
+              <td class="TableEntry border-r border-gray-200 text-center"> <%= pc.is_working ? "✅" : "❌" %> </td>
+              <td class="TableEntry border-r border-gray-200 text-center"><%= pc.is_my_contact ? "✅" : "❌" %> </td>
+              <td class="TableEntry border-r border-gray-200">
+                <%= link_to "Delete", destroy_by_person_personcompanies_path(@person, pc.company), 
+                  data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, 
+                  class: "text-red-600 hover:text-red-500 hover:underline", 
+                  form_class: "inline" %>
+                <%= link_to "Update Is Working", update_is_working_by_person_personcompanies_path(@person, pc.company), 
+                  data: { turbo_method: :patch }, 
+                  class: "text-yellow-600 hover:text-yellow-500 hover:underline inline-block mr-2" %>
+                <%= link_to "Update Main Contact", update_is_my_contact_by_person_personcompanies_path(@person, pc.company), 
+                  data: { turbo_method: :patch }, 
+                  class: "text-yellow-600 hover:text-yellow-500 hover:underline inline-block mr-2" %>
               </td>
             </tr>
           <% end %>
@@ -62,26 +86,30 @@
     </div>
 
     <!-- Emails Section -->
+    <h2 class="ContainerHeaderText">Emails</h2>
     <div id="emails">
       <%= render "emails/form", person: @person, email: @new_email %>
-      <table>
+      <table class="min-w-full bg-white rounded-lg border border-gray-200">
         <thead>
           <tr>
-            <th>Email</th>
-            <th>Active</th>
-            <th>Current</th>
-            <th>Actions</th>
+            <th class="TableHeader border-r border-gray-200">Email</th>
+            <th class="TableHeader border-r border-gray-200">Active</th>
+            <th class="TableHeader border-r border-gray-200">Current</th>
+            <th class="TableHeader border-r border-gray-200">Actions</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody class="bg-white divide-y divide-gray-200">
           <% @person.emails.select{ |e| e.id.present? }.each do |email| %>
-            <tr>
-              <td><%= email.email %></td>
-              <td><%= email.is_active %></td>
-              <td><%= email.current %></td>
-              <td>
-                <%= link_to "Edit", edit_person_email_path(@person, email) %>
-                <%= link_to "Delete", person_email_path(@person, email), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
+            <tr class="hover:bg-gray-100">
+              <td class="TableEntry border-r border-gray-200"><%= email.email %></td>
+              <td class="TableEntry border-r border-gray-200 text-center"><%= email.is_active ? "✅" : "❌" %></td>
+              <td class="TableEntry border-r border-gray-200 text-center"><%= email.current ? "✅" : "❌" %></td>
+              <td class="TableEntry border-r border-gray-200">
+                <%= link_to "Edit", edit_person_email_path(@person, email),
+                 class: "text-yellow-600 hover:text-yellow-500 hover:underline inline-block mr-2"%>
+                <%= link_to "Delete", person_email_path(@person, email), 
+                data: { turbo_method: :delete, turbo_confirm: "Are you sure?" },
+                class: "text-red-600 hover:text-red-500 hover:underline inline-block mr-2" %>
               </td>
             </tr>
           <% end %>
@@ -90,26 +118,29 @@
     </div>
 
     <!-- Phone Numbers Section -->
+    <h2 class="ContainerHeaderText">Phone Numbers</h2>
     <div id="numbers">
       <%= render "phonenumbers/form", person: @person, phonenumber: @new_phone_number %>
-      <table>
+      <table class="min-w-full bg-white rounded-lg border border-gray-200">
         <thead>
           <tr>
-            <th>Phone Number</th>
-            <th>Active</th>
-            <th>Current</th>
-            <th>Actions</th>
+            <th class="TableHeader border-r border-gray-200">Phone Number</th>
+            <th class="TableHeader border-r border-gray-200">Active</th>
+            <th class="TableHeader border-r border-gray-200">Current</th>
+            <th class="TableHeader border-r border-gray-200">Actions</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody class="bg-white divide-y divide-gray-200">
           <% @person.phonenumbers.select{ |p| p.id.present? }.each do |pn| %>
-            <tr>
-              <td><%= pn.number %></td>
-              <td><%= pn.is_active %></td>
-              <td><%= pn.current %></td>
-              <td>
-                <%= link_to "Edit", edit_person_phonenumber_path(@person, pn) %>
-                <%= link_to "Delete", person_phonenumber_path(@person, pn), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
+            <tr class="hover:bg-gray-100">
+              <td class="TableEntry border-r border-gray-200"><%= pn.number %></td>
+              <td class="TableEntry border-r border-gray-200 text-center"><%= pn.is_active ? "✅" : "❌" %></td>
+              <td class="TableEntry border-r border-gray-200 text-center"><%= pn.current ? "✅" : "❌" %></td>
+              <td class="TableEntry border-r border-gray-200">
+                <%= link_to "Edit", edit_person_phonenumber_path(@person, pn),
+                class: "text-yellow-600 hover:text-yellow-500 hover:underline inline-block mr-2" %>
+                <%= link_to "Delete", person_phonenumber_path(@person, pn), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" },
+                class: "text-red-600 hover:text-red-500 hover:underline inline-block mr-2" %>
               </td>
             </tr>
           <% end %>
@@ -118,29 +149,7 @@
     </div>
 
     <!-- Notes Section -->
-    <div id="notes">
-      <%= render "personnotes/form", person: @person, personnote: @new_person_note %>
-      <table>
-        <thead>
-          <tr>
-            <th>Note</th>
-            <th>Author</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @person.personnotes.select{ |note| note.id.present? }.each do |note| %>
-            <tr>
-              <td><%= note.note %></td>
-              <td><%= note.user.email %></td>
-              <td>
-                <%= link_to "Edit", edit_person_personnote_path(@person, note) %>
-                <%= link_to "Delete", person_personnote_path(@person, note), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
-              </td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-    </div>
+
+    <%= render "personnotes/notes" %>
   </div>
 </div>

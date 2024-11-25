@@ -1,29 +1,43 @@
-<div class="mx-auto md:w-2/3 w-full flex">
-  <div class="mx-auto">
+<div class="flex items-center justify-center min-h-screen">
+  <div class="Container w-full max-w-5xl px-8 mx-auto mt-16">
 
+    <div class="HeaderContainer mb-8">
+      <h2 class="ContainerHeaderText"><%= @company.name %></h2>
+    </div>
+    
     <%= render @company %>
 
-    <%= link_to "Edit this company", edit_company_path(@company), class: "mt-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
-    <%= link_to "Back to companies", companies_path, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
-    <%= link_to "Delete", @company, data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
+    <div class="overflow-x-auto mt-4">
+      <div class="flex flex-nowrap md:justify-end space-x-2 text-sm mb-2 whitespace-nowrap min-w-full">
+        <%= link_to "Back to companies", companies_path, class:"Btn-secondary block" %>
+        <%= link_to "Edit this company", edit_company_path(@company), class:"Btn-primary block" %>
+        <%= link_to "Delete", @company, data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class:"Btn-delete block" %>
+      </div>
+    </div>
 
-    <div id="company_links">
-      <%= render "companylinks/form", company:@company, companylink: @new_company_link%>
-      <table>
+    <div id="company_links" class="overflow-x-auto my-4">
+      <h2 class="ContainerHeaderText">Links</h2>
+      <%= render "companylinks/form", company: @company, companylink: @new_company_link %>
+      <table class="min-w-full bg-white shadow-md rounded-lg border border-gray-200">
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Link</th>
-            <th>Actions</th>
+            <th class="TableHeader border-r border-gray-200">Name</th>
+            <th class="TableHeader border-r border-gray-200">Actions</th>
           </tr>
         </thead>
-        <tbody>
-          <% @company.companylinks.select{ |pl| pl.name.present? }.each do |companylink| %>
-            <tr>
-              <td><%= companylink.name %></td>
-              <td><%= companylink.link %></td>
-              <td>
-               <%= button_to "Delete link", destroy_content_company_companylink_path(@company, companylink, name: companylink.name), method: :delete, data: { confirm: "Are you sure?" } %>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <% @company.companylinks.select { |pl| pl.name.present? }.each do |companylink| %>
+            <tr class="hover:bg-gray-100">
+              <td class="TableEntry border-r border-gray-200">
+                <strong>
+                  <%= link_to companylink.name, companylink.link, target: "_blank", rel: "noopener", class: "hover:underline" %>
+                </strong>
+              </td>
+              <td class="TableEntry border-r border-gray-200">
+                <%= link_to "Delete", destroy_content_company_companylink_path(@company, companylink, name: companylink.name), 
+                  data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, 
+                  class: "text-red-600 hover:text-red-500 hover:underline", 
+                  form_class: "inline" %>
               </td>
             </tr>
           <% end %>
@@ -31,33 +45,51 @@
       </table>
     </div>
 
-    <div id="people_company">
+    <div id="people_company" class="overflow-x-auto my-4">
+      <h2 class="ContainerHeaderText">People</h2>
       <%= render "personcompanies/formcompany", company: @company, personcompany: @new_person_company %>
-      <table>
+      <table class="min-w-full bg-white shadow-md rounded-lg border border-gray-200">
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Is Working</th>
-            <th>Is My Company contact</th>
-            <th>Actions</th>
+            <th class="TableHeader border-r border-gray-200">Name</th>
+            <th class="TableHeader border-r border-gray-200">Currently Working?</th>
+            <th class="TableHeader border-r border-gray-200">Main Contact?</th>
+            <th class="TableHeader border-r border-gray-200">Actions</th>
           </tr>
         </thead>
-        <tbody>
-          <% @company.personcompanies.select { |pc| pc.person.present? }.each do |pc| %>
-            <tr>
-              <td><%= link_to pc.person.name, person_path(pc.person) %></td>
-              <td><%= pc.is_working ? "Yes" : "No" %></td>
-              <td><%= pc.is_my_contact ? "Yes" : "No" %></td>
-              <td>
-                <%= link_to "Delete", destroy_by_company_personcompanies_path(@company, pc.person), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
-                <%= link_to "Update Is Working", update_is_working_by_company_personcompanies_path(@company, pc.person), data: { turbo_method: :patch } %>
-                <%= link_to "Update Main Contact", update_is_my_contact_by_company_personcompanies_path(@company, pc.person), data: { turbo_method: :patch } %>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <% @company.personcompanies.select { |pc| pc.person.present? && (pc.person.is_private == false || pc.person.user == current_user) }.each do |pc| %>
+            <tr class="hover:bg-gray-100">
+              <td class="TableEntry border-r border-gray-200">
+                <strong><%= link_to pc.person.name, person_path(pc.person) %></strong>
+              </td>
+              <td class="TableEntry border-r border-gray-200 text-center"><%= pc.is_working ?  "✅" : "❌" %>
+              </td>
+              <td class="TableEntry border-r border-gray-200 text-center"><%= pc.is_my_contact ?  "✅" : "❌" %>
+              </td>
+              <td class="TableEntry border-r border-gray-200">
+                <%= link_to pc.is_working ? "Mark as Not Working" : "Mark as Working", 
+                  update_is_working_by_company_personcompanies_path(@company, pc.person), 
+                  data: { turbo_method: :patch }, 
+                  class: "text-yellow-600 hover:text-yellow-500 hover:underline inline-block mr-2" %>
+
+                <%= link_to pc.is_my_contact ? "Remove Main Contact" : "Add Main Contact", 
+                  update_is_my_contact_by_company_personcompanies_path(@company, pc.person), 
+                  data: { turbo_method: :patch }, 
+                  class: "text-yellow-600 hover:text-yellow-500 hover:underline inline-block mr-2" %>
+
+                <%= link_to "Delete", destroy_by_company_personcompanies_path(@company, pc.person), 
+                  data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, 
+                  class: "text-red-600 hover:text-red-500 hover:underline", 
+                  form_class: "inline" %>
               </td>
             </tr>
           <% end %>
         </tbody>
       </table>
     </div>
-    <%= render "companynotes/notes"%>
+
+    <%= render "companynotes/notes" %>
+
   </div>
 </div>

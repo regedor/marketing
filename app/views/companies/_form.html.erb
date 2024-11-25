@@ -1,47 +1,46 @@
-<%= form_with(model: company, class: "contents") do |form| %>
+<%= form_with(model: company, local: true) do |form| %>
   <% if company.errors.any? %>
-    <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-lg mt-3">
-      <h2><%= pluralize(company.errors.count, "error") %> prohibited this company from being saved:</h2>
-
-      <ul>
+    <div class="text-red-500 mb-1">
+      <ol class="list-decimal list-inside mt-2">
         <% company.errors.each do |error| %>
           <li><%= error.full_message %></li>
         <% end %>
-      </ul>
+      </ol>
     </div>
   <% end %>
 
-  <div class="my-5">
-    <%= form.label :name %>
-    <%= form.text_field :name, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
+  <div class="mb-4">
+    <%= form.label :name, class: "GenericFormLabel" %>
+    <%= form.text_field :name, class: "InputField block mt-2 w-full" %>
   </div>
 
-  <div class="my-5">
-    <%= form.label :employer_range, "Number of Employers" %>
-    <%= form.select :employer_range, options_for_select([["0-10", "0-10"], ["10-50", "10-50"], ["50-250", "50-250"], ["250-1000", "250-1000"], ["1000-2500", "1000-2500"], ["2500-5000", "2500-5000"], ["5000-10000", "5000-10000"]], company.employers_min.to_s + "-" + company.employers_max.to_s), { prompt: "Select a range" }, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
+  <div class="mb-4">
+    <%= form.label :employer_range, "Number of Employers", class: "GenericFormLabel" %>
+    <%= form.select :employer_range, options_for_select([["0-10", "0-10"], ["10-50", "10-50"], ["50-250", "50-250"], ["250-1000", "250-1000"], ["1000-2500", "1000-2500"], ["2500-5000", "2500-5000"], ["5000-10000", "5000-10000"]], company.employers_min.to_s + "-" + company.employers_max.to_s), { prompt: "Select a range" }, class: "InputField block mt-2 w-full" %>
   </div>
 
-  <div class="my-5">
-    <%= form.label :phone_number %>
-    <%= form.text_field :phone_number, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
+  <div class="mb-4">
+    <%= form.label :phone_number, class: "GenericFormLabel" %>
+    <%= form.text_field :phone_number, class: "InputField block mt-2 w-full" %>
   </div>
 
-  <div class="my-5">
-    <%= form.label :url_site %>
-    <%= form.text_field :url_site, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
+  <div class="mb-4">
+    <%= form.label :url_site, class: "GenericFormLabel" %>
+    <%= form.text_field :url_site, class: "InputField block mt-2 w-full" %>
   </div>
 
-  <div class="mb-5">
-    <%= form.label :description%>
-    <%= form.text_area :description,  class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full"%>
+  <div class="mb-4">
+    <%= form.label :description, class: "GenericFormLabel" %>
+    <%= form.text_area :description, class: "TextArea h-40 block mt-2 w-full" %>
   </div>
 
-  <div class="my-5">
-    <%= form.label :linkedin_link %>
-    <%= form.text_field :linkedin_link, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
+  <div class="mb-4">
+    <%= form.label :linkedin_link, class: "GenericFormLabel" %>
+    <%= form.text_field :linkedin_link, class: "InputField block mt-2 w-full" %>
   </div>
 
-  <div class="inline">
-    <%= form.submit class: "rounded-lg py-3 px-5 bg-blue-600 text-white inline-block font-medium cursor-pointer" %>
+  <div class="Bottom-right">
+    <%= link_to "Cancel", 'javascript:history.back()', class: "Bottom-right Btn-secondary" %>
+    <%= form.submit class: "Btn-primary ml-2" %>
   </div>
 <% end %>

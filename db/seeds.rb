@@ -422,8 +422,8 @@ def demo_seed
   demo_create_calendar_jmf(organization, userJMF, userREG, userSTD)
   demo_create_calendar_ww(organization, userJMF, userREG, userSTD)
 
-  company1 = Company.create!(name: "Universidade do Minho", employers_min: 500, employers_max: 1500, phone_number: "253 604 110", url_site: "https://www.uminho.pt/PT", organization: organization, description: $lorem, linkedin_link: "https://www.linkedin.com/school/universidade-do-minho/posts/?feedView=all")
-  company2 = Company.create!(name: "SC Braga", employers_min: 2500, employers_max: 500, phone_number: "253 261 259", url_site: "https://sc-braga.00.pt", organization: organization, description: $lorem, linkedin_link: "https://www.linkedin.com/company/scbraga/?originalSubdomain=pt")
+  company1 = Company.create!(name: "Universidade do Minho", employers_min: 500, employers_max: 1500, phone_number: "253 604 110", url_site: "https://www.uminho.pt/PT", organization: organization, description: "Universidade do norte de Portugal", linkedin_link: "https://www.linkedin.com/school/universidade-do-minho/posts/?feedView=all")
+  company2 = Company.create!(name: "SC Braga", employers_min: 2500, employers_max: 500, phone_number: "253 261 259", url_site: "https://sc-braga.00.pt", organization: organization, description: "Clube desportivo da cidade de Braga", linkedin_link: "https://www.linkedin.com/company/scbraga/?originalSubdomain=pt")
   Companynote.create!(note: "Universidade do Norte do pais", company: company1, user: userSTD)
   Companynote.create!(note: "Clube fundado a 19/01/21", company: company2, user: userSTD)
   Companylink.create!(name: "Facebook", link: "https://www.facebook.com/uminhooficial/?locale=pt_PT", company: company1)

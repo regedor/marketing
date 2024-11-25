@@ -1,23 +1,23 @@
 <% if @people.any? %>
   <%= form_with(url: create_by_company_personcompanies_path(company),model: personcompany, class: "contents") do |form| %>
-    <div class="my-5">
-      <%= form.label :person_id %>
-      <%= form.select :person_id, options_for_select(@people.map { |p| [p[:name], p[:id]] }), { prompt: 'Person' } %>
+    <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-5">
+      <div class="mb-4">
+        <%= form.label "Select a person to add to the company:", class: "GenericFormLabel" %>
+        <%= form.select :person_id, options_for_select(@people.map { |p| [p[:name], p[:id]] }), { prompt: 'Person' }, class: "InputField border-0" %>
+      </div>
+
+      <div class="ml-6 mt-1 flex items-center space-x-2">
+        <%= form.label "Is currently in the company", class: "GenericFormLabel" %>
+        <%= form.check_box :is_working, class: "h-5 w-5" %>
+      </div>
+
+      <div class="mt-1 flex items-center space-x-2">
+        <%= form.label :is_my_contact, class: "GenericFormLabel" %>
+        <%= form.check_box :is_my_contact, class: "h-5 w-5" %>
+      </div>
     </div>
-
-
-    <div class="my-5">
-      <%= form.label :is_working %>
-      <%= form.check_box :is_working, class: "block mt-2 h-5 w-5" %>
-    </div>
-
-    <div class="my-5">
-        <%= form.label :is_my_contact %>
-        <%= form.check_box :is_my_contact, class: "block mt-2 h-5 w-5" %>
-    </div>
-
-    <div class="inline">
-      <%= form.submit class: "rounded-lg py-3 px-5 bg-blue-600 text-white inline-block font-medium cursor-pointer" %>
+    <div class="Bottom-right mb-4">
+      <%= form.submit "Add Person to Company", class: "Btn-primary ml-2" %>
     </div>
   <% end %>
 <% end %>

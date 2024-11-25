@@ -1,37 +1,42 @@
-<div id="<%= dom_id company %>">
-  <p class="my-5">
-    <strong class="block font-medium mb-1">Name:</strong>
-    <%= company.name %>
-  </p>
-
-  <p class="my-5">
-    <strong class="block font-medium mb-1">Employers min:</strong>
-    <%= company.employers_min %>
-  </p>
-
-  <p class="my-5">
-    <strong class="block font-medium mb-1">Employers max:</strong>
-    <%= company.employers_max %>
-  </p>
-
-  <p class="my-5">
-    <strong class="block font-medium mb-1">Phone number:</strong>
-    <%= company.phone_number %>
-  </p>
-
-  <p class="my-5">
-    <strong class="block font-medium mb-1">Url site:</strong>
-    <%= company.url_site %>
-  </p>
-
-  <p class="my-5">
-    <strong class="block font-medium mb-1"> Linkedin link:</strong>
-    <%= company.linkedin_link %>
-  </p>
-  
-  <p class="my-5">
-    <strong class="block font-medium mb-1">Description:</strong>
-    <%= company.description %>
-  </p>
-
+<div id="<%= dom_id company %>" >
+  <div class="flex items-center justify-center space-x-4 mb-4 w-full">
+    <p class="w-full md:w-1/3">
+      <label class="GenericFormLabel">Name:</label>    
+      <input class="InputFieldReadOnly text-gray-900 w-full" type="text" value="<%= company.name %>" readonly>
+    </p>
+    <p class="w-full md:w-1/3">
+      <label class="GenericFormLabel">Phone number:</label> 
+      <input class="InputFieldReadOnly text-gray-900 w-full" type="text" value="<%= company.phone_number %>" readonly>
+    </p>
+    <p class="w-full md:w-1/3">
+      <label class="GenericFormLabel">Employees range:</label> 
+      <input class="InputFieldReadOnly text-gray-900 w-full" type="text" value="<%= company.employers_min %> - <%= company.employers_max %>" readonly>
+    </p>
+  </div>
+  <div class="my-4 space-y-2">
+    <div>
+      <label class="GenericFormLabel">Url site:</label>
+      <div class="InputField bg-white text-blue-400 underline w-full p-2">
+        <%= link_to company.url_site, company.url_site, target: :blank %>
+      </div>
+    </div>
+    <div>
+      <label class="GenericFormLabel">Linkedin link:</label>
+      <div class="InputField bg-white text-blue-400 underline w-full p-2">
+        <%= link_to company.linkedin_link, company.linkedin_link, target: :blank %>
+      </div>
+    </div>
+  </div>
+  <div>
+    <label class="GenericFormLabel">Description:</label>
+    <div class="Comment">
+      <% if company.description.strip.empty? %>
+        <p> No Description</p>
+      <% else %>
+        <% company.description.split("\n").each do |line| %>
+          <p><%= line %></p>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
 </div>

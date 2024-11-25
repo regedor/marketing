@@ -4,18 +4,17 @@ class LeadsController < ApplicationController
   before_action :check_organization!
   before_action :set_companies_people
   before_action :set_lead, only: %i[ show edit update destroy update_stage]
-  before_action :check_company_people!, only: [ :create, :update ]
 
   # GET /leads/
   def show
-    lead_notes = @lead.leadnotes.map { |ln| { id: ln.id, note: ln.note, type: "lead", author: ln.user.email, to: @lead.id, datetime: ln.created_at } }
+    lead_notes = @lead.leadnotes.map { |ln| { id: ln.id, note: ln.note, type: "lead", author: ln.user.email, to: @lead.name, datetime: ln.created_at, link: pipeline_lead_path(@pipeline, @lead) } }
     if @pipeline.to_people
-      person_notes =  @lead.person.personnotes.map { |pn| { id: pn.id, note: pn.note, type: "person", to: pn.person.name, author: pn.user.email,  datetime: pn.created_at } }
+      person_notes =  @lead.person.personnotes.map { |pn| { id: pn.id, note: pn.note, type: "person", to: pn.person.name, author: pn.user.email,  datetime: pn.created_at, link: person_path(pn.person) } }
       @notes = (lead_notes + person_notes)
     else
       company = @lead.company
-      company_notes = company.companynotes.map { |cn| { id: cn.id, note: cn.note, type: "company", author: cn.user.email, to: company.name, datetime: cn.created_at } }
-      person_company_notes =  company.personcompanies.map { |pc| pc.person.personnotes }.flatten.map { |pn| { id: pn.id, note: pn.note, type: "person", to: pn.person.name, author: pn.user.email,  datetime: pn.created_at } }
+      company_notes = company.companynotes.map { |cn| { id: cn.id, note: cn.note, type: "company", author: cn.user.email, to: company.name, datetime: cn.created_at, link: company_path(company) } }
+      person_company_notes =  company.personcompanies.select { |pc| pc.person.is_private == false || pc.person.user == current_user }.map { |pc| pc.person.personnotes }.flatten.map { |pn| { id: pn.id, note: pn.note, type: "person", to: pn.person.name, author: pn.user.email,  datetime: pn.created_at, link: person_path(pn.person) } }
       @notes = (lead_notes + company_notes + person_company_notes)
     end
     @notes = @notes.sort { |a, b| b[:datetime] <=> a[:datetime] }
@@ -38,15 +37,17 @@ class LeadsController < ApplicationController
     else
       @lead = @pipeline.leads.new(lead_company_params)
     end
-    @lead.stage = @pipeline.stages.sort_by { |s| s.index }.first
-    @pipeline.pipeattributes.each do |pa|
-      @lead.leadcontents.new(value: "", lead: @lead, pipeattribute: pa)
-    end
+    if check_company_people(:new)
+      @lead.stage = @pipeline.stages.sort_by { |s| s.index }.first
+      @pipeline.pipeattributes.each do |pa|
+        @lead.leadcontents.new(value: "", lead: @lead, pipeattribute: pa)
+      end
 
-    if @lead.save
-      redirect_to pipeline_lead_path(@pipeline, @lead), notice: "Lead was successfully created."
-    else
-      render :new, status: :unprocessable_entity
+      if @lead.save
+        redirect_to pipeline_lead_path(@pipeline, @lead), notice: "Lead was successfully created."
+      else
+        render :new, status: :unprocessable_entity
+      end
     end
   end
 
@@ -109,14 +110,26 @@ class LeadsController < ApplicationController
 
     def set_companies_people
       @companies = Company.where(organization: current_user.organization)
-      @people = Person.where(organization: current_user.organization)
+      @people = Person.where(organization: current_user.organization).where("is_private = ? OR user_id = ?", false, current_user.id)
     end
 
-    def check_company_people!
+    def check_company_people(page)
       if @pipeline.to_people
-        redirect_to request.referrer, alert: "Not a valid person" unless @people.map { |p| p.id }.include? params[:lead][:person_id].to_i
+        if !@people.map { |p| p.id }.include? params[:lead][:person_id].to_i
+          @lead.errors.add(:base, "Not a valid person")
+          render page, status: :unprocessable_entity
+          false
+        else
+          true
+        end
       else
-        redirect_to request.referrer, alert: "Not a valid company" unless @companies.map { |c| c.id }.include? params[:lead][:company_id].to_i
+        if !@companies.map { |c| c.id }.include? params[:lead][:company_id].to_i
+          @lead.errors.add(:base, "Not a valid company")
+          render page, status: :unprocessable_entity
+          false
+        else
+          true
+        end
       end
     end
 end

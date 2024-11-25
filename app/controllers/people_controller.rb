@@ -5,6 +5,7 @@ class PeopleController < ApplicationController
   before_action :check_organization!, only: [ :show, :edit, :update, :destroy ]
   before_action :check_leader!, only: [ :destroy ]
   before_action :check_author!, only: [ :show, :edit, :update ]
+  before_action :check_owner!, only: [ :update ]
 
   # GET /people
   def index
@@ -97,10 +98,20 @@ class PeopleController < ApplicationController
       redirect_to request.referrer || root_path, alert: "Access Denied" unless @person.user == current_user || (@person.is_private == false && current_user.isLeader)
     end
 
+    def check_owner!
+      redirect_to request.referrer || root_path, alert: "Access Denied. You cannot change is private flag." unless params[:person][:is_private] == @person.is_private || @person.user == current_user
+    end
+
     def url?(string)
-      uri = URI.parse(string)
-      uri.is_a?(URI::HTTP) || uri.is_a?(URI::HTTPS)
-    rescue URI::InvalidURIError
-      false
+      if string.empty?
+         true
+      else
+        begin
+          uri = URI.parse(string)
+          uri.is_a?(URI::HTTP) || uri.is_a?(URI::HTTPS)
+        rescue URI::InvalidURIError
+          false
+        end
+      end
     end
 end

@@ -4,6 +4,7 @@ person_one:
   is_private: false
   user: user_one
   organization: organization_one
+  description: MyString
 
 person_two:
   name: PersonTwo
@@ -11,3 +12,4 @@ person_two:
   is_private: false
   user: user_two
   organization: organization_two
+  description: MyString

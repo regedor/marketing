@@ -1,21 +1,53 @@
 <div id="<%= dom_id lead %>">
-  <p class="my-5">
-    <strong class="block font-medium mb-1">Name:</strong>
-    <%= lead.name %>
-  </p>
+  <div class="flex items-center justify-center space-x-4 mb-4 w-full">
+    <div class="w-full md:w-1/2">
+      <label class="GenericFormLabel">Associated to:</label>
+      <p class="Comment">
+        <% if lead.pipeline.to_people %>
+          <%= lead.person.name %>
+        <% else %>
+          <%= lead.company.name %> 
+        <% end %>
+      </p>  
+    </div>
 
-  <p class="my-5">
-    <strong class="block font-medium mb-1">Start date:</strong>
-    <%= lead.start_date %>
-  </p>
+    <div class="w-full md:w-1/2">
+      <%= form_with url: update_stage_pipeline_lead_path(@pipeline, @lead), method: :patch, local: true, id: "stage-form-#{dom_id(@lead)}" do %>
+          <label class="GenericFormLabel">Stage:</label>
+          <select name="lead[stage_id]" id="selector_<%= dom_id(@lead) %>" class="InputField text-sm" onchange="this.form.submit()">
+            <% @pipeline.stages.each do |stage| %>
+              <option value="<%= stage.id%>" <% if @lead.stage == stage %> selected <% end %>><%= stage.name %></option>
+            <% end %>
+          </select>
+        <% end %>
+    </div>
+  </div>
 
-  <p class="my-5">
-    <strong class="block font-medium mb-1">End date:</strong>
-    <%= lead.end_date %>
-  </p>
-
-  <p class="my-5">
-    <strong class="block font-medium mb-1">Description:</strong>
-    <%= lead.description %>
-  </p>
+  <div class="flex items-center justify-center space-x-4 mb-4 w-full">
+    <div class="w-full md:w-1/2">
+      <p class="mb-4">
+        <label class="GenericFormLabel">Start date:</label>
+        <input class="InputFieldReadOnly text-gray-900" type="text" value="<%= lead.start_date %>" readonly>
+      </p>
+    </div>
+    <div class="w-full md:w-1/2">    
+      <p class="mb-4">
+        <label class="GenericFormLabel">End date:</label>
+        <input class="InputFieldReadOnly text-gray-900" type="text" value="<%= lead.end_date %>" readonly>
+      </p>
+    </div>
+  </div>
+  
+  <div class="mb-4">
+    <label class="GenericFormLabel">Description:</label>
+    <div class="Comment mb-4">
+      <% if lead.description.strip.empty? %>
+        <p> No Description</p>
+      <% else %>
+        <% lead.description.split("\n").each do |line| %>
+          <p><%= line %></p>
+        <% end %>
+      <% end %>
+    </div>
+  <div>
 </div>

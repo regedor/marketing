@@ -11,12 +11,13 @@
     </div>
   <% end %>
 
-  <div class="my-5">
-    <%= form.label :value %>
-    <%= form.text_field :value, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
+  <div class="my-4">
+    <label class="GenericFormLabel">Value:</label>
+    <%= form.text_field :value, class: "InputField", placeholder: "Insert Value..."  %>
   </div>
 
-  <div class="inline">
-    <%= form.submit class: "rounded-lg py-3 px-5 bg-blue-600 text-white inline-block font-medium cursor-pointer" %>
+  <div class="Bottom-right mb-4">
+    <%= link_to "Cancel", pipeline_lead_path(@pipeline, @lead), class: "Btn-secondary" %>
+    <%= form.submit "Submit", class: "Btn-primary ml-2" %>
   </div>
 <% end %>

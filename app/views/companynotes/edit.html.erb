@@ -1,5 +1,8 @@
-<div class="mx-auto md:w-2/3 w-full">
-  <h1 class="font-bold text-4xl">Editing companynote</h1>
-
-  <%= render "form", company: @company, companynote: @note %>
+<div id="form_attachment" class="Container w-full mx-auto mt-16">
+  <div class="HeaderContainer mb-8">
+    <h2 class="ContainerHeaderText">Edit Company Note</h2>
+  </div>
+  <div class="space-y-6 mt-8;">
+    <%= render "formedit", company: @company, companynote: @note %>
+  </div>
 </div>

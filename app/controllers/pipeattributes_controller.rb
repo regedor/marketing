@@ -9,6 +9,7 @@ class PipeattributesController < ApplicationController
     @pipeattribute = @pipeline.pipeattributes.new(pipeattribute_params)
 
     if @pipeattribute.save
+      @pipeline.leads.map { |l| l.leadcontents.new(value: "", lead: l, pipeattribute: @pipeattribute) }.each { |l| l.save }
       redirect_to pipeline_path(@pipeline), notice: "Pipeattribute was successfully created."
     else
       error_messages = @pipeattribute.errors.full_messages.join(", ")

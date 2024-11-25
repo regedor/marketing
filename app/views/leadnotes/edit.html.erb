@@ -1,5 +1,8 @@
-<div class="mx-auto md:w-2/3 w-full">
-  <h1 class="font-bold text-4xl">Editing leadnote</h1>
-
-  <%= render "form", pipeline: @pipeline, lead: @lead, leadnote: @note %>
+<div id="form_attachment" class="Container w-full mx-auto mt-16">
+  <div class="HeaderContainer mb-8">
+    <h2 class="ContainerHeaderText">Editing Item Note</h1>
+  </div>
+  <div class="space-y-6 mt-8;">
+    <%= render "formedit", pipeline: @pipeline, lead: @lead, leadnote: @note %>
+  </div>  
 </div>
