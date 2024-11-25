@@ -7,14 +7,14 @@ class LeadsController < ApplicationController
 
   # GET /leads/
   def show
-    lead_notes = @lead.leadnotes.map { |ln| { id: ln.id, note: ln.note, type: "lead", author: ln.user.email, to: @lead.name, datetime: ln.created_at } }
+    lead_notes = @lead.leadnotes.map { |ln| { id: ln.id, note: ln.note, type: "lead", author: ln.user.email, to: @lead.name, datetime: ln.created_at, link: pipeline_lead_path(@pipeline, @lead) } }
     if @pipeline.to_people
-      person_notes =  @lead.person.personnotes.map { |pn| { id: pn.id, note: pn.note, type: "person", to: pn.person.name, author: pn.user.email,  datetime: pn.created_at } }
+      person_notes =  @lead.person.personnotes.map { |pn| { id: pn.id, note: pn.note, type: "person", to: pn.person.name, author: pn.user.email,  datetime: pn.created_at, link: person_path(pn.person) } }
       @notes = (lead_notes + person_notes)
     else
       company = @lead.company
-      company_notes = company.companynotes.map { |cn| { id: cn.id, note: cn.note, type: "company", author: cn.user.email, to: company.name, datetime: cn.created_at } }
-      person_company_notes =  company.personcompanies.map { |pc| pc.person.personnotes }.flatten.map { |pn| { id: pn.id, note: pn.note, type: "person", to: pn.person.name, author: pn.user.email,  datetime: pn.created_at } }
+      company_notes = company.companynotes.map { |cn| { id: cn.id, note: cn.note, type: "company", author: cn.user.email, to: company.name, datetime: cn.created_at, link: company_path(company) } }
+      person_company_notes =  company.personcompanies.select { |pc| pc.person.is_private == false || pc.person.user == current_user }.map { |pc| pc.person.personnotes }.flatten.map { |pn| { id: pn.id, note: pn.note, type: "person", to: pn.person.name, author: pn.user.email,  datetime: pn.created_at, link: person_path(pn.person) } }
       @notes = (lead_notes + company_notes + person_company_notes)
     end
     @notes = @notes.sort { |a, b| b[:datetime] <=> a[:datetime] }
