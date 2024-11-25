@@ -4,10 +4,8 @@
 
   <% @person.personnotes.select{|n| n.id.present?}.each do |note| %>
     <div id="note-<%= note.id %>" class="mb-4" data-type="<%= note[:type] %>">
-      <div class="flex items-center">
-        <div class="icon-placeholder mr-2"></div>
-        
-        <p class="GenericFormLabel pl-4">
+      <div class="flex items-center"> 
+        <p class="GenericFormLabel">
           <strong>From: <%= note.user.email %></strong>
         </p>
         <p class="flex-grow"></p>

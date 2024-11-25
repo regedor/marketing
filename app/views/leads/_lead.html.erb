@@ -31,7 +31,16 @@
       </p>
     </div>
   </div>
-
+  <div class="mb-4">
+    <label class="GenericFormLabel">Associated to:</label>
+    <p class="Comment mb-4">
+      <% if lead.pipeline.to_people %>
+        <%= lead.person.name %>
+      <% else %>
+        <%= lead.company.name %> 
+      <% end %>
+    </p>
+  </div>
   <div class="mb-4">
     <label class="GenericFormLabel">Description:</label>
     <div class="Comment mb-4">

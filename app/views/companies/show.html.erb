@@ -63,15 +63,9 @@
               <td class="TableEntry border-r border-gray-200">
                 <strong><%= link_to pc.person.name, person_path(pc.person) %></strong>
               </td>
-              <td class="TableEntry border-r border-gray-200">
-                <span class="<%= pc.is_working ? 'text-green-600' : 'text-red-600' %>">
-                  <%= pc.is_working ? "Yes" : "No" %>
-                </span>
+              <td class="TableEntry border-r border-gray-200 text-center"><%= pc.is_working ?  "✅" : "❌" %>
               </td>
-              <td class="TableEntry border-r border-gray-200">
-                <span class="<%= pc.is_my_contact ? 'text-green-600' : 'text-red-600' %>">
-                  <%= pc.is_my_contact ? "Yes" : "No" %>
-                </span>
+              <td class="TableEntry border-r border-gray-200 text-center"><%= pc.is_my_contact ?  "✅" : "❌" %>
               </td>
               <td class="TableEntry border-r border-gray-200">
                 <%= link_to pc.is_working ? "Mark as Not Working" : "Mark as Working", 

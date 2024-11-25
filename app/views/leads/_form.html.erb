@@ -32,13 +32,13 @@
   <% if pipeline.to_people %>
     <div class="mb-4">
       <%= form.label :person_id, class: "GenericFormLabel" %>
-      <%= form.select :person_id, options_for_select(@people.map { |w| [w[:name], w[:id]] }), { prompt: 'People' }, class: "InputField border-0" %>
+      <%= form.select :person_id, options_for_select(@people.map { |person| [person.name, person.id] }, lead.person_id), { prompt: "Select a person" }, class: "InputField" %>
     </div>
     
   <% else %>
     <div class="mb-4">
       <%= form.label :company_id, class: "GenericFormLabel" %>
-      <%= form.select :company_id, options_for_select(@companies.map { |w| [w[:name], w[:id]] }), { prompt: 'Company' }, class: "InputField border-0" %>
+      <%= form.select :company_id, options_for_select(@companies.map { |company| [company.name, company.id] }, lead.company_id), { prompt: "Select a company" }, class: "InputField" %>
     </div>
   <% end %>
 

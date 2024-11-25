@@ -24,10 +24,12 @@
     <%= form.text_area :description, class: "TextArea h-40 block mt-2 w-full" %>
   </div>
 
-  <div class="mb-4 flex items-center">
-    <%= form.label :is_private, "Private Contact?", class: "GenericFormLabel mr-2" %>
-    <%= form.check_box :is_private, class: "CheckboxField" %>
-  </div>
+  <% if action_name == "new" || current_user == person.user %>
+    <div class="mb-4 flex items-center">
+      <%= form.label :is_private, "Private Contact?", class: "GenericFormLabel mr-2" %>
+      <%= form.check_box :is_private, class: "CheckboxField" %>
+    </div>
+  <% end %>
 
   <div class="mb-4">
     <%= form.label :linkedin_link, class: "GenericFormLabel" %>

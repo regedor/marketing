@@ -22,6 +22,7 @@
         <thead>
           <tr>
             <th class="TableHeader border-r border-gray-200">Name</th>
+            <th class="TableHeader border-r border-gray-200">Associated to</th>
             <th class="TableHeader border-r border-gray-200">Stage</th>
             <th class="TableHeader border-r border-gray-200">Start Date</th>
             <th class="TableHeader border-r border-gray-200">End Date</th>
@@ -33,6 +34,13 @@
             <tr class="hover:bg-gray-100">
               <td class="TableEntry border-r border-gray-200">
                 <strong><%= link_to lead.name, pipeline_lead_path(@pipeline,lead), class: "hover:underline" %></strong>
+              </td>
+              <td class="TableEntry border-r border-gray-200">
+                <% if lead.pipeline.to_people %>
+                  <%= lead.person.name %>
+                <% else %>
+                  <%= lead.company.name %>
+                <% end %>
               </td>
               <td class="TableEntry border-r border-gray-200"><%= lead.stage.name %> </td>
               <td class="TableEntry border-r border-gray-200"><%= lead.start_date %> </td>
