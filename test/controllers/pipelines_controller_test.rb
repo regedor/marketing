@@ -40,14 +40,14 @@ class PipelinesControllerTest < ActionDispatch::IntegrationTest
   test "should show pipeline" do
     get pipeline_url(@pipeline)
     assert_response :success
-    assert_not_nil assigns(:new_pipeattribute)
-    assert_not_nil assigns(:new_stage)
-    assert_not_nil assigns(:indexs)
   end
 
   test "should get edit" do
     get edit_pipeline_url(@pipeline)
     assert_response :success
+    assert_not_nil assigns(:new_pipeattribute)
+    assert_not_nil assigns(:new_stage)
+    assert_not_nil assigns(:indexs)
   end
 
   test "should update pipeline" do

@@ -20,15 +20,15 @@ class LeadsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should create lead" do
-    assert_difference('Lead.count') do
-      post pipeline_leads_url(@pipeline), params: { lead: { name: 'NewLead', description: 'NewDescription', start_date: '2024-10-29', end_date: '2024-11-29', company_id: companies(:company_one).id } }
+    assert_difference("Lead.count") do
+      post pipeline_leads_url(@pipeline), params: { lead: { name: "NewLead", description: "NewDescription", start_date: "2024-10-29", end_date: "2024-11-29", company_id: companies(:company_one).id } }
     end
     assert_redirected_to pipeline_lead_path(@pipeline, Lead.last)
   end
 
   test "should not create lead with invalid data" do
-    assert_no_difference('Lead.count') do
-      post pipeline_leads_url(@pipeline), params: { lead: { name: '', description: '', start_date: '', end_date: '', company_id: companies(:company_one).id } }
+    assert_no_difference("Lead.count") do
+      post pipeline_leads_url(@pipeline), params: { lead: { name: "", description: "", start_date: "", end_date: "", company_id: companies(:company_one).id } }
     end
     assert_response :unprocessable_entity
   end
@@ -40,18 +40,18 @@ class LeadsControllerTest < ActionDispatch::IntegrationTest
 
   test "should update lead" do
     LeadsController.any_instance.stubs(:check_company_people!).returns(true)
-    patch pipeline_lead_url(@pipeline, @lead), params: { lead: { name: 'UpdatedLead', description: 'UpdatedDescription' } }
+    patch pipeline_lead_url(@pipeline, @lead), params: { lead: { name: "UpdatedLead", description: "UpdatedDescription" } }
     assert_redirected_to pipeline_lead_path(@pipeline, @lead)
   end
 
   test "should not update lead with invalid data" do
     LeadsController.any_instance.stubs(:check_company_people!).returns(true)
-    patch pipeline_lead_url(@pipeline, @lead), params: { lead: { start_date: '', end_date: '' } }
+    patch pipeline_lead_url(@pipeline, @lead), params: { lead: { start_date: "", end_date: "" } }
     assert_response :unprocessable_entity
   end
 
   test "should destroy lead" do
-    assert_difference('Lead.count', -1) do
+    assert_difference("Lead.count", -1) do
       delete pipeline_lead_url(@pipeline, @lead)
     end
     assert_redirected_to pipeline_path(@pipeline)

@@ -12,6 +12,10 @@
     @apply flex justify-center rounded-md bg-yellow-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-yellow-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow-600 cursor-pointer;
   }
 
+  .Btn-download {
+    @apply flex justify-center rounded-md bg-orange-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-yellow-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow-600 cursor-pointer;
+  }
+
   .Btn-secondary {
     @apply flex justify-center rounded-md bg-gray-300 px-3 py-1.5 text-sm font-semibold leading-6 text-gray-700 shadow-sm hover:bg-gray-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-400;
   }
@@ -72,6 +76,10 @@
     @apply block rounded-md text-gray-900 shadow-sm border-0 py-1.5 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-yellow-600 sm:text-sm sm:leading-6;
   }
 
+  .InputFieldReadOnly {
+    @apply block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6 focus:outline-none;
+    pointer-events: none;
+  }
   .TextArea {
     @apply block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-yellow-600;
   }
@@ -102,6 +110,10 @@
 }
 
 @layer utilities {
+  .Bottom-left {
+    @apply flex justify-start;
+  }
+
   .Bottom-right {
     @apply flex justify-end;
   }

@@ -97,7 +97,7 @@ class PersoncompaniesController < ApplicationController
         redirect_to path,  notice: "Person Company was successfully updated."
       else
         error_messages = @personcompany.errors.full_messages.join(", ")
-        redirect_back(fallback_location: path, alert: "Failed: #{error_messages}")
+        redirect_to path,  alert: "Failed: #{error_messages}"
       end
     end
 
@@ -106,7 +106,9 @@ class PersoncompaniesController < ApplicationController
     end
 
     def check_person_contact_2!
-      person = Person.find(params[:personcompany][:person_id])
-      redirect_to request.referrer || root_path, alert: "Access Denied" unless person.is_private == false || person.user == current_user
+      if Person.where(id: params[:personcompany][:person_id]).any?
+        person = Person.find(params[:personcompany][:person_id])
+        redirect_to request.referrer || root_path, alert: "Access Denied" unless person.is_private == false || person.user == current_user
+      end
     end
 end

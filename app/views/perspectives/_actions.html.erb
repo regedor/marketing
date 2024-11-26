@@ -1,7 +1,7 @@
 <div class="overflow-x-auto">
   <div id="<%= dom_id(perspective) %>_actions" class="flex flex-nowrap md:justify-end space-x-2 text-sm mb-2 whitespace-nowrap min-w-full">
+    <%= link_to "Back to calendar", calendars_path, class: "Btn-secondary block" %>
     <%= link_to "Download Images", download_calendar_post_path(@calendar, @post), class: "Btn-primary block" %>
-    <%#= link_to "Edit Post", edit_calendar_post_path(@calendar, post), class: "Btn-primary block" %>
     <%= link_to "Delete Post", calendar_post_path(@calendar, post), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "Btn-delete block" %>
   </div>
 </div>

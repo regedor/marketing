@@ -1,36 +1,46 @@
-<div class="w-full">
+<div class="flex items-center justify-center min-h-screen">
+  <div class="Container w-full max-w-5xl px-8 mx-auto mt-16">
 
-  <% content_for :title, "Companies" %>
+    <div class="HeaderContainer mb-8">
+      <h1 class="ContainerHeaderText">Companies</h1>
+    </div>
 
-  <div class="flex justify-between items-center">
-    <h1 class="font-bold text-4xl">Companies</h1>
-    <%= link_to "New company", new_company_path, class: "rounded-lg py-3 px-5 bg-blue-600 text-white block font-medium" %>
-  </div>
-
-  <div id="companies" class="min-w-full">
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Range</th>
-          <th>Phone Number</th>
-          <th>Site</th>
-          <th>Main Contacts</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @companies.each do |company| %>
+    <div id="companies" class="overflow-x-auto mb-4">
+      <table class="min-w-full bg-white shadow-md rounded-lg border border-gray-200">
+        <thead>
           <tr>
-            <td><%= company.name %></td>
-            <td><%= company.employers_max %> - <%= company.employers_min %></td>
-            <td><%= company.phone_number %></td>
-            <td><%= company.url_site %></td>
-            <td><%= company.personcompanies.select { |pc| pc.is_my_contact && (!pc.person.is_private || pc.person.user == current_user) }.map { |pc| pc.person.name } %></td>
-            <td><%= link_to "Show this company", company, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %></td>
+            <th class="TableHeader border-r border-gray-200"> Name </th>
+            <th class="TableHeader border-r border-gray-200"> Employee Range </th>
+            <th class="TableHeader border-r border-gray-200"> Phone Number </th>
+            <th class="TableHeader border-r border-gray-200"> Website </th>
+            <th class="TableHeader border-r border-gray-200"> Main Contacts </th>
           </tr>
-        <% end %>
-      </tbody>
-    </table>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <% @companies.each do |company| %>
+            <tr class="hover:bg-gray-100">
+              <td class="TableEntry border-r border-gray-200">
+                <strong><%= link_to company.name, company, class: "hover:underline" %></strong>
+              </td>
+              <td class="TableEntry border-r border-gray-200"><%= company.employers_max %> - <%= company.employers_min %></td>
+              <td class="TableEntry border-r border-gray-200"><%= company.phone_number %></td>
+              <td class="TableEntry border-r border-gray-200 text-blue-400 underline">
+                <%= link_to company.url_site, company.url_site, target: "_blank", rel: "noopener" %>
+              </td>
+              <td class="TableEntry border-r border-gray-200">
+                <%= company.personcompanies
+                .select { |pc| pc.is_my_contact && (!pc.person.is_private || pc.person.user == current_user) }
+                .map { |pc| link_to(pc.person.name, pc.person) }
+                .join(', ')
+                .html_safe %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+    <div class="Bottom-right">
+      <%= link_to "New company", new_company_path, class: "Btn-primary" %>
+    </div>
   </div>
 </div>
