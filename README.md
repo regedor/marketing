@@ -90,9 +90,9 @@ Then, visit `http://localhost:3000` in your browser.
 
 # Architecture
 
-The following pictures contains the diagrams developed by the group.
+The following pictures contain the diagrams developed by the group.
 
-**Multi tentant**:
+**Multi tenant**:
 
 ![Settings](documentation/diagrams/DomainSettings.png "Settings")
 
