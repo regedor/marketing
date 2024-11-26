@@ -88,21 +88,48 @@ sh run.sh
 
 Then, visit `http://localhost:3000` in your browser.
 
+# Architecture
+
+The following pictures contains the diagrams developed by the group.
+
+**Multi tentant**:
+
+![Settings](documentation/diagrams/DomainSettings.png "Settings")
+
+**Marketing Campaign Management**:
+
+![MCM](documentation/diagrams/ModelDomainPosts.png "MCM")
+
+**Customer Relationship Management**:
+
+![CRM](documentation/diagrams/DomainModelCRM.png "CRM")
+
+
+
+
 # Slack Notifications
 
-Each organization must give the workspace token and the channel so that the application is able to send notifications through slack. The notification have 4 different types:
+The following table is used to store notifications in the database.
+
+![Notifications](documentation/diagrams/ModelDomainNotifications.PNG "Notifications")
+
+
+Each organization must provide a workspace token and a channel so the application can send notifications through Slack. The notification has 4 different types:
 - 0 - Create something
 - 1 - Updated something
 - 2 - Destroy something
 - 3 - Updated status on something
 
-In order to send slack notifications, **before** starting the server for development run the 1st command, for production run the 2nd command:
+To send slack notifications, **before** starting the server for development run the 1st command, for production run the 2nd command:
+
 ```bash
 whenever --update-crontab --set environment=development
 ```
 ```bash
 whenever --update-crontab
 ```
+
+The notifications are set to be sent every minute, but they can be changed to any other time by changing the configuration file `config/schedule.rb`.
 
 # Authors
 - [Abhimanyu Aryan](https://github.com/AbhimanyuAryan)
