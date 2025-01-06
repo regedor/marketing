@@ -128,21 +128,22 @@ class PostsController < ApplicationController
     attachments = @post.perspectives.map { |p| p.attachments }.flatten
                       .select { |a| a.status == "approved" }
                       .reject { |a| a.type_content == "cloud" }
-                      
+    return redirect_to calendars_path, alert: "No approved attachments to download" if attachments.blank?
+
     formatted_date = @post.publish_date.strftime("%Y-%m-%d_(%Hh-%Mm)")
     zip_filename = "calendar#{@calendar.id}-#{formatted_date}.zip"
-    
+
     zip_data = Zip::OutputStream.write_buffer do |zip|
       attachments.each do |attachment|
         zip.put_next_entry(attachment.filename)
         zip.print attachment.content
       end
     end
-    
+
     zip_data.rewind
-    send_data zip_data.read, 
-              filename: zip_filename, 
-              type: "application/zip", 
+    send_data zip_data.read,
+              filename: zip_filename,
+              type: "application/zip",
               disposition: "attachment"
   end
 

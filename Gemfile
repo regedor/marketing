@@ -46,12 +46,15 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
+
+  gem "rspec-rails"
 end
 
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
   gem "letter_opener"
+  gem "annotate"
 end
 
 group :test do
@@ -60,7 +63,7 @@ group :test do
   gem "selenium-webdriver"
   gem "rails-controller-testing"
   gem "minitest"
-  gem 'mocha'
+  gem "mocha"
 end
 
 gem "devise"
@@ -76,4 +79,4 @@ gem "tailwindcss-rails"
 gem "foreman"
 gem "slack-ruby-client"
 gem "whenever", require: false
-gem 'font-awesome-sass'
+gem "font-awesome-sass"

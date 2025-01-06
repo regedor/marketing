@@ -12,9 +12,9 @@ class PhonenumbersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should create phonenumber" do
-    assert_difference('Phonenumber.count') do
+    assert_difference("Phonenumber.count") do
       post person_phonenumbers_path(@person), params: {
-        phonenumber: { 
+        phonenumber: {
           number: "1234567890",
           current: true,
           is_active: true
@@ -26,7 +26,7 @@ class PhonenumbersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should not create phonenumber with invalid data" do
-    assert_no_difference('Phonenumber.count') do
+    assert_no_difference("Phonenumber.count") do
       post person_phonenumbers_path(@person), params: {
         phonenumber: { number: "" }
       }
@@ -51,7 +51,7 @@ class PhonenumbersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should destroy phonenumber" do
-    assert_difference('Phonenumber.count', -1) do
+    assert_difference("Phonenumber.count", -1) do
       delete person_phonenumber_path(@person, @phonenumber)
     end
     assert_redirected_to person_path(@person)

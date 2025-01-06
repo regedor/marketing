@@ -5,7 +5,7 @@ default: &default
 
 development:
   <<: *default
-  database: <%= ENV["DATABASE_DEV_DBNAME"] %>
+  database: <%= ENV["DATABASE_DEV_DBNAME"] || "postgres://postgres@localhost:5432/ww_marketing_development" %>
   username: <%= ENV['DATABASE_USERNAME'] %>
   password: <%= ENV['DATABASE_PASSWORD'] %>
   host: <%= ENV['DATABASE_HOSTNAME'] %>
@@ -13,7 +13,7 @@ development:
 
 test:
   <<: *default
-  database: <%= ENV["DATABASE_TEST_DBNAME"] %>
+  database: <%= ENV["DATABASE_TEST_DBNAME"] || "postgres://postgres@localhost:5432/ww_marketing_test" %>
   username: <%= ENV['DATABASE_USERNAME'] %>
   password: <%= ENV['DATABASE_PASSWORD'] %>
   host: <%= ENV['DATABASE_HOSTNAME'] %>
@@ -21,7 +21,7 @@ test:
 
 production:
   <<: *default
-  database: <%= ENV["DATABASE_TEST_DBNAME"] %>
+  database: <%= ENV["DATABASE_PROD_DBNAME"] %>
   username: <%= ENV['DATABASE_USERNAME'] %>
   password: <%= ENV['DATABASE_PASSWORD'] %>
   host: <%= ENV['DATABASE_HOSTNAME'] %>

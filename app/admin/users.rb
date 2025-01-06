@@ -25,8 +25,8 @@ ActiveAdmin.register User do
       f.input :isLeader
     end
     f.actions do
-      f.action :submit 
-      f.action :cancel, wrapper_html: {class: :cancel}
+      f.action :submit
+      f.action :cancel, wrapper_html: { class: :cancel }
     end
   end
 

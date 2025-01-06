@@ -2,7 +2,7 @@ require "test_helper"
 
 class PostsControllerTest < ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
-  
+
   setup do
     @calendar = calendars(:calendar_one)
     @post = posts(:post_one)
@@ -19,7 +19,7 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
     get new_calendar_post_url(@calendar)
     assert_response :success
   end
-  
+
   test "should create post" do
     assert_difference("Post.count") do
       post_params = {
@@ -34,7 +34,6 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
         }
       }
       post calendar_posts_url(@calendar), params: { post: post_params }
-
     end
     assert_redirected_to calendar_post_url(@calendar, Post.last)
   end
@@ -76,10 +75,10 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update categories" do
-    patch update_categories_calendar_post_url(@calendar, @post), params: { post: { categories: ["new_category1", "new_category2"] } }
+    patch update_categories_calendar_post_url(@calendar, @post), params: { post: { categories: [ "new_category1", "new_category2" ] } }
     assert_response :success
     @post.reload
-    assert_equal ["new_category1", "new_category2"], @post.categories
+    assert_equal [ "new_category1", "new_category2" ], @post.categories
   end
 
   test "should update day" do

@@ -5,14 +5,14 @@ class CompanynotesControllerTest < ActionDispatch::IntegrationTest
   setup do
     @company = companies(:company_one)
     @other_company = companies(:company_two)
-    @user = users(:user_one) 
+    @user = users(:user_one)
     @note = companynotes(:company_one_note_one)
     sign_in @user
   end
 
   test "should create companynote" do
-    assert_difference('Companynote.count') do
-      post company_companynotes_path(@company), params: { 
+    assert_difference("Companynote.count") do
+      post company_companynotes_path(@company), params: {
         companynote: { note: "Test note" }
       }
     end
@@ -21,7 +21,7 @@ class CompanynotesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should not create invalid companynote" do
-    assert_no_difference('Companynote.count') do
+    assert_no_difference("Companynote.count") do
       post company_companynotes_path(@company), params: {
         companynote: { note: "" }
       }
@@ -51,7 +51,7 @@ class CompanynotesControllerTest < ActionDispatch::IntegrationTest
 
   test "should destroy companynote as leader" do
     @user.update(isLeader: true)
-    assert_difference('Companynote.count', -1) do
+    assert_difference("Companynote.count", -1) do
       delete company_companynote_path(@company, @note)
     end
     assert_redirected_to company_path(@company)

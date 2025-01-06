@@ -3,19 +3,23 @@
 @tailwind utilities;
 
 @layer utilities {
-    .HomeSection {
-      @apply flex items-center justify-center min-h-screen flex-col text-center space-y-6;
-    }
-    .LogoImage {
-      @apply w-96 h-96 object-contain;
-    }
-  
-    .WelcomeText {
-      @apply text-2xl font-bold text-gray-900;
-    }
-  
-    .OrganizationText {
-      @apply text-lg text-gray-700;
-    }
+  .HomeSection {
+    @apply flex items-center justify-center min-h-screen flex-col text-center space-y-8 bg-gray-50;
   }
   
+  .LogoImage {
+    @apply w-72 h-72 object-contain;
+  }
+
+  .WelcomeText {
+    @apply text-3xl font-extrabold text-gray-900 tracking-wide;
+  }
+
+  .OrganizationText {
+    @apply text-base text-gray-600;
+  }
+
+  .UserRole {
+    @apply font-semibold text-blue-600;
+  }
+}

@@ -1,3 +1,14 @@
+# == Schema Information
+#
+# Table name: organizations
+#
+#  id                    :bigint           not null, primary key
+#  name                  :string           not null
+#  created_at            :datetime         not null
+#  updated_at            :datetime         not null
+#  slack_workspace_token :string
+#  slack_channel         :string
+#
 class Organization < ApplicationRecord
   has_many :users, dependent: :destroy
   has_many :calendars, dependent: :destroy
@@ -10,6 +21,6 @@ class Organization < ApplicationRecord
   end
 
   def self.ransackable_attributes(auth_object = nil)
-    [ "id", "name", "created_at", "updated_at" ]
+    %w[ id name slack_channel slack_workspace_token created_at updated_at ]
   end
 end

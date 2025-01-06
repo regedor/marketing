@@ -1,8 +1,17 @@
+# == Schema Information
+#
+# Table name: log_entries
+#
+#  id              :bigint           not null, primary key
+#  controller_name :string
+#  info            :text
+#  created_at      :datetime         not null
+#
 class LogEntry < ApplicationRecord
     before_update :prevent_update
-  
+
     def self.create_log(info)
-        caller_class = caller_locations(1,1)[0].to_s.match(/\/([^\/]+_controller)\.rb/)[1]
+        caller_class = caller_locations(1, 1)[0].to_s.match(/\/([^\/]+_controller)\.rb/)[1]
         create(
             controller_name: caller_class,
             info: info

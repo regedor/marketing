@@ -1,4 +1,4 @@
-class CalendarsController < ApplicationController
+class CalendarsController < BaseController
   before_action :authenticate_user!
   before_action :set_calendars
   before_action :set_calendar, only: [ :edit, :update, :destroy ]
@@ -32,13 +32,13 @@ class CalendarsController < ApplicationController
 
 
   def new
-    @calendar = current_user.organization.calendars.new
+    @calendar = current_organization.calendars.new
   end
 
   # POST /calendars
   def create
     @calendar = Calendar.new(calendar_params)
-    @calendar.organization = current_user.organization
+    @calendar.organization = current_organization
 
     if @calendar.save
       redirect_to dashboard_path, notice: "Calendar was successfully created."
@@ -57,7 +57,7 @@ class CalendarsController < ApplicationController
 
   # PATCH/PUT /calendars/:id
   def update
-    @calendar.organization = current_user.organization
+    @calendar.organization = current_organization
     if @calendar.update(calendar_params)
       redirect_to dashboard_path, notice: "Calendar was successfully updated."
     else
@@ -76,7 +76,7 @@ class CalendarsController < ApplicationController
   private
 
   def set_calendars
-    @calendars = Calendar.where(organization: current_user.organization)
+    @calendars = Calendar.where(organization: current_organization)
   end
 
   def set_calendar
@@ -88,7 +88,7 @@ class CalendarsController < ApplicationController
   end
 
   def check_organization!
-    redirect_to root_path, alert: "Access Denied" unless current_user.organization_id == @calendar.organization_id
+    redirect_to root_path, alert: "Access Denied" unless current_organization.id == @calendar.organization_id
   end
 
   def permitted_params

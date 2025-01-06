@@ -15,7 +15,7 @@ class PublishplatformsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should create publishplatform when user is author" do
-    assert_difference('Publishplatform.count') do
+    assert_difference("Publishplatform.count") do
       post calendar_post_publishplatforms_path(@calendar, @post), params: {
         publishplatform: { socialplatform_id: @socialplatform_two.id }
       }
@@ -27,8 +27,8 @@ class PublishplatformsControllerTest < ActionDispatch::IntegrationTest
 
   test "should not create publishplatform when user is not author" do
     sign_in @other_user
-    
-    assert_no_difference('Publishplatform.count') do
+
+    assert_no_difference("Publishplatform.count") do
       post calendar_post_publishplatforms_path(@calendar, @post), params: {
         publishplatform: { socialplatform_id: @socialplatform.id }
       }
@@ -40,8 +40,8 @@ class PublishplatformsControllerTest < ActionDispatch::IntegrationTest
 
   test "should not create publishplatform when user is not in organization" do
     @user.update(organization: organizations(:organization_two))
-    
-    assert_no_difference('Publishplatform.count') do
+
+    assert_no_difference("Publishplatform.count") do
       post calendar_post_publishplatforms_path(@calendar, @post), params: {
         publishplatform: { socialplatform_id: @socialplatform.id }
       }
@@ -52,7 +52,7 @@ class PublishplatformsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should destroy publishplatform when user is author" do
-    assert_difference('Publishplatform.count', -1) do
+    assert_difference("Publishplatform.count", -1) do
       delete calendar_post_publishplatform_path(@calendar, @post, @socialplatform)
     end
 
@@ -63,7 +63,7 @@ class PublishplatformsControllerTest < ActionDispatch::IntegrationTest
   test "should not destroy publishplatform when user is not author" do
     sign_in @other_user
 
-    assert_no_difference('Publishplatform.count') do
+    assert_no_difference("Publishplatform.count") do
       delete calendar_post_publishplatform_path(@calendar, @post, @socialplatform)
     end
 
@@ -74,7 +74,7 @@ class PublishplatformsControllerTest < ActionDispatch::IntegrationTest
   test "should not destroy publishplatform when user is not in organization" do
     @user.update(organization: organizations(:organization_two))
 
-    assert_no_difference('Publishplatform.count') do
+    assert_no_difference("Publishplatform.count") do
       delete calendar_post_publishplatform_path(@calendar, @post, @socialplatform)
     end
 

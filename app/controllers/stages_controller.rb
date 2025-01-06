@@ -14,7 +14,7 @@ class StagesController < ApplicationController
     if @stage.save
       if @last_stage
         @last_stage.update(is_final: false)
-      end 
+      end
       redirect_to pipeline_path(@pipeline), notice: "Stage was successfully created."
     else
       error_messages = @stage.errors.full_messages.join(", ")

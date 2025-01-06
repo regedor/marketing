@@ -17,8 +17,8 @@ class Dashboard::UsersControllerTest < ActionDispatch::IntegrationTest
 
   test "should create user" do
     sign_in @leader
-    assert_difference('User.count') do
-      post dashboard_users_path, params: { user: { email: 'newuser@example.com', organization_id: @organization.id, isLeader: false } }
+    assert_difference("User.count") do
+      post dashboard_users_path, params: { user: { email: "newuser@example.com", organization_id: @organization.id, isLeader: false } }
     end
   end
 
@@ -30,9 +30,9 @@ class Dashboard::UsersControllerTest < ActionDispatch::IntegrationTest
 
   test "should update user" do
     sign_in @leader
-    patch dashboard_user_path(@user), params: { user: { email: 'updated@example.com' } }
+    patch dashboard_user_path(@user), params: { user: { email: "updated@example.com" } }
     @user.reload
-    assert_equal 'updated@example.com', @user.email
+    assert_equal "updated@example.com", @user.email
   end
 
   # test "should destroy user" do
@@ -49,7 +49,7 @@ class Dashboard::UsersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should redirect create when not logged in" do
-    post dashboard_users_path, params: { user: { email: 'newuser@example.com', organization_id: @organization.id, isLeader: false } }
+    post dashboard_users_path, params: { user: { email: "newuser@example.com", organization_id: @organization.id, isLeader: false } }
     assert_redirected_to new_user_session_path
   end
 
@@ -59,7 +59,7 @@ class Dashboard::UsersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should redirect update when not logged in" do
-    patch dashboard_user_path(@user), params: { user: { email: 'updated@example.com' } }
+    patch dashboard_user_path(@user), params: { user: { email: "updated@example.com" } }
     assert_redirected_to new_user_session_path
   end
 
@@ -77,7 +77,7 @@ class Dashboard::UsersControllerTest < ActionDispatch::IntegrationTest
 
   test "should redirect create when not a leader" do
     sign_in @user
-    post dashboard_users_path, params: { user: { email: 'newuser@example.com', organization_id: @organization.id, isLeader: false } }
+    post dashboard_users_path, params: { user: { email: "newuser@example.com", organization_id: @organization.id, isLeader: false } }
     assert_redirected_to root_path
     assert_equal "Access Denied", flash[:alert]
   end
@@ -91,7 +91,7 @@ class Dashboard::UsersControllerTest < ActionDispatch::IntegrationTest
 
   test "should redirect update when not a leader" do
     sign_in @user
-    patch dashboard_user_path(@user), params: { user: { email: 'updated@example.com' } }
+    patch dashboard_user_path(@user), params: { user: { email: "updated@example.com" } }
     assert_redirected_to root_path
     assert_equal "Access Denied", flash[:alert]
   end
