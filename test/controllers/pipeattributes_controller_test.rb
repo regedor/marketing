@@ -11,7 +11,7 @@ class PipeattributesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should create pipeattribute" do
-    assert_difference('Pipeattribute.count') do
+    assert_difference("Pipeattribute.count") do
       post pipeline_pipeattributes_path(@pipeline), params: {
         pipeattribute: { name: "New Attribute" }
       }
@@ -21,7 +21,7 @@ class PipeattributesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should not create pipeattribute with invalid data" do
-    assert_no_difference('Pipeattribute.count') do
+    assert_no_difference("Pipeattribute.count") do
       post pipeline_pipeattributes_path(@pipeline), params: {
         pipeattribute: { name: "" }
       }
@@ -50,7 +50,7 @@ class PipeattributesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should destroy pipeattribute" do
-    assert_difference('Pipeattribute.count', -1) do
+    assert_difference("Pipeattribute.count", -1) do
       delete pipeline_pipeattribute_path(@pipeline, @pipeattribute)
     end
     assert_redirected_to pipeline_path(@pipeline)

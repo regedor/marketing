@@ -2,7 +2,7 @@ require "test_helper"
 
 class PersonlinksControllerTest < ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
-  
+
   setup do
     @user = users(:user_one)
     @person = people(:person_one)
@@ -11,7 +11,7 @@ class PersonlinksControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should create personlink with valid url" do
-    assert_difference('Personlink.count') do
+    assert_difference("Personlink.count") do
       post person_personlinks_path(@person), params: {
         personlink: {
           name: "Test Link",
@@ -24,7 +24,7 @@ class PersonlinksControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should not create personlink with invalid url" do
-    assert_no_difference('Personlink.count') do
+    assert_no_difference("Personlink.count") do
       post person_personlinks_path(@person), params: {
         personlink: {
           name: "Invalid Link",
@@ -37,7 +37,7 @@ class PersonlinksControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should not create duplicate personlink" do
-    assert_no_difference('Personlink.count') do
+    assert_no_difference("Personlink.count") do
       post person_personlinks_path(@person), params: {
         personlink: {
           name: @personlink.name,
@@ -50,7 +50,7 @@ class PersonlinksControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should destroy personlink" do
-    assert_difference('Personlink.count', -1) do
+    assert_difference("Personlink.count", -1) do
       delete destroy_content_person_personlink_path(@person, @personlink, name: @personlink.name)
     end
     assert_redirected_to person_path(@person)
@@ -59,14 +59,14 @@ class PersonlinksControllerTest < ActionDispatch::IntegrationTest
 
   test "should not allow access from different organization" do
     @user.update(organization: organizations(:organization_two))
-    
+
     post person_personlinks_path(@person), params: {
       personlink: {
         name: "Test Link",
         link: "https://example.com"
       }
     }
-    
+
     assert_redirected_to root_path
     assert_equal "Access Denied", flash[:alert]
   end

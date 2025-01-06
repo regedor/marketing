@@ -1,6 +1,6 @@
 class PersonnotesControllerTest < ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
-  
+
   setup do
     @user = users(:user_one)
     @person = people(:person_one)
@@ -9,7 +9,7 @@ class PersonnotesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should create personnote" do
-    assert_difference('Personnote.count') do
+    assert_difference("Personnote.count") do
       post person_personnotes_path(@person), params: {
         personnote: { note: "Test note" }
       }
@@ -19,7 +19,7 @@ class PersonnotesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should not create invalid personnote" do
-    assert_no_difference('Personnote.count') do
+    assert_no_difference("Personnote.count") do
       post person_personnotes_path(@person), params: {
         personnote: { note: "" }
       }
@@ -49,7 +49,7 @@ class PersonnotesControllerTest < ActionDispatch::IntegrationTest
 
   test "should destroy personnote as leader" do
     @user.update(isLeader: true)
-    assert_difference('Personnote.count', -1) do
+    assert_difference("Personnote.count", -1) do
       delete person_personnote_path(@person, @note)
     end
     assert_redirected_to person_path(@person)

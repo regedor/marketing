@@ -11,7 +11,7 @@ class CompanylinksControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should create companylink with valid url" do
-    assert_difference('Companylink.count') do
+    assert_difference("Companylink.count") do
       post company_companylinks_path(@company), params: {
         companylink: {
           name: "Test Link",
@@ -24,7 +24,7 @@ class CompanylinksControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should not create companylink with invalid url" do
-    assert_no_difference('Companylink.count') do
+    assert_no_difference("Companylink.count") do
       post company_companylinks_path(@company), params: {
         companylink: {
           name: "Invalid Link",
@@ -37,7 +37,7 @@ class CompanylinksControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should not create duplicate companylink" do
-    assert_no_difference('Companylink.count') do
+    assert_no_difference("Companylink.count") do
       post company_companylinks_path(@company), params: {
         companylink: {
           name: @companylink.name,
@@ -51,14 +51,14 @@ class CompanylinksControllerTest < ActionDispatch::IntegrationTest
 
   test "should not allow access from different organization" do
     @user.update(organization: organizations(:organization_two))
-    
+
     post company_companylinks_path(@company), params: {
       companylink: {
         name: "Test Link",
         link: "https://example.com"
       }
     }
-    
+
     assert_redirected_to root_path
     assert_equal "Access Denied", flash[:alert]
   end

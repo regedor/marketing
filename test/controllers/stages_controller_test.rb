@@ -12,7 +12,7 @@ class StagesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should create stage" do
-    assert_difference('Stage.count') do
+    assert_difference("Stage.count") do
       post pipeline_stages_url(@pipeline), params: { stage: { name: "New Stage" } }
     end
     assert_redirected_to pipeline_url(@pipeline)
@@ -20,7 +20,7 @@ class StagesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should not create stage with invalid data" do
-    assert_no_difference('Stage.count') do
+    assert_no_difference("Stage.count") do
       post pipeline_stages_url(@pipeline), params: { stage: { name: "" } }
     end
     assert_redirected_to pipeline_url(@pipeline)
@@ -51,7 +51,7 @@ class StagesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should destroy stage" do
-    assert_difference('Stage.count', -1) do
+    assert_difference("Stage.count", -1) do
       delete pipeline_stage_url(@pipeline, @stage)
     end
     assert_redirected_to pipeline_url(@pipeline)
@@ -63,5 +63,4 @@ class StagesControllerTest < ActionDispatch::IntegrationTest
     get edit_pipeline_stage_url(@pipeline, @stage)
     assert_redirected_to new_user_session_url
   end
-
 end

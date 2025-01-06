@@ -1,5 +1,5 @@
 <div id="calendars_page" class="p-4 flex flex-col w-full">
-  <% if @calendars.length > 1%>
+  <% if @calendars.present? %>
     <div class="p-4">
       <%= render "filter" %>
     </div>

@@ -16,7 +16,7 @@ class LeadcontentsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update leadcontent" do
-    patch pipeline_lead_leadcontent_url(@pipeline, @lead, @leadcontent), params: { leadcontent: { value: 'UpdatedValue' } }
+    patch pipeline_lead_leadcontent_url(@pipeline, @lead, @leadcontent), params: { leadcontent: { value: "UpdatedValue" } }
     assert_redirected_to pipeline_lead_path(@pipeline, @lead)
   end
 end

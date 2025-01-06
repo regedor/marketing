@@ -6,6 +6,12 @@ class ApplicationController < ActionController::Base
     redirect_to root_path, alert: exception.message
   end
 
+  attr_reader :current_member, :current_administrator, :current_organization
+
+  helper_method :current_user
+  helper_method :current_administrator
+  helper_method :current_organization
+
   private
   def set_sidebar_pipelines
     if current_user

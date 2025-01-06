@@ -1,3 +1,14 @@
+# == Schema Information
+#
+# Table name: organizations
+#
+#  id                    :bigint           not null, primary key
+#  name                  :string           not null
+#  created_at            :datetime         not null
+#  updated_at            :datetime         not null
+#  slack_workspace_token :string
+#  slack_channel         :string
+#
 organization_one:
   name: "Organization One"
 
