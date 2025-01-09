@@ -1,0 +1,21 @@
+{
+  "name": "marketing",
+  "version": "1.0.0",
+  "description": "Customer Relationship Management and Marketing Campaigns Management web application.",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "webpack": "^5.97.1",
+    "webpack-cli": "^6.0.1",
+    "yarn": "^1.22.22"
+  }
+}
