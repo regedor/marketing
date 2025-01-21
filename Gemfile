@@ -29,17 +29,19 @@ gem "simple_calendar", "~> 2.0"
 # gem "bcrypt", "~> 3.1.7"
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem "tzinfo-data", platforms: %i[ windows jruby ]
+gem "tzinfo-data", platforms: %i[windows jruby]
 
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
-# gem "image_processing", "~> 1.2"
+gem "image_processing"
+
+gem "streamio-ffmpeg"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
-  gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
+  gem "debug", platforms: %i[mri windows], require: "debug/prelude"
 
   # Static analysis for security vulnerabilities [https://brakemanscanner.org/]
   gem "brakeman", require: false
@@ -52,31 +54,31 @@ end
 
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
-  gem "web-console"
-  gem "letter_opener"
   gem "annotate"
+  gem "letter_opener"
+  gem "web-console"
 end
 
 group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
-  gem "selenium-webdriver"
-  gem "rails-controller-testing"
   gem "minitest"
   gem "mocha"
+  gem "rails-controller-testing"
+  gem "selenium-webdriver"
 end
 
-gem "devise"
-gem "jwt"
-gem "dotenv-rails", groups: [ :development, :test ]
-gem "cancancan", "~> 3.0"
 gem "activeadmin"
-gem "sassc-rails"
-gem "rubyzip"
+gem "cancancan", "~> 3.0"
+gem "devise"
+gem "dotenv-rails", groups: [ :development, :test ]
+gem "font-awesome-sass"
+gem "foreman"
+gem "jwt"
 gem "omniauth-google-oauth2"
 gem "omniauth-rails_csrf_protection"
-gem "tailwindcss-rails"
-gem "foreman"
+gem "rubyzip"
+gem "sassc-rails"
 gem "slack-ruby-client"
+gem "tailwindcss-rails"
 gem "whenever", require: false
-gem "font-awesome-sass"

@@ -24,26 +24,41 @@
 #  fk_rails_...  (user_id => users.id)
 #
 class Post < ApplicationRecord
-  belongs_to :user
-  belongs_to :calendar
+  belongs_to :user,
+    foreign_key: :user_id,
+    inverse_of: :posts
+  belongs_to :calendar,
+    foreign_key: :calendar_id,
+    inverse_of: :posts
+
+  has_many :publishplatforms,
+    foreign_key: :post_id,
+    inverse_of: :post,
+    dependent: :destroy
+  has_many :comments,
+    foreign_key: :post_id,
+    inverse_of: :post,
+    dependent: :destroy
+  has_many :perspectives,
+    foreign_key: :post_id,
+    inverse_of: :post,
+    dependent: :destroy
+
+  accepts_nested_attributes_for :comments,      allow_destroy: true
+  accepts_nested_attributes_for :perspectives,  allow_destroy: true
+
+  validates :status,       inclusion: { in: %w[approved in_analysis rejected] }
+  validates :publish_date, presence: true
+  validates :calendar,     presence: true
+  validates :design_idea,  presence: true
+
   before_save :set_default_title
 
-  has_many :publishplatforms, dependent: :destroy
-
-  has_many :comments, dependent: :destroy
-  accepts_nested_attributes_for :comments, allow_destroy: true
-
-  has_many :perspectives, dependent: :destroy
-  accepts_nested_attributes_for :perspectives, allow_destroy: true
-
-  validates :status, inclusion: { in: %w[approved in_analysis rejected] }
-  validates :publish_date, presence: true
-  validates :calendar, presence: true
-  validates :design_idea, presence: true
   private
-    def set_default_title
-      if title.blank? && publish_date.present?
-        self.title = publish_date.strftime("%H:%M")
-      end
-    end
+
+  def set_default_title
+    return unless title.blank? && publish_date.present?
+
+    self.title = publish_date.strftime("%H:%M")
+  end
 end

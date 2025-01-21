@@ -20,11 +20,12 @@ class CalendarsController < BaseController
       default_perspective = post.perspectives.find_by(socialplatform: nil)
       default_attachment = default_perspective&.attachments&.reject { |a| a.type_content == "cloud" }&.first
       {
-        post: post.id,
-        default_attachment_content_url: default_attachment ? calendar_post_perspective_attachment_path(post.calendar, post, default_perspective, default_attachment) : nil
+        post_id: post.id,
+        id: default_attachment&.id,
+        preview_url: default_attachment&.preview_image_url
       }
     end
-    @attachments_by_post_id = @default_attachments.index_by { |attachment| attachment[:post] }
+    @attachments_by_post_id = @default_attachments.index_by { |attachment| attachment[:post_id] }
 
     @permitted_params = permitted_params
   end

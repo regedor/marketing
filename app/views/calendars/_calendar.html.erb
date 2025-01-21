@@ -34,9 +34,9 @@
         <div class="posts-container overflow-y-auto grid grid-cols-2">
           <% posts.each do |post| %>
             <% attachment = @attachments_by_post_id[post.id] %>
-            <% if attachment && attachment[:default_attachment_content_url].present? %>
+            <% if attachment && attachment[:preview_url].present? %>
               <%= link_to calendar_post_path(post.calendar, post), class: "draggable", data: { post_id: post.id, calendar_id: post.calendar.id , datetime: post.publish_date - Time.new(post.publish_date.year, post.publish_date.month, post.publish_date.day) } do %>
-                <%= image_tag attachment[:default_attachment_content_url], alt: "Post Image"%>
+              <%= image_tag attachment[:preview_url] %>
               <% end %>
             <% else %>
               <%= link_to post.publish_date.strftime("%H:%M"), calendar_post_path(post.calendar, post), class: "Btn-primary mt-2 bg-blue-500 draggable", data: { post_id: post.id, calendar_id: post.calendar.id, datetime: post.publish_date - Time.new(post.publish_date.year, post.publish_date.month, post.publish_date.day) } %>
