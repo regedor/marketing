@@ -87,8 +87,10 @@
     var array_attachments = [];
     function showPhotos(attachments) {
       for(var num = 0; num < attachments.length; num++) {
+        const attachmentSource = attachments[num].preview_url
+
         $('#attachments_' + (num+1)).attr("href", attachments[num].content_url);
-        $('#attachments_' + (num+1)).find('#img_' + (num + 1)).attr("src", attachments[num].content_url);
+        $('#attachments_' + (num+1)).find('#img_' + (num + 1)).attr("src", attachmentSource);
         $('#attachments_' + (num+1)).removeClass('hidden')
       }
       if (attachments.length > 4) {

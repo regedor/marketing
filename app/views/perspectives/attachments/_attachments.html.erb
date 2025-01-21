@@ -21,7 +21,7 @@
             <td class="TableEntry border-r border-gray-200 relative">
               <strong class="pr-6 flex items-center space-x-2">
                 <% if attachment.type_content != "cloud" %>
-                    <%= image_tag calendar_post_perspective_attachment_path(@calendar, @post, @perspective, attachment), class: "w-16 h-16 object-cover border rounded", alt: attachment.filename %>
+                    <%= image_tag attachment&.preview_image_url || "", class: "w-16 h-16 object-cover border rounded", alt: attachment.filename %>
                 <% end %>
                 <% if attachment.perspective.socialplatform.present? %>
                   <%= image_tag "platforms/#{attachment.perspective.socialplatform.name.downcase}.svg", class: "w-6 h-6", alt: attachment.perspective.socialplatform.name %>

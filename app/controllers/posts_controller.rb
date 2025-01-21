@@ -153,6 +153,7 @@ class PostsController < ApplicationController
       attachments_data = @post.perspectives.map do |perspective|
         perspective.attachments.reject { |a| a.type_content == "cloud" }.map do |attachment|
           {
+            preview_url: attachment.preview_image_url,
             content_url: calendar_post_perspective_attachment_path(@calendar, @post, perspective, attachment)
           }
         end
