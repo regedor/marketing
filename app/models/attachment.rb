@@ -49,10 +49,8 @@ class Attachment < ApplicationRecord
   def preview_image_url
     return unless content.present?
 
-    smaller_file_path = Rails.root.join("public/system/attachments", "#{id}_smaller.jpg")
-    return unless File.exist?(smaller_file_path)
-
-    "/system/attachments/#{id}_smaller.jpg"
+    post = perspective.post
+    "/calendars/#{post.calendar.id}/posts/#{post.id}/perspectives/#{perspective.id}/attachments/#{id}"
   end
 
   private
