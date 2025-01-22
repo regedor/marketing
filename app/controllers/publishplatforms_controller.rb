@@ -38,7 +38,9 @@ class PublishplatformsController < ApplicationController
     end
 
     def check_author!
-      render json: { error: "You are not the author" }, status: :forbidden, alert: "Access Denied" unless current_user == @post.user
+      return if current_user == @post.user || current_user.isLeader?
+
+      render json: { error: "You are not the author" }, status: :forbidden, alert: "Access Denied"
     end
 
     def set_publishplatform
