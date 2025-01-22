@@ -50,7 +50,6 @@ class Post < ApplicationRecord
   validates :status,       inclusion: { in: %w[approved in_analysis rejected] }
   validates :publish_date, presence: true
   validates :calendar,     presence: true
-  validates :design_idea,  presence: true
 
   before_save :set_default_title
 

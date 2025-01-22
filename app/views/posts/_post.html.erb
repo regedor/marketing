@@ -1,36 +1,49 @@
 <div id="<%= dom_id(post) %>" class="text-gray-900">
   <div class="flex flex-col md:flex-row gap-4 mt-4 mb-4">
+  
   <div class="w-full md:w-1/3">
     <label class="GenericFormLabel flex">Categories: <p id="savedCat" class="ml-auto"></p></label>
-    <div class="TextArea h-60 bg-white p-4 rounded-md overflow-y-auto relative">
-      <div id="categories" contenteditable="true" class="border-none outline-none focus:outline-none">
-        <%= post.categories.join(", ") %>
-      </div>
+    <div class="TextArea h-60 bg-white p-4 rounded-md overflow-hidden relative">
+      <textarea 
+        id="categories" 
+        class="border-none outline-none focus:outline-none focus:ring-0 focus:border-none w-full h-full p-2 resize-none"
+        placeholder="Enter categories here, separated by commas..."
+      ><%= post.categories.join(",") %></textarea>
       <div class="absolute top-2 right-2 flex items-center">
-        <button id="categories-copy-button" class="relative p-2 hover:bg-gray-100 rounded transition-all duration-200 ease-in-out" data-copy-text="<%= post.categories.join(", ") %>">
+        <button 
+          id="categories-copy-button" 
+          class="relative p-2 hover:bg-gray-100 rounded transition-all duration-200 ease-in-out" 
+        >
           <img src="<%= asset_path('copy.svg') %>" alt="Copy" class="w-4 h-4"/>
         </button>
-        <span id="categories-copy-message" class="mr-2 text-green-600 bg-gray-100 px-2 py-1 rounded-md text-xs invisible absolute font-bold right-full top-2">
+        <span 
+          id="categories-copy-message" 
+          class="mr-2 text-green-600 bg-gray-100 px-2 py-1 rounded-md text-xs invisible absolute font-bold right-full top-2"
+        >
           Copied!
         </span>
       </div>
     </div>
   </div>
+
+  
   <div class="w-full md:w-2/3">
-    <label class="GenericFormLabel flex">Design Idea: <p id="savedDI" class ="ml-auto"></p></label>
-    <div class="TextArea h-60 bg-white p-4 rounded-md overflow-y-auto relative">
-      <div id="design_idea" contenteditable="true" class="border-none outline-none focus:outline-none">
-        <% post.design_idea.split("\n").each do |newline| %>
-          <p><%= newline %></p>
-        <% end %>
-      </div>
+    <label class="GenericFormLabel flex">Design Idea: <p id="savedDI" class="ml-auto"></p></label>
+    <div class="TextArea h-60 bg-white p-4 rounded-md overflow-hidden relative">
+      <textarea 
+        id="design_idea"
+        class="border-none outline-none focus:outline-none focus:ring-0 focus:border-none w-full h-full p-2 resize-none"
+        placeholder="Enter your design idea here..."
+      ><%= "\n" + post.design_idea %></textarea>
       <div class="absolute top-2 right-2 flex items-center">
-        <button id="design-copy-button" class="relative p-2 hover:bg-gray-100 rounded transition-all duration-200 ease-in-out" data-copy-text="<%= post.design_idea %>">
+        <button 
+          id="design-copy-button" 
+          class="relative p-2 hover:bg-gray-100 rounded transition-all duration-200 ease-in-out" 
+        >
           <img src="<%= asset_path('copy.svg') %>" alt="Copy" class="w-4 h-4"/>
         </button>
-        <span id="design-copy-message" class="mr-2 text-green-600 bg-gray-100 px-2 py-1 rounded-md text-xs invisible absolute font-bold right-full top-2">
-          Copied!
-        </span>
+        <span id="design-copy-message" 
+          class="mr-2 text-green-600 bg-gray-100 px-2 py-1 rounded-md text-xs invisible absolute font-bold right-full top-2">Copied!</span>
       </div>
     </div>
   </div>
@@ -38,26 +51,23 @@
 
 <script>
   $(document).ready(function() {
-
     $('#design-copy-button').on('click', function() {
-      var copyText = $(this).data('copy-text');
-      
-      var tempInput = $('<input>');
+      var copyText = $('#design_idea').val(); // Get the value of the textarea
+      var tempInput = $('<textarea>'); // Use a textarea instead of an input to preserve newlines
       $('body').append(tempInput);
       tempInput.val(copyText).select();
       document.execCommand('copy');
       tempInput.remove();
-       
-       $('#design-copy-message').removeClass('invisible');
+
+      $('#design-copy-message').removeClass('invisible');
       setTimeout(function() {
         $('#design-copy-message').addClass('invisible');
       }, 1000);
     });
     
     $('#categories-copy-button').on('click', function() {
-      var copyText = $(this).data('copy-text');
-      
-      var tempInput = $('<input>');
+      var copyText = $("#categories").val();
+      var tempInput = $('<textarea>');
       $('body').append(tempInput);
       tempInput.val(copyText).select();
       document.execCommand('copy');
@@ -69,16 +79,18 @@
       }, 1000);
     });
 
-    let original_categories = $('#categories').text();
+    let original_categories = "<%= j(post.categories.join(",")) %>";
     let will_update_categories = false;
 
     // Add categories update function
     function update_categories() {
-      let categories_data = $('#categories').text();
-      if(categories_data != original_categories && categories_data.length > 0) {
-        let url = "<%= update_categories_calendar_post_path(@calendar,post)%>";
+      let categories_data = $('#categories').val();
+      console.log(categories_data);
+      if(categories_data != original_categories) {
+        let url = "<%= update_categories_calendar_post_path(@calendar, post)%>";
+        let cleaned_categories = categories_data.split(",").map((category) => category.trim()).filter(category => category !== '');
         build_axios();
-        axios.patch(url, {post: {categories: categories_data.split(',').map(cat => cat.trim())}})
+        axios.patch(url, {post: {categories: cleaned_categories}})
         .then((response) => {
           console.log("success categories");
           original_categories = categories_data;
@@ -91,13 +103,9 @@
           count++;
         });
       }
-      else if(categories_data.length == 0) {
-        $("#savedCat").text("Categories can not be blank");
-      }
       else {
         $("#savedCat").text("Same Categories");
       }
-      
       will_update_categories = false;
     }
 
@@ -129,9 +137,11 @@
     }
     
     function update_design_idea() {
-      let design_idea_data = $('#design_idea p').map(function() { return $(this).text(); }).get().join('\n');
-      if(design_idea_data != original_design_idea && design_idea_data.length > 0) {
-        let url = "<%= update_design_idea_calendar_post_path(@calendar,post)%>"
+      let design_idea_data = $('#design_idea').val();
+      console.log(design_idea_data);
+
+      if(design_idea_data != original_design_idea) {
+        let url = "<%= update_design_idea_calendar_post_path(@calendar, post)%>"
         build_axios()
         axios.patch(url, {post : {design_idea : design_idea_data}})
         .then((response) => {
@@ -146,8 +156,6 @@
           count++;
         })
       }
-      else if(design_idea_data.length == 0)
-        $("#savedDI").text("Design Idea can not be blanked");
       else
         $("#savedDI").text("Same Design Idea");
       

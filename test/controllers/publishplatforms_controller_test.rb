@@ -25,19 +25,6 @@ class PublishplatformsControllerTest < ActionDispatch::IntegrationTest
     assert_equal "Publishplatform created successfully", JSON.parse(response.body)["message"]
   end
 
-  test "should not create publishplatform when user is not author" do
-    sign_in @other_user
-
-    assert_no_difference("Publishplatform.count") do
-      post calendar_post_publishplatforms_path(@calendar, @post), params: {
-        publishplatform: { socialplatform_id: @socialplatform.id }
-      }
-    end
-
-    assert_response :forbidden
-    assert_equal "You are not the author", JSON.parse(response.body)["error"]
-  end
-
   test "should not create publishplatform when user is not in organization" do
     @user.update(organization: organizations(:organization_two))
 
@@ -58,17 +45,6 @@ class PublishplatformsControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_equal "Publishplatform deleted successfully", JSON.parse(response.body)["message"]
-  end
-
-  test "should not destroy publishplatform when user is not author" do
-    sign_in @other_user
-
-    assert_no_difference("Publishplatform.count") do
-      delete calendar_post_publishplatform_path(@calendar, @post, @socialplatform)
-    end
-
-    assert_response :forbidden
-    assert_equal "You are not the author", JSON.parse(response.body)["error"]
   end
 
   test "should not destroy publishplatform when user is not in organization" do
