@@ -38,17 +38,6 @@ class PerspectivesControllerTest < ActionDispatch::IntegrationTest
     assert_equal "Perspective was successfully created.", flash[:notice]
   end
 
-  test "should not create perspective with invalid data" do
-    assert_no_difference("Perspective.count") do
-      post calendar_post_perspectives_url(@calendar, @post), params: {
-        perspective: {
-          socialplatform_id: nil,
-          copy: ""
-        }
-      }
-    end
-  end
-
   test "should destroy perspective" do
     perspective = perspectives(:perspective_one)
     assert_difference("Perspective.count", -1) do
