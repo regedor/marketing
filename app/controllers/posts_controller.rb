@@ -125,9 +125,8 @@ class PostsController < ApplicationController
 
   # GET /calendars/:calendar_id/posts/:id/download
   def download
-    attachments = @post.perspectives.map { |p| p.attachments }.flatten
-                      .select { |a| a.status == "approved" }
-                      .reject { |a| a.type_content == "cloud" }
+    attachments = @post.perspectives.map { |p| p.attachments.where.not(type_content: "cloud")
+      .where(status: "approved", attachment_id: nil) }.flatten
     return redirect_to calendars_path, alert: "No approved attachments to download" if attachments.blank?
 
     formatted_date = @post.publish_date.strftime("%Y-%m-%d_(%Hh-%Mm)")
@@ -151,7 +150,9 @@ class PostsController < ApplicationController
   def json
     begin
       attachments_data = @post.perspectives.map do |perspective|
-        perspective.attachments.reject { |a| a.type_content == "cloud" }.map do |attachment|
+        attachments = perspective.attachments.where.not(type_content: "cloud").where(attachment_id: nil)
+          .select(:id, :filename, :type_content, :perspective_id, :status, :attachment_id)
+        attachments.map do |attachment|
           {
             preview_url: attachment.preview_image_url,
             content_url: calendar_post_perspective_attachment_path(@calendar, @post, perspective, attachment)

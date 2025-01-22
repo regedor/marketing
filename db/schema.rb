@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_11_14_162813) do
+ActiveRecord::Schema[7.2].define(version: 2025_01_21_214357) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -59,6 +59,8 @@ ActiveRecord::Schema[7.2].define(version: 2024_11_14_162813) do
     t.string "status", default: "in_analysis"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "attachment_id"
+    t.index ["attachment_id"], name: "index_attachments_on_attachment_id"
     t.index ["perspective_id"], name: "index_attachments_on_perspective_id"
   end
 
@@ -324,6 +326,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_11_14_162813) do
 
   add_foreign_key "attachmentcounters", "attachments"
   add_foreign_key "attachmentcounters", "users"
+  add_foreign_key "attachments", "attachments"
   add_foreign_key "attachments", "perspectives"
   add_foreign_key "calendars", "organizations"
   add_foreign_key "comments", "posts"

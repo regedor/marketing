@@ -8,7 +8,8 @@ class AttachmentsController < ApplicationController # rubocop:disable Metrics/Cl
 
   # POST /calendars/:calendar_id/posts/:post_id/perspectives/:perspective_id/attachments/:id
   def show
-    send_data @attachment.content, type: @attachment.type_content, disposition: "inline"
+    send_data @attachment.content, type: @attachment.type_content,
+      disposition: "inline; filename=#{@attachment.filename}"
   end
 
   # GET /calendars/:calendar_id/posts/:post_id/perspectives/:perspective_id/attachments/:id/edit
@@ -32,6 +33,8 @@ class AttachmentsController < ApplicationController # rubocop:disable Metrics/Cl
     end
 
     if @attachment.save
+      @attachment.generate_preview
+
       redirect_to calendar_post_perspective_path(@calendar, @post, @perspective, anchor: dom_id(@attachment)),
         notice: "Attachment was successfully created."
       send_notification("created", 0)
