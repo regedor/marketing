@@ -10,35 +10,58 @@
 #  status         :string           default("in_analysis")
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
+#  attachment_id  :bigint
 #
 # Indexes
 #
+#  index_attachments_on_attachment_id   (attachment_id)
 #  index_attachments_on_perspective_id  (perspective_id)
 #
 # Foreign Keys
 #
+#  fk_rails_...  (attachment_id => attachments.id)
 #  fk_rails_...  (perspective_id => perspectives.id)
 #
 require "marcel"
 require "streamio-ffmpeg"
 class Attachment < ApplicationRecord
+  include Rails.application.routes.url_helpers
+
   # Examples of type_content: image/jpeg, video/quicktime, cloud (links)
   belongs_to :perspective
+  belongs_to :original_attachment,
+    class_name: "Attachment",
+    foreign_key: :attachment_id,
+    inverse_of: :preview_file,
+    optional: true
 
   has_many :attachmentcounters, dependent: :destroy
+  has_one :preview_file,
+    class_name: "Attachment",
+    foreign_key: :attachment_id,
+    dependent: :destroy,
+    inverse_of: :original_attachment
 
   validates :filename, presence: true
   validates :status, inclusion: { in: %w[approved in_analysis rejected] }
 
-  after_create_commit   :generate_smaller_version
-  after_destroy_commit  :destroy_smaller_version
+  def is_preview?
+    attachment_id.present?
+  end
+
+  def generate_preview
+    return if attachment_id.present?
+
+    generate_smaller_version
+  end
 
   def self.update_preview_images
     Attachment.find_in_batches(batch_size: 100) do |attachments|
       attachments.each do |attachment|
         begin
-          attachment.send(:destroy_smaller_version)
-          attachment.send(:generate_smaller_version)
+          next if attachment.preview_file.present?
+
+          generate_smaller_version
         rescue => e
           Rails.logger.error "Failed to update preview image for Attachment ID: #{attachment.id}. Error: #{e.message}"
         end
@@ -47,10 +70,14 @@ class Attachment < ApplicationRecord
   end
 
   def preview_image_url
-    return unless content.present?
-
     post = perspective.post
-    "/calendars/#{post.calendar.id}/posts/#{post.id}/perspectives/#{perspective.id}/attachments/#{id}"
+    preview_id = preview_file&.id
+    if preview_id.blank? && attachment_id.blank?
+      self.reload
+      generate_smaller_version
+      preview_id = preview_file&.id || id
+    end
+    calendar_post_perspective_attachment_path(post.calendar.id, post.id, perspective.id, preview_id)
   end
 
   private
@@ -90,6 +117,7 @@ class Attachment < ApplicationRecord
   end
 
   def generate_smaller_version
+    return if Attachment.exists?(attachment_id: id)
     mime_type = file_type
     return unless mime_type == :image || mime_type == :video
     return unless content.present?
@@ -97,10 +125,9 @@ class Attachment < ApplicationRecord
     return generate_video_banner if mime_type == :video
 
     smaller_binary = resized_image(width: 300, height: 300)
-    smaller_file_path = Rails.root.join("public/system/attachments", "#{id}_smaller.jpg")
-
-    FileUtils.mkdir_p(File.dirname(smaller_file_path))
-    File.open(smaller_file_path, "wb") { |file| file.write(smaller_binary) }
+    preview_attachment = Attachment.create!(perspective_id: perspective_id, filename: filename,
+      type_content: type_content, content: smaller_binary, status: status, original_attachment: self)
+    preview_attachment
   end
 
   def generate_video_banner
@@ -112,28 +139,36 @@ class Attachment < ApplicationRecord
     video_path.write(content)
     video_path.rewind
 
-    # Initialize the FFMPEG movie object
     movie = FFMPEG::Movie.new(video_path.path)
-
     # Choose a frame at 10% of the video's duration or the first frame
     frame_time = movie.duration * 0.1 rescue 0
-    banner_path = Rails.root.join("public/system/attachments/#{id}_smaller.jpg")
-    FileUtils.mkdir_p(File.dirname(banner_path))
 
     if movie.valid?
-      movie.screenshot(banner_path.to_s, { seek_time: frame_time, resolution: "400x300" })
-      puts "Banner generated at #{banner_path}"
+      # Create a temporary file for the screenshot
+      banner_tempfile = Tempfile.new([ "screenshot", ".jpg" ])
+
+      # Generate the screenshot
+      movie.screenshot(banner_tempfile.path, { seek_time: frame_time, resolution: "400x300" })
+
+      # Read the screenshot content into a binary format
+      screenshot_content = File.binread(banner_tempfile.path)
+
+      # Save the screenshot as a new Attachment record
+      Attachment.create!(
+        perspective: self.perspective, # Adjust to associate with the correct perspective
+        type_content: "image/jpeg",
+        filename: "#{filename}_preview.jpg",
+        content: screenshot_content,
+        original_attachment: self
+      )
     else
-      puts "Invalid video file: #{video_path}"
+      puts "Invalid video file: #{video_path.path}"
     end
   ensure
-    # Clean up the temporary video file
+    # Clean up temporary files
     video_path.close
     video_path.unlink
-  end
-
-  def destroy_smaller_version
-    smaller_file_path = Rails.root.join("public/system/attachments", "#{id}_smaller.jpg")
-    File.delete(smaller_file_path) if File.exist?(smaller_file_path)
+    banner_tempfile&.close
+    banner_tempfile&.unlink
   end
 end

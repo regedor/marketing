@@ -18,7 +18,12 @@ class CalendarsController < BaseController
 
     @default_attachments = @posts.map do |post|
       default_perspective = post.perspectives.find_by(socialplatform: nil)
-      default_attachment = default_perspective&.attachments&.reject { |a| a.type_content == "cloud" }&.first
+      attachments = default_perspective&.attachments.where.not(type_content: "cloud")
+        .select(:id, :filename, :type_content, :perspective_id, :status, :attachment_id)
+
+      original_attachments = attachments.reject { |attach| attach.is_preview? }
+
+      default_attachment = original_attachments&.first
       {
         post_id: post.id,
         id: default_attachment&.id,
