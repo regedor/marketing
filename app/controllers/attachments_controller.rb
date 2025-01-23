@@ -1,4 +1,4 @@
-class AttachmentsController < ApplicationController # rubocop:disable Metrics/ClassLength
+class AttachmentsController < BaseController # rubocop:disable Metrics/ClassLength
   include ActionView::RecordIdentifier
 
   # before_action :authenticate_user!
@@ -143,6 +143,7 @@ class AttachmentsController < ApplicationController # rubocop:disable Metrics/Cl
   end
 
   def check_organization!
+    return if current_organization.slug == "medgical" && @post.user.organization.slug == "regedor-creations"
     redirect_to root_path, alert: "Access Denied" unless current_user.organization_id == @calendar.organization.id
   end
 

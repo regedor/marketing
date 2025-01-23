@@ -33,6 +33,8 @@ class User < ApplicationRecord
     dependent: :destroy,
     inverse_of: :user
 
+  validates :organization, presence: true
+
   def self.recent(limit)
     order(created_at: :desc).limit(limit)
   end

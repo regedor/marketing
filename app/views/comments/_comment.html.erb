@@ -1,10 +1,9 @@
-<div id='<%= dom_id(comment) %>' class="comment mb-4">
-  <div class="flex items-center">
-    <p class="GenericFormLabel pl-4"><strong><%= comment.user.email %></strong></p>
-    <p class="flex-grow"></p> 
-    <p class="SmallText text-right pr-4"><%= time_ago_in_words(comment.created_at) %> ago</p>
+<div id="<%= dom_id(comment) %>" class="comment mb-1 p-2 rounded-md bg-gray-50">
+  <div class="flex items-center justify-between mb-2">
+    <p class="text-sm font-semibold text-gray-800"><%= comment.user.email %></p>
+    <p class="text-xs text-gray-500"><%= time_ago_in_words(comment.created_at) %> ago</p>
   </div>
-  <div class="Comment">
+  <div class="mt-2 text-gray-700 leading-relaxed">
     <% comment.content.split("\n").each do |line| %>
       <p><%= line %></p>
     <% end %>

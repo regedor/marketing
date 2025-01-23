@@ -16,6 +16,8 @@
 #
 organization_one:
   name: "Organization One"
+  slug: "organization_one"
 
 organization_two:
   name: "Organization Two"
+  slug: "organization_two"

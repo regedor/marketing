@@ -1,6 +1,6 @@
 require "zip"
 
-class PerspectivesController < ApplicationController
+class PerspectivesController < BaseController
   before_action :authenticate_user!
   before_action :set_data
   before_action :check_organization!
@@ -89,6 +89,7 @@ class PerspectivesController < ApplicationController
     end
 
     def check_organization!
+      return if current_organization.slug == "medgical" && @calendar.organization.slug == "regedor-creations"
       redirect_to root_path, alert: "Access Denied" unless current_user.organization_id == @calendar.organization.id
     end
 

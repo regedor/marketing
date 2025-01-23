@@ -82,7 +82,13 @@ class CalendarsController < BaseController
   private
 
   def set_calendars
-    @calendars = Calendar.where(organization: current_organization)
+    @calendars = Calendar.where(organization: current_organization).to_a
+
+    if current_organization.slug == "medgical"
+      regedor = Organization.find_by(slug: "regedor-creations")
+      medgical_calendar = Calendar.find_by(name: "Medgical", organization_id: regedor.id)
+      @calendars << medgical_calendar
+    end
   end
 
   def set_calendar
