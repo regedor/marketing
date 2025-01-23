@@ -8,6 +8,11 @@
 #  updated_at            :datetime         not null
 #  slack_workspace_token :string
 #  slack_channel         :string
+#  slug                  :string           not null
+#
+# Indexes
+#
+#  index_organizations_on_slug  (slug) UNIQUE
 #
 require "test_helper"
 
