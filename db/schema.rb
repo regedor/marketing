@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_01_21_214357) do
+ActiveRecord::Schema[7.2].define(version: 2025_01_23_204650) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -185,6 +185,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_01_21_214357) do
     t.datetime "updated_at", null: false
     t.string "slack_workspace_token"
     t.string "slack_channel"
+    t.string "slug", null: false
+    t.index ["slug"], name: "index_organizations_on_slug", unique: true
   end
 
   create_table "people", force: :cascade do |t|

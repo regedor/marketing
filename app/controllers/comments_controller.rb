@@ -1,4 +1,4 @@
-class CommentsController < ApplicationController
+class CommentsController < BaseController
   include ActionView::RecordIdentifier
   before_action :authenticate_user!
   before_action :set_data
@@ -64,10 +64,14 @@ class CommentsController < ApplicationController
     end
 
     def check_organization!
+      return if current_organization.slug == "medgical" && @post.user.organization.slug == "regedor-creations"
+
       redirect_to root_path, alert: "Access Denied" unless current_user.organization_id == @calendar.organization.id
     end
 
     def check_author!
+      return if current_organization.slug == "medgical" && @post.user.organization.slug == "regedor-creations"
+
       redirect_to root_path, alert: "Access Denied" unless current_user == @comment.user
     end
 

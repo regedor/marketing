@@ -8,13 +8,27 @@
 #  updated_at            :datetime         not null
 #  slack_workspace_token :string
 #  slack_channel         :string
+#  slug                  :string           not null
+#
+# Indexes
+#
+#  index_organizations_on_slug  (slug) UNIQUE
 #
 class Organization < ApplicationRecord
-  has_many :users, dependent: :destroy
-  has_many :calendars, dependent: :destroy
-  validates :name, presence: true
-  has_many :people, dependent: :destroy
-  has_many :companies, dependent: :destroy
+  has_many :users,
+    dependent: :destroy,
+    foreign_key: :organization_id
+  has_many :calendars,
+    dependent: :destroy,
+    foreign_key: :organization_id
+  has_many :people,
+    dependent: :destroy,
+    foreign_key: :organization_id
+  has_many :companies,
+    dependent: :destroy,
+    foreign_key: :organization_id
+
+  validates :name, :slug, presence: true
 
   def self.recent(limit)
       order(created_at: :desc).limit(limit)

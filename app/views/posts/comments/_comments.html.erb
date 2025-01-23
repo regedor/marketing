@@ -1,18 +1,30 @@
-<div id="comments">
-  <h2 class="ContainerHeaderText">Comments</h2>
+<div id="comments" class="space-y-3">
+  <h2 class="text-xl font-semibold text-gray-800 border-b pb-3 mt-3 ">Comments</h2>
 
   <%= render "comments/form", calendar: calendar, post: post, comment: @comment %>
-  <div id="comments_info">
+
+  <div id="comments_info" class="space-y-2">
     <% @post.comments.order(created_at: :asc).each do |comment| %>
       <% if comment.id.present? %>
-        <div id='<%= dom_id(comment) %>' class="comment">
-          <%= render comment %>
-          <div id='<%= dom_id(comment) %>_actions' class="comment Bottom-right mb-4">
-            <%= link_to "Edit", edit_calendar_post_comment_path(calendar, post, comment), class: "Btn-secondary", method: :get %>
-            <%= button_to "Delete", 
-                          calendar_post_comment_path(calendar, post, comment),
-                          data: { turbo: false }, :method => :delete, class: 'Btn-delete ml-2',
-                          onclick: "return confirm('Are you sure you wish to delete this comment?');"  %>
+        <div id="<%= dom_id(comment) %>" class="comment border border-gray-300 rounded-lg p-2 bg-gray-50 shadow-sm hover:shadow-md transition-shadow duration-200">
+          <div class="flex justify-between items-center mb-1">
+            <p class="text-sm font-medium text-gray-500"><%= comment.user.email %></p>
+            <p class="text-xs text-gray-500"><%= time_ago_in_words(comment.created_at) %> ago</p>
+          </div>
+          <div class="text-black leading-relaxed ">
+            <% comment.content.split("\n").each do |line| %>
+              <p class="mb-2"><%= line %></p>
+            <% end %>
+          </div>
+          <div id="<%= dom_id(comment) %>_actions" class="flex space-x-3 justify-end">
+            <%= link_to "Edit", edit_calendar_post_comment_path(calendar, post, comment), 
+                class: "px-4 py-2 text-sm font-medium text-blue-600 bg-blue-100 rounded hover:bg-blue-200" %>
+            <%= button_to "Delete",
+                calendar_post_comment_path(calendar, post, comment),
+                data: { turbo: false },
+                method: :delete,
+                class: "px-4 py-2 text-sm font-medium text-red-600 bg-red-100 rounded hover:bg-red-200",
+                onclick: "return confirm('Are you sure you want to delete this comment?');" %>
           </div>
         </div>
       <% end %>
