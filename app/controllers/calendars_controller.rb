@@ -27,6 +27,7 @@ class CalendarsController < BaseController
       {
         post_id: post.id,
         id: default_attachment&.id,
+        filename: default_attachment&.filename,
         preview_url: default_attachment&.preview_image_url
       }
     end

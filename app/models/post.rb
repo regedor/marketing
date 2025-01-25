@@ -8,7 +8,7 @@
 #  categories   :string           default([]), is an Array
 #  user_id      :bigint           not null
 #  calendar_id  :bigint           not null
-#  status       :string           default("in_analysis")
+#  status       :string           default("draft")
 #  publish_date :datetime
 #  created_at   :datetime         not null
 #  updated_at   :datetime         not null
@@ -47,7 +47,7 @@ class Post < ApplicationRecord
   accepts_nested_attributes_for :comments,      allow_destroy: true
   accepts_nested_attributes_for :perspectives,  allow_destroy: true
 
-  validates :status,       inclusion: { in: %w[approved in_analysis rejected] }
+  validates :status,       inclusion: { in: %w[draft pending_review approved rejected archived] }
   validates :publish_date, presence: true
   validates :calendar,     presence: true
 

@@ -18,9 +18,11 @@
               id="selector_<%= dom_id(@post) %>" 
               class="InputField text-sm" 
               onchange="this.form.submit()">
-        <option value="approved" class="text-green-600" <%= 'selected' if @post.status == "approved" %>>Approved</option>
-        <option value="in_analysis" class="text-yellow-600" <%= 'selected' if @post.status == "in_analysis" %>>In Analysis</option>
-        <option value="rejected" class="text-red-600" <%= 'selected' if @post.status == "rejected" %>>Rejected</option>
+        <option value="draft" class="text-purple-600" <%= 'selected' if @post.status == "draft" %>>🟣 Draft</option>
+        <option value="pending_review" class="text-yellow-600" <%= 'selected' if @post.status == "pending_review" %>>🟡 Pending Review</option>
+        <option value="approved" class="text-green-600" <%= 'selected' if @post.status == "approved" %>>🟢 Approved</option>
+        <option value="rejected" class="text-red-600" <%= 'selected' if @post.status == "rejected" %>>🔴 Rejected</option>
+        <option value="archived" class="text-gray-600" <%= 'selected' if @post.status == "archived" %>>⚫ Archived</option>
       </select>
     <% end %>
   </div>

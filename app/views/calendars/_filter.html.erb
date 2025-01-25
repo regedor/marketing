@@ -1,8 +1,8 @@
-<div class="Container min-w-full text-gray-600" id="filter">
+<div class="Container p-3 min-w-full text-gray-600" id="filter">
   <%= form_with url: calendars_path, method: :get, local: true, id: "calendar_filter_form" do %>
-    <div class="flex flex-row w-full"> <!-- Ensure flex-row is here to make items horizontal -->
+    <div class="flex flex-wrap w-full space-x-2"> <!-- Use flex-wrap to wrap elements when needed -->
       <% @calendars.each do |calendar| %>
-        <div class="flex-grow items-center space-x-2"> <!-- Flex and space-x-2 for label and checkbox alignment -->
+        <div class="flex-shrink-0 w-1/5 p-0"> <!-- Reduce width and prevent shrinking of items -->
           <%= label_tag "calendar_ids_#{calendar.id}", calendar.name, class: "mr-2" %>
           <%= check_box_tag "calendar_ids[]", calendar.id, params[:calendar_ids]&.include?(calendar.id.to_s) || params[:calendar_ids].nil? %>
         </div>

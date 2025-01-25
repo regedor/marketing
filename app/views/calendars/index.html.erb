@@ -1,11 +1,11 @@
 <div id="calendars_page" class="p-4 flex flex-col w-full">
   <% if @calendars.present? %>
-    <div class="p-4">
+    <div class="p-2">
       <%= render "filter" %>
     </div>
   <% end %>
 
-  <div class="w-full p-4 pt-0 flex">
+  <div class="w-full p-2 pt-0 flex">
     <%= render "calendar" %>
     <%= render "post_info" %>
     <%= render "post_photos" %>

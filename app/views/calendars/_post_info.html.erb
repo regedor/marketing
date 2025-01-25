@@ -1,18 +1,18 @@
-<div class="ml-4 w-1/4">
-  <div id="post-info" class="Container text-gray-600 h-full">
+<div class="ml-1 w-1/4">
+  <div id="post-info" class="Container p-2 text-gray-600 h-full">
     <div id="no-info">
       <span>Hover a Post</span>
     </div>
     <div id="have-info" class="hidden">
       <div>
-        <div class="grid grid-cols-2 mb-4 gap-0.5">
+        <div class="grid grid-cols-2 mb-2 gap-0.5">
           <% (1..4).each do |num| %>
             <%= link_to "", id:"attachments_#{num}", class:"hidden", target: :_blank do %>
               <%= image_tag "", id:"img_#{num}", class: "rounded-lg w-full h-36 object-cover" %>
             <% end %>
           <% end %>
         </div>
-        <div class="flex justify-between mb-4">
+        <div class="flex justify-between mb-2">
           <div class="Bottom-left">
             <%= link_to "Download Images", "", class: "Btn-download", id: "download-images" %>
           </div>
@@ -90,7 +90,7 @@
         const attachmentSource = attachments[num].preview_url
 
         $('#attachments_' + (num+1)).attr("href", attachments[num].content_url);
-        $('#attachments_' + (num+1)).find('#img_' + (num + 1)).attr("src", attachmentSource);
+        $('#attachments_' + (num+1)).find('#img_' + (num + 1)).attr("src", attachmentSource).attr("title", attachments[num].filename);
         $('#attachments_' + (num+1)).removeClass('hidden')
       }
       if (attachments.length > 4) {
@@ -100,16 +100,21 @@
     }
 
     const statusToIcon = {
+      "draft": "🟣",
+      "pending_review": "🟡",
       "approved": "🟢",
-      "in_analysis": "🟡",
-      "rejected": "🔴"
+      "rejected": "🔴",
+      "archived": "⚫"
     };
 
     function fillInfo(data) {
       $('#design_idea').text(data.design_idea);
       $('#calendar').text(data.calendar);
       $('#author').text(data.author);
-      $('#status').text(statusToIcon[data.status] || '');
+
+      const statusText = `${statusToIcon[data.status]}`
+
+      $('#status').text(statusText || '');
       $('#copy').text(data.perspective_default_copy);
       $('#publish_date').text(data.publish_date);
       data.socialplatforms.forEach(sp => $(`#${sp.name}`).removeClass('hidden'));

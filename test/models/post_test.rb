@@ -8,7 +8,7 @@
 #  categories   :string           default([]), is an Array
 #  user_id      :bigint           not null
 #  calendar_id  :bigint           not null
-#  status       :string           default("in_analysis")
+#  status       :string           default("draft")
 #  publish_date :datetime
 #  created_at   :datetime         not null
 #  updated_at   :datetime         not null
