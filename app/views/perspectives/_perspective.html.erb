@@ -59,9 +59,9 @@
                   <% if p.id.present? %>
                     <%= form_with url: update_status_calendar_post_perspective_path(@calendar, @post, p), method: :patch, local: true, id: "status-form-#{dom_id(p)}" do %>
                       <select name="perspective[status]" id="selector_perspective_<%= dom_id(p) %>"class="InputField2 text-sm select-circle-option" onchange="this.form.submit()">
-                        <option value="approved" <% if p.status == "approved" %> selected <% end %>>🟢</option>
-                        <option value="in_analysis" <% if p.status == "in_analysis" %> selected <% end %>>🟡</option>
-                        <option value="rejected" <% if p.status == "rejected" %> selected <% end %>>🔴</option>
+                        <option value="approved" <% if p.status == "approved" %> selected <% end %>>✅</option>
+                        <option value="in_analysis" <% if p.status == "in_analysis" %> selected <% end %>>✏️</option>
+                        <option value="rejected" <% if p.status == "rejected" %> selected <% end %>>⛔</option>
                       </select>
                     <% end %>
                   <% else %>

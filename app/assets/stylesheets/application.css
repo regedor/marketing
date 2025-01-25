@@ -21,14 +21,21 @@
 
  */
 
+select:has(option[value="draft"]:checked) {
+  color: purple;
+}
 select:has(option[value="approved"]:checked) {
   color: #2fa458;
 }
-
+select:has(option[value="pending_review"]:checked) {
+  color: #ca8a04;
+}
 select:has(option[value="in_analysis"]:checked) {
   color: #ca8a04;
 }
-
 select:has(option[value="rejected"]:checked) {
   color: #dd2626;
+}
+select:has(option[value="archived"]:checked) {
+  color: #4B5563;
 }

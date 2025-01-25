@@ -20,8 +20,7 @@
 #
 class User < ApplicationRecord
   devise :database_authenticatable, :recoverable,
-         :rememberable, :validatable,
-         :omniauthable, omniauth_providers: %i[google_oauth2]
+    :rememberable, :validatable, :omniauthable, omniauth_providers: %i[google_oauth2]
 
   belongs_to :organization, optional: true
 
@@ -33,7 +32,7 @@ class User < ApplicationRecord
     dependent: :destroy,
     inverse_of: :user
 
-  validates :organization, presence: true
+  validates :organization, :email, presence: true
 
   def self.recent(limit)
     order(created_at: :desc).limit(limit)

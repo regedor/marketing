@@ -20,7 +20,7 @@ class PostsController < BaseController
 
   # GET /calendars/:calendar_id/posts/new
   def new
-    @post = @calendar.posts.new
+    @post = @calendar.posts.new(status: "draft")
     @perspective = @post.perspectives.new
 
     if params[:date].present?
@@ -77,7 +77,7 @@ class PostsController < BaseController
   def update_design_idea
     @post.update(perspective_params_design_idea)
     send_notification("updated", 1)
-    LogEntry.create_log("Post design idea has been updated to In Analysis by #{current_user.email}. [#{perspective_params_design_idea}]")
+    LogEntry.create_log("Post design idea has been updated to 'Pendging Review'' by #{current_user.email}. [#{perspective_params_design_idea}]")
   end
 
   def update_categories
@@ -155,6 +155,7 @@ class PostsController < BaseController
         attachments.map do |attachment|
           {
             preview_url: attachment.preview_image_url,
+            filename: attachment.filename,
             content_url: calendar_post_perspective_attachment_path(@calendar, @post, perspective, attachment)
           }
         end

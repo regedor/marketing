@@ -1,5 +1,15 @@
+<%
+  statusToIcon = {
+    draft: "🟣",
+    pending_review: "🟡",
+    approved: "🟢",
+    rejected: "🔴",
+    archived: "⚫"
+  };
+%>
+
 <div id="calendar-div" class="w-3/4">
-  <div class="Container2">
+  <div class="Container2 p-3">
     <div class="flex justify-between items-center mb-4">
       <%= link_to "Previous Year", params.permit(:start_date, calendar_ids: []).merge(start_date: @start_date.prev_year), class: "text-blue-500 hover:underline" %>
       <%= link_to "Previous", params.permit(:start_date, calendar_ids: []).merge(start_date: @start_date.prev_month), class: "text-blue-500 hover:underline" %>
@@ -31,18 +41,27 @@
             </ul>
           </div>
         </div>
-        <div class="posts-container overflow-y-auto grid grid-cols-2">
+        <div class="posts-container overflow-y-auto grid grid-cols-2 gap-1">
           <% posts.each do |post| %>
             <% attachment = @attachments_by_post_id[post.id] %>
             <% if attachment && attachment[:preview_url].present? %>
-              <%= link_to calendar_post_path(post.calendar, post), class: "draggable", data: { post_id: post.id, calendar_id: post.calendar.id , datetime: post.publish_date - Time.new(post.publish_date.year, post.publish_date.month, post.publish_date.day) } do %>
-              <%= image_tag attachment[:preview_url] %>
+              <%= link_to calendar_post_path(post.calendar, post), class: "draggable block", data: { post_id: post.id, calendar_id: post.calendar.id , datetime: post.publish_date - Time.new(post.publish_date.year, post.publish_date.month, post.publish_date.day) } do %>
+                <div class="overflow-hidden">
+                  <div class="absolute text-xs text-white bg-black bg-opacity-20 p-0.2 rounded-full"><%= statusToIcon.dig(post.status.to_sym) %></div>
+                  <%= image_tag attachment[:preview_url], title: attachment[:filename], class: "rounded-lg object-cover w-full h-12" %>
+                </div>
               <% end %>
             <% else %>
-              <%= link_to post.publish_date.strftime("%H:%M"), calendar_post_path(post.calendar, post), class: "Btn-primary mt-2 bg-blue-500 draggable", data: { post_id: post.id, calendar_id: post.calendar.id, datetime: post.publish_date - Time.new(post.publish_date.year, post.publish_date.month, post.publish_date.day) } %>
+              <%= link_to calendar_post_path(post.calendar, post), class: "Btn-primary mt-1 bg-blue-500 draggable w-15 h-15 flex items-center justify-center text-center relative", data: { post_id: post.id, calendar_id: post.calendar.id, datetime: post.publish_date - Time.new(post.publish_date.year, post.publish_date.month, post.publish_date.day) } do %>
+                <%= post.publish_date.strftime("%H:%M") %>
+                <div class="absolute top-0 left-0 text-xs text-white bg-black bg-opacity-20 p-0.2 rounded-full">
+                  <%= statusToIcon.dig(post.status.to_sym) %>
+                </div>
+              <% end %>
             <% end %>          
           <% end %>
         </div>
+
       </div>
     <% end %>
   </div>
