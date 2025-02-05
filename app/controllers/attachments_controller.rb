@@ -16,40 +16,56 @@ class AttachmentsController < BaseController # rubocop:disable Metrics/ClassLeng
   def edit; end
 
   # POST /calendars/:calendar_id/posts/:post_id/perspectives/:perspective_id/attachments
-  def create # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
-    @attachment = @perspective.attachments.new(attachment_params)
+  def create # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+    uploaded_files = Array(params[:attachment][:content]).reject(&:blank?)
+    attachments = []
 
-    if params[:attachment][:content].present?
-      @attachment.content = params[:attachment][:content].read
-      @attachment.filename = generate_unique_filename(params[:attachment][:content].original_filename)
-      @attachment.type_content = params[:attachment][:content].content_type
+    if uploaded_files.any?
+      uploaded_files.each do |file|
+        next unless file.respond_to?(:read) # Ensure it's a valid uploaded file
+
+        attachment = @perspective.attachments.new
+        attachment.content = file.read
+        attachment.filename = generate_unique_filename(file.original_filename)
+        attachment.type_content = file.content_type
+
+        if attachment.save
+          attachment.generate_preview
+          attachments << attachment
+          LogEntry.create_log("Attachment has been created by #{current_user.email}. [#{attachment.filename}]")
+        else
+          error_messages = attachment.errors.full_messages.join(", ")
+          LogEntry.create_log("#{current_user.email} attempted to create an attachment but failed (error: #{error_messages}).")
+        end
+      end
     else
       unless url?(params[:attachment][:filename])
         redirect_to calendar_post_perspective_path(@calendar, @post, @perspective, anchor: "attachments_info"),
-          alert: "Not a valid URL"
+                  alert: "Not a valid URL"
         return
       end
-      @attachment.type_content = "cloud"
+
+      attachment = @perspective.attachments.new(type_content: "cloud")
+
+      if attachment.save
+        attachments << attachment
+        LogEntry.create_log("Cloud attachment created by #{current_user.email}.")
+      else
+        error_messages = attachment.errors.full_messages.join(", ")
+        LogEntry.create_log("#{current_user.email} attempted to create cloud attachment but failed (error: #{error_messages}).")
+      end
     end
 
-    if @attachment.save
-      @attachment.generate_preview
-
-      redirect_to calendar_post_perspective_path(@calendar, @post, @perspective, anchor: dom_id(@attachment)),
-        notice: "Attachment was successfully created."
-      send_notification("created", 0)
-      LogEntry.create_log("Attachment has been created by #{current_user.email}. [#{attachment_params}]")
+    if attachments.any?
+      redirect_to calendar_post_perspective_path(@calendar, @post, @perspective, anchor: dom_id(attachments.first)),
+                  notice: "Attachments were successfully created."
     else
-      error_messages = @attachment.errors.full_messages.join(", ")
       redirect_to calendar_post_perspective_path(@calendar, @post, @perspective, anchor: "attachments_info"),
-        alert: "Failed to create attachment: #{error_messages}"
-
-      LogEntry.create_log(
-        "#{current_user.email} attempted to create attachment but failed (error: #{error_messages}). " \
-        "[#{attachment_params}]"
-      )
+                  alert: "Failed to create attachments."
     end
   end
+
+
 
   # PATCH/PUT /calendars/:calendar_id/posts/:post_id/perspectives/:perspective_id/attachments/:id
   def update # rubocop:disable Metrics/AbcSize
@@ -66,7 +82,6 @@ class AttachmentsController < BaseController # rubocop:disable Metrics/ClassLeng
     if @attachment.update(data)
       redirect_to calendar_post_perspective_path(@calendar, @post, @perspective, anchor: dom_id(@attachment)),
         notice: "Attachment was successfully updated."
-      send_notification("updated", 1)
       LogEntry.create_log("Attachment has been updated by #{current_user.email}. [#{attachment_params}]")
     else
       render :edit, status: :unprocessable_entity
@@ -81,7 +96,6 @@ class AttachmentsController < BaseController # rubocop:disable Metrics/ClassLeng
     @attachment.destroy
     redirect_to calendar_post_perspective_path(@calendar, @post, @perspective, anchor: "attachments_info"),
       notice: "Attachment was successfully destroyed."
-    send_notification("destroyed", 2)
     LogEntry.create_log("Attachment #{@attachment.filename} has been destroyed by #{current_user.email}.")
   end
 
@@ -101,7 +115,6 @@ class AttachmentsController < BaseController # rubocop:disable Metrics/ClassLeng
     @attachment.update(attachment_params_status)
     redirect_to calendar_post_perspective_path(@calendar, @post, @perspective, anchor: dom_id(@attachment)),
       notice: "Attachment status updated."
-    send_notification("changed status", 3)
     LogEntry.create_log("Attachment #{@attachment.id} status has been updated by #{current_user.email}. " \
                         "[#{attachment_params_status}]")
   end
@@ -187,22 +200,4 @@ class AttachmentsController < BaseController # rubocop:disable Metrics/ClassLeng
   rescue URI::InvalidURIError
     false
   end
-
-  # rubocop:disable Layout/LineLength
-  def send_notification(action, action_type) # rubocop:disable Metrics/AbcSize
-    if @perspective.socialplatform.nil?
-      Notification.create(
-        description: "The attachment #{@attachment.id}, that belongs to the default perspective, has been #{action} by #{current_user.email}. <#{calendar_post_perspective_url(
-          @calendar, @post, @perspective
-        )}|Link>", type_notification: action_type, organization: current_user.organization, title: "Post #{@post.title}, default perspective, attachment #{@attachment.filename} Notification"
-      )
-    else
-      Notification.create(
-        description: "The attachment #{@attachment.id}, that belongs to the perspective `#{@perspective.socialplatform.name}`, has been #{action} by #{current_user.email}. <#{calendar_post_perspective_url(
-          @calendar, @post, @perspective
-        )}|Link>", type_notification: action_type, organization: current_user.organization, title: "Post #{@post.title}, #{@perspective.socialplatform.name} perspective, attachment #{@attachment.filename} Notification"
-      )
-    end
-  end
-  # rubocop:enable Layout/LineLength
 end
