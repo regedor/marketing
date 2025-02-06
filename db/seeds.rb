@@ -3,15 +3,17 @@
 # The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
 
 
-organization = Organization.find_or_create_by!(name: "Wellbeing Warrior", slack_workspace_token: ENV['BOT_TOKEN'],
-  slack_channel: ENV['BOT_CHANNEL'])
+organization = Organization.find_or_create_by!(name: "Regedor Creations", slack_workspace_token: ENV['BOT_TOKEN'],
+  slack_channel: ENV['BOT_CHANNEL'], slug: "regedor-creations")
 
 emails = %w[miguel.regedor@regedor.com luisa.vieira@regedor.com hugo.marinho@regedor.com diogo.araujo@regedor.com
   tiago.freitas@regedor.com nicoleta.domenti@regedor.com]
 
 emails.each do |email|
-  User.create!(email: email, password: "password123", password_confirmation: "password123",
+  user = User.create!(email: email, password: "password123", password_confirmation: "password123",
     isLeader: true, organization: organization)
+    member = Member.create!(user: user, organization: organization, isLeader: true, email: user.email)
+    user.update(member_id: member.id)
   AdminUser.create!(email: email, password: "password123")
 end
 

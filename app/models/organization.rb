@@ -18,6 +18,9 @@ class Organization < ApplicationRecord
   has_many :users,
     dependent: :destroy,
     foreign_key: :organization_id
+  has_many :members,
+    dependent: :destroy,
+    foreign_key: :organization_id
   has_many :calendars,
     dependent: :destroy,
     foreign_key: :organization_id
@@ -30,11 +33,21 @@ class Organization < ApplicationRecord
 
   validates :name, :slug, presence: true
 
+  before_validation :slug_presence
+
   def self.recent(limit)
       order(created_at: :desc).limit(limit)
   end
 
   def self.ransackable_attributes(auth_object = nil)
     %w[ id name slack_channel slack_workspace_token created_at updated_at ]
+  end
+
+  private
+
+  def slug_presence
+    return unless slug.blank?
+
+    self.slug = name.parameterize
   end
 end
