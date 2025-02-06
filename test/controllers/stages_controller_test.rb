@@ -15,7 +15,7 @@ class StagesControllerTest < ActionDispatch::IntegrationTest
     assert_difference("Stage.count") do
       post pipeline_stages_url(@pipeline), params: { stage: { name: "New Stage" } }
     end
-    assert_redirected_to pipeline_url(@pipeline)
+    assert_redirected_to edit_pipeline_url(@pipeline)
     assert_equal "Stage was successfully created.", flash[:notice]
   end
 
@@ -34,7 +34,7 @@ class StagesControllerTest < ActionDispatch::IntegrationTest
 
   test "should update stage" do
     patch pipeline_stage_url(@pipeline, @stage), params: { stage: { name: "Updated Stage" } }
-    assert_redirected_to pipeline_path(@pipeline)
+    assert_redirected_to edit_pipeline_path(@pipeline)
     assert_equal "Stage was successfully updated.", flash[:notice]
   end
 
@@ -45,7 +45,7 @@ class StagesControllerTest < ActionDispatch::IntegrationTest
 
   test "should update index stage" do
     patch pipeline_stage_update_index_stage_path(@pipeline, @stage), params: { stage: { index: "2" } }
-    assert_redirected_to pipeline_path(@pipeline)
+    assert_redirected_to edit_pipeline_path(@pipeline)
     @stage.reload
     assert_equal 2, @stage.index
   end

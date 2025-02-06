@@ -18,7 +18,7 @@ class PeopleTest < ApplicationSystemTestCase
     check "Is private" if @person.is_private
     fill_in "Name", with: @person.name
     fill_in "Organization", with: @person.organization_id
-    fill_in "User", with: @person.user_id
+    fill_in "User", with: @person.member_id
     click_on "Create Person"
 
     assert_text "Person was successfully created"
@@ -33,7 +33,7 @@ class PeopleTest < ApplicationSystemTestCase
     check "Is private" if @person.is_private
     fill_in "Name", with: @person.name
     fill_in "Organization", with: @person.organization_id
-    fill_in "User", with: @person.user_id
+    fill_in "User", with: @person.member_id
     click_on "Update Person"
 
     assert_text "Person was successfully updated"

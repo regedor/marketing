@@ -18,7 +18,7 @@ class PostsTest < ApplicationSystemTestCase
     fill_in "Publish date", with: @post.publish_date
     fill_in "Status", with: @post.status
     fill_in "Title", with: @post.title
-    fill_in "User", with: @post.user_id
+    fill_in "User", with: @post.member_id
     click_on "Create Post"
 
     assert_text "Post was successfully created"
@@ -33,7 +33,7 @@ class PostsTest < ApplicationSystemTestCase
     fill_in "Publish date", with: @post.publish_date.to_s
     fill_in "Status", with: @post.status
     fill_in "Title", with: @post.title
-    fill_in "User", with: @post.user_id
+    fill_in "User", with: @post.member_id
     click_on "Update Post"
 
     assert_text "Post was successfully updated"

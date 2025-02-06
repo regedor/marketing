@@ -16,7 +16,7 @@ class CommentsTest < ApplicationSystemTestCase
 
     fill_in "Content", with: @comment.content
     fill_in "Post", with: @comment.post_id
-    fill_in "User", with: @comment.user_id
+    fill_in "User", with: @comment.member_id
     click_on "Create Comment"
 
     assert_text "Comment was successfully created"
@@ -29,7 +29,7 @@ class CommentsTest < ApplicationSystemTestCase
 
     fill_in "Content", with: @comment.content
     fill_in "Post", with: @comment.post_id
-    fill_in "User", with: @comment.user_id
+    fill_in "User", with: @comment.member_id
     click_on "Update Comment"
 
     assert_text "Comment was successfully updated"

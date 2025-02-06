@@ -42,13 +42,13 @@
               <% end %>
             </td>
             <td class="TableEntry border-r border-gray-200 text-center">
-              <%= button_to (attachment.attachmentcounters.where(aproved: true).where(user: current_user).empty? ? image_tag('thumbs-up.svg', alt: 'Thumbs Up', class: 'h-5 w-5 inline-block') : image_tag('thumbs-up-black.svg', alt: 'Thumbs Up', class: 'h-5 w-5 inline-block')) + 
+              <%= button_to (attachment.attachmentcounters.where(aproved: true).where(member: @current_member).empty? ? image_tag('thumbs-up.svg', alt: 'Thumbs Up', class: 'h-5 w-5 inline-block') : image_tag('thumbs-up-black.svg', alt: 'Thumbs Up', class: 'h-5 w-5 inline-block')) + 
                           " #{attachment.attachmentcounters.where(aproved: true).count}".html_safe, 
                           like_calendar_post_perspective_attachment_path(@calendar, @post, attachment.perspective, attachment),
                           data: { turbo: false}, :method => :patch, class: 'flex justify-center items-center space-x-1 w-full' %>
             </td>
             <td class="TableEntry border-r border-gray-200 text-center">
-              <%= button_to (attachment.attachmentcounters.where(rejected: true).where(user: current_user).empty? ? image_tag('thumbs-down.svg', alt: 'Thumbs Down', class: 'h-5 w-5 inline-block') : image_tag('thumbs-down-black.svg', alt: 'Thumbs Down', class: 'h-5 w-5 inline-block')) +
+              <%= button_to (attachment.attachmentcounters.where(rejected: true).where(member: @current_member).empty? ? image_tag('thumbs-down.svg', alt: 'Thumbs Down', class: 'h-5 w-5 inline-block') : image_tag('thumbs-down-black.svg', alt: 'Thumbs Down', class: 'h-5 w-5 inline-block')) +
                           " #{attachment.attachmentcounters.where(rejected: true).count}".html_safe, 
                           dislike_calendar_post_perspective_attachment_path(@calendar, @post, attachment.perspective, attachment), 
                           data: { turbo: false}, :method => :patch, class: 'flex justify-center items-center space-x-1 w-full' %>

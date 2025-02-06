@@ -3,29 +3,29 @@
 # Table name: comments
 #
 #  id         :bigint           not null, primary key
-#  user_id    :bigint           not null
 #  post_id    :bigint           not null
 #  content    :string
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  member_id  :bigint           not null
 #
 # Indexes
 #
-#  index_comments_on_post_id  (post_id)
-#  index_comments_on_user_id  (user_id)
+#  index_comments_on_member_id  (member_id)
+#  index_comments_on_post_id    (post_id)
 #
 # Foreign Keys
 #
+#  fk_rails_...  (member_id => members.id)
 #  fk_rails_...  (post_id => posts.id)
-#  fk_rails_...  (user_id => users.id)
 #
 
 comment_one:
-  user: user_one
+  member: member_one
   post: post_one
   content: MyString
 
 comment_two:
-  user: user_two
+  member: member_two
   post: post_two
   content: MyString

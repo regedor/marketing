@@ -16,7 +16,7 @@ class CompanynotesTest < ApplicationSystemTestCase
 
     fill_in "Company", with: @companynote.company_id
     fill_in "Note", with: @companynote.note
-    fill_in "User", with: @companynote.user_id
+    fill_in "User", with: @companynote.member_id
     click_on "Create Companynote"
 
     assert_text "Companynote was successfully created"
@@ -29,7 +29,7 @@ class CompanynotesTest < ApplicationSystemTestCase
 
     fill_in "Company", with: @companynote.company_id
     fill_in "Note", with: @companynote.note
-    fill_in "User", with: @companynote.user_id
+    fill_in "User", with: @companynote.member_id
     click_on "Update Companynote"
 
     assert_text "Companynote was successfully updated"

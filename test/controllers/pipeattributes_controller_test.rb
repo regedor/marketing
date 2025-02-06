@@ -16,7 +16,7 @@ class PipeattributesControllerTest < ActionDispatch::IntegrationTest
         pipeattribute: { name: "New Attribute" }
       }
     end
-    assert_redirected_to pipeline_path(@pipeline)
+    assert_redirected_to edit_pipeline_path(@pipeline)
     assert_equal "Pipeattribute was successfully created.", flash[:notice]
   end
 
@@ -38,7 +38,7 @@ class PipeattributesControllerTest < ActionDispatch::IntegrationTest
     patch pipeline_pipeattribute_path(@pipeline, @pipeattribute), params: {
       pipeattribute: { name: "Updated Name" }
     }
-    assert_redirected_to pipeline_path(@pipeline)
+    assert_redirected_to edit_pipeline_path(@pipeline)
     assert_equal "Pipeattribute was successfully updated.", flash[:notice]
   end
 
