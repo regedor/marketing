@@ -9,7 +9,15 @@
             <span class="ml-2">Home</span>
           <% end %>
         </li>
-        <% if current_user.isLeader %>
+        <% if current_user.members.count > 1 %>
+          <li class="mb-2">
+            <%= link_to dashboard_organizations_path, class: "SidebarLink flex items-center" do %>
+              <%= image_tag 'eye-icon-white.png', class: 'SidebarIcon' %>
+              <span class="ml-2">Change Organization</span>
+            <% end %>
+          </li>
+        <% end %>
+        <% if current_member&.isLeader %>
           <li class="mb-2 <%= 'bg-yellow-400' if current_page?(dashboard_path) %>">
             <%= link_to dashboard_path, class: "SidebarLink flex items-center" do %>
               <%= image_tag 'dashboard-icon.svg', class: 'SidebarIcon' %>

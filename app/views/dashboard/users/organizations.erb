@@ -1,0 +1,13 @@
+<div class="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
+  <div class="w-full max-w-md bg-white rounded-lg shadow-lg p-6">
+    <h2 class="text-xl font-semibold text-center mb-4">Select an Organization</h2>
+    <div class="space-y-3">
+      <% current_user.members.each do |member| %>
+        <%= button_to member.organization.name,
+                      dashboard_change_organization_path(organization_id: member.organization.id),
+                      method: :post,
+                      class: "w-full text-center bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg transition duration-200" %>
+      <% end %>
+    </div>
+  </div>
+</div>
