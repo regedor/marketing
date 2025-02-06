@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_01_25_124732) do
+ActiveRecord::Schema[7.2].define(version: 2025_02_06_150451) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -42,13 +42,13 @@ ActiveRecord::Schema[7.2].define(version: 2025_01_25_124732) do
 
   create_table "attachmentcounters", force: :cascade do |t|
     t.bigint "attachment_id", null: false
-    t.bigint "user_id", null: false
     t.boolean "aproved", default: false
     t.boolean "rejected", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "member_id", null: false
     t.index ["attachment_id"], name: "index_attachmentcounters_on_attachment_id"
-    t.index ["user_id"], name: "index_attachmentcounters_on_user_id"
+    t.index ["member_id"], name: "index_attachmentcounters_on_member_id"
   end
 
   create_table "attachments", force: :cascade do |t|
@@ -73,13 +73,13 @@ ActiveRecord::Schema[7.2].define(version: 2025_01_25_124732) do
   end
 
   create_table "comments", force: :cascade do |t|
-    t.bigint "user_id", null: false
     t.bigint "post_id", null: false
     t.string "content"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "member_id", null: false
+    t.index ["member_id"], name: "index_comments_on_member_id"
     t.index ["post_id"], name: "index_comments_on_post_id"
-    t.index ["user_id"], name: "index_comments_on_user_id"
   end
 
   create_table "companies", force: :cascade do |t|
@@ -107,12 +107,12 @@ ActiveRecord::Schema[7.2].define(version: 2025_01_25_124732) do
 
   create_table "companynotes", force: :cascade do |t|
     t.text "note"
-    t.bigint "user_id", null: false
     t.bigint "company_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "member_id", null: false
     t.index ["company_id"], name: "index_companynotes_on_company_id"
-    t.index ["user_id"], name: "index_companynotes_on_user_id"
+    t.index ["member_id"], name: "index_companynotes_on_member_id"
   end
 
   create_table "emails", force: :cascade do |t|
@@ -138,11 +138,11 @@ ActiveRecord::Schema[7.2].define(version: 2025_01_25_124732) do
   create_table "leadnotes", force: :cascade do |t|
     t.text "note"
     t.bigint "lead_id", null: false
-    t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "member_id", null: false
     t.index ["lead_id"], name: "index_leadnotes_on_lead_id"
-    t.index ["user_id"], name: "index_leadnotes_on_user_id"
+    t.index ["member_id"], name: "index_leadnotes_on_member_id"
   end
 
   create_table "leads", force: :cascade do |t|
@@ -166,6 +166,19 @@ ActiveRecord::Schema[7.2].define(version: 2025_01_25_124732) do
     t.string "controller_name"
     t.text "info"
     t.datetime "created_at", null: false
+  end
+
+  create_table "members", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "organization_id", null: false
+    t.boolean "isLeader", default: false, null: false
+    t.string "email"
+    t.string "first_name"
+    t.string "last_name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["organization_id"], name: "index_members_on_organization_id"
+    t.index ["user_id"], name: "index_members_on_user_id"
   end
 
   create_table "notifications", force: :cascade do |t|
@@ -195,12 +208,12 @@ ActiveRecord::Schema[7.2].define(version: 2025_01_25_124732) do
     t.text "description"
     t.boolean "is_private"
     t.string "linkedin_link"
-    t.bigint "user_id", null: false
     t.bigint "organization_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "member_id", null: false
+    t.index ["member_id"], name: "index_people_on_member_id"
     t.index ["organization_id"], name: "index_people_on_organization_id"
-    t.index ["user_id"], name: "index_people_on_user_id"
   end
 
   create_table "personcompanies", primary_key: ["person_id", "company_id"], force: :cascade do |t|
@@ -226,11 +239,11 @@ ActiveRecord::Schema[7.2].define(version: 2025_01_25_124732) do
   create_table "personnotes", force: :cascade do |t|
     t.text "note"
     t.bigint "person_id", null: false
-    t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "member_id", null: false
+    t.index ["member_id"], name: "index_personnotes_on_member_id"
     t.index ["person_id"], name: "index_personnotes_on_person_id"
-    t.index ["user_id"], name: "index_personnotes_on_user_id"
   end
 
   create_table "perspectives", force: :cascade do |t|
@@ -275,14 +288,14 @@ ActiveRecord::Schema[7.2].define(version: 2025_01_25_124732) do
     t.string "title"
     t.text "design_idea"
     t.string "categories", default: [], array: true
-    t.bigint "user_id", null: false
     t.bigint "calendar_id", null: false
     t.string "status", default: "draft"
     t.datetime "publish_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "member_id", null: false
     t.index ["calendar_id"], name: "index_posts_on_calendar_id"
-    t.index ["user_id"], name: "index_posts_on_user_id"
+    t.index ["member_id"], name: "index_posts_on_member_id"
   end
 
   create_table "publishplatforms", primary_key: ["socialplatform_id", "post_id"], force: :cascade do |t|
@@ -322,46 +335,51 @@ ActiveRecord::Schema[7.2].define(version: 2025_01_25_124732) do
     t.datetime "updated_at", null: false
     t.integer "organization_id"
     t.boolean "isLeader", default: false, null: false
+    t.bigint "member_id"
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["member_id"], name: "index_users_on_member_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
   add_foreign_key "attachmentcounters", "attachments"
-  add_foreign_key "attachmentcounters", "users"
+  add_foreign_key "attachmentcounters", "members"
   add_foreign_key "attachments", "attachments"
   add_foreign_key "attachments", "perspectives"
   add_foreign_key "calendars", "organizations"
+  add_foreign_key "comments", "members"
   add_foreign_key "comments", "posts"
-  add_foreign_key "comments", "users"
   add_foreign_key "companies", "organizations"
   add_foreign_key "companylinks", "companies"
   add_foreign_key "companynotes", "companies"
-  add_foreign_key "companynotes", "users"
+  add_foreign_key "companynotes", "members"
   add_foreign_key "emails", "people"
   add_foreign_key "leadcontents", "leads"
   add_foreign_key "leadcontents", "pipeattributes"
   add_foreign_key "leadnotes", "leads"
-  add_foreign_key "leadnotes", "users"
+  add_foreign_key "leadnotes", "members"
   add_foreign_key "leads", "companies"
   add_foreign_key "leads", "people"
   add_foreign_key "leads", "pipelines"
   add_foreign_key "leads", "stages"
+  add_foreign_key "members", "organizations"
+  add_foreign_key "members", "users"
   add_foreign_key "notifications", "organizations"
+  add_foreign_key "people", "members"
   add_foreign_key "people", "organizations"
-  add_foreign_key "people", "users"
   add_foreign_key "personcompanies", "companies"
   add_foreign_key "personcompanies", "people"
   add_foreign_key "personlinks", "people"
+  add_foreign_key "personnotes", "members"
   add_foreign_key "personnotes", "people"
-  add_foreign_key "personnotes", "users"
   add_foreign_key "perspectives", "posts"
   add_foreign_key "perspectives", "socialplatforms"
   add_foreign_key "phonenumbers", "people"
   add_foreign_key "pipeattributes", "pipelines"
   add_foreign_key "pipelines", "organizations"
   add_foreign_key "posts", "calendars"
-  add_foreign_key "posts", "users"
+  add_foreign_key "posts", "members"
   add_foreign_key "publishplatforms", "posts"
   add_foreign_key "publishplatforms", "socialplatforms"
   add_foreign_key "stages", "pipelines"
+  add_foreign_key "users", "members"
 end

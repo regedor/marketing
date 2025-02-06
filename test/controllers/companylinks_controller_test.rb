@@ -5,6 +5,7 @@ class CompanylinksControllerTest < ActionDispatch::IntegrationTest
 
   setup do
     @user = users(:user_two)
+    @member = members(:member_two)
     @company = companies(:company_one)
     @companylink = companylinks(:company_one_link_one)
     sign_in @user
@@ -50,7 +51,7 @@ class CompanylinksControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should not allow access from different organization" do
-    @user.update(organization: organizations(:organization_two))
+    @member.update(organization: organizations(:organization_two))
 
     post company_companylinks_path(@company), params: {
       companylink: {

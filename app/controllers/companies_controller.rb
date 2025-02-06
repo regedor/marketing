@@ -1,4 +1,4 @@
-class CompaniesController < ApplicationController
+class CompaniesController < BaseController
   before_action :authenticate_user!
   before_action :set_companies, only: [ :index ]
   before_action :set_company, only: [ :show, :edit, :update, :destroy ]
@@ -15,17 +15,17 @@ class CompaniesController < ApplicationController
 
   # GET /companies/:id
   def show
-    company_notes = @company.companynotes.map { |cn| { id: cn.id, note: cn.note, type: "company", author: cn.user.email, to: @company.name, datetime: cn.created_at, link: company_path(@company) } }
-    person_company_notes =  @company.personcompanies.select { |pc| pc.person.is_private == false || pc.person.user == current_user }.map { |pc| pc.person.personnotes }.flatten.map { |pn| { id: pn.id, note: pn.note, type: "person", to: pn.person.name, link: person_path(pn.person), author: pn.user.email,  datetime: pn.created_at } }
+    company_notes = @company.companynotes.map { |cn| { id: cn.id, note: cn.note, type: "company", author: cn.member.email, to: @company.name, datetime: cn.created_at, link: company_path(@company) } }
+    person_company_notes =  @company.personcompanies.select { |pc| pc.person.is_private == false || pc.person.member == current_member }.map { |pc| pc.person.personnotes }.flatten.map { |pn| { id: pn.id, note: pn.note, type: "person", to: pn.person.name, link: person_path(pn.person), author: pn.member.email,  datetime: pn.created_at } }
     @notes = (company_notes + person_company_notes).sort { |a, b| b[:datetime] <=> a[:datetime] }
     workers = @company.personcompanies.map { |pc| pc.person }
     @new_company_note = @company.companynotes.new
     @new_person_company = @company.personcompanies.new
     @new_company_link = @company.companylinks.new
-    # @people = Person.where(organization: current_user.organization).reject { |p| workers.include?(p) }.reject{ |p| p.is_private && p.user != current_user }
-    @people = Person.where(organization: current_user.organization)
+    # @people = Person.where(organization: current_member.organization).reject { |p| workers.include?(p) }.reject{ |p| p.is_private && p.member != current_member }
+    @people = Person.where(organization: current_member.organization)
                 .where.not(id: workers.pluck(:id))
-                .where("is_private = ? OR user_id = ?", false, current_user.id)
+                .where("is_private = ? OR member_id = ?", false, current_member.id)
   end
 
   # POST /companies
@@ -38,7 +38,7 @@ class CompaniesController < ApplicationController
       return
     end
 
-    @company.organization = current_user.organization
+    @company.organization = current_member.organization
     update_min_max_employers
 
     if @company.save
@@ -77,7 +77,7 @@ class CompaniesController < ApplicationController
   private
 
     def check_organization!
-      redirect_to request.referrer || root_path, alert: "Access Denied" unless current_user.organization_id == @company.organization.id
+      redirect_to request.referrer || root_path, alert: "Access Denied" unless current_member.organization_id == @company.organization.id
     end
 
     def company_params
@@ -85,7 +85,7 @@ class CompaniesController < ApplicationController
     end
 
     def set_companies
-      @companies = Company.where(organization: current_user.organization)
+      @companies = Company.where(organization: current_member.organization)
     end
 
     def set_company

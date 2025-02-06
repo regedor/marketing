@@ -10,17 +10,17 @@ class CommentsController < BaseController
   # POST /calendars/:calendar_id/posts/:post_id/comments
   def create
     @comment = @post.comments.new(comment_params)
-    @comment.user_id = current_user.id
+    @comment.member_id = current_member.id
 
     if @comment.save
       redirect_to calendar_post_path(@calendar, @post, anchor: dom_id(@comment)), notice: "Comment was successfully created."
 
-      LogEntry.create_log("Comment has been created by #{current_user.email}. [#{comment_params}]")
+      LogEntry.create_log("Comment has been created by #{current_member.email}. [#{comment_params}]")
     else
       error_messages = @comment.errors.full_messages.join(", ")
       redirect_to calendar_post_path(@calendar, @post, anchor: "comments_info"), alert: "Failed to create comment: #{error_messages}"
 
-      LogEntry.create_log("#{current_user.email} attempted to create comment but failed (error: #{error_messages}). [#{comment_params}]")
+      LogEntry.create_log("#{current_member.email} attempted to create comment but failed (error: #{error_messages}). [#{comment_params}]")
     end
   end
 
@@ -33,11 +33,11 @@ class CommentsController < BaseController
     if @comment.update(comment_params)
       redirect_to calendar_post_path(@calendar, @post, anchor: dom_id(@comment)), notice: "Comment was successfully updated."
 
-      LogEntry.create_log("Comment has been updated by #{current_user.email}. [#{comment_params}]")
+      LogEntry.create_log("Comment has been updated by #{current_member.email}. [#{comment_params}]")
     else
       render :edit, status: :unprocessable_entity
 
-      LogEntry.create_log("#{current_user.email} attempted to update comment but failed (unprocessable_entity). [#{comment_params}]")
+      LogEntry.create_log("#{current_member.email} attempted to update comment but failed (unprocessable_entity). [#{comment_params}]")
     end
   end
 
@@ -46,7 +46,7 @@ class CommentsController < BaseController
     @comment.destroy
     redirect_to calendar_post_path(@calendar, @post, anchor: "comments_info"),  notice: "Comment was successfully deleted."
 
-    LogEntry.create_log("Comment #{@comment.id} has been destroyed by #{current_user.email}.")
+    LogEntry.create_log("Comment #{@comment.id} has been destroyed by #{current_member.email}.")
   end
 
   private
@@ -64,18 +64,18 @@ class CommentsController < BaseController
     end
 
     def check_organization!
-      return if current_organization.slug == "medgical" && @post.user.organization.slug == "regedor-creations"
+      return if current_organization.slug == "medgical" && @post.member.organization.slug == "regedor-creations"
 
-      redirect_to root_path, alert: "Access Denied" unless current_user.organization_id == @calendar.organization.id
+      redirect_to root_path, alert: "Access Denied" unless current_member.organization_id == @calendar.organization.id
     end
 
     def check_author!
-      return if current_organization.slug == "medgical" && @post.user.organization.slug == "regedor-creations"
+      return if current_organization.slug == "medgical" && @post.member.organization.slug == "regedor-creations"
 
-      redirect_to root_path, alert: "Access Denied" unless current_user == @comment.user
+      redirect_to root_path, alert: "Access Denied" unless current_member == @comment.member
     end
 
     def check_leader!
-      check_author! unless current_user.isLeader
+      check_author! unless current_member.isLeader
     end
 end

@@ -16,7 +16,7 @@ class PersonnotesTest < ApplicationSystemTestCase
 
     fill_in "Note", with: @personnote.note
     fill_in "Person", with: @personnote.person_id
-    fill_in "User", with: @personnote.user_id
+    fill_in "User", with: @personnote.member_id
     click_on "Create Personnote"
 
     assert_text "Personnote was successfully created"
@@ -29,7 +29,7 @@ class PersonnotesTest < ApplicationSystemTestCase
 
     fill_in "Note", with: @personnote.note
     fill_in "Person", with: @personnote.person_id
-    fill_in "User", with: @personnote.user_id
+    fill_in "User", with: @personnote.member_id
     click_on "Update Personnote"
 
     assert_text "Personnote was successfully updated"

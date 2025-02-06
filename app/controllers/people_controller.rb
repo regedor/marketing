@@ -1,4 +1,4 @@
-class PeopleController < ApplicationController
+class PeopleController < BaseController
   before_action :authenticate_user!
   before_action :set_people, only: [ :index ]
   before_action :set_person, only: [ :show, :edit, :update, :destroy ]
@@ -25,14 +25,14 @@ class PeopleController < ApplicationController
     @new_person_company = @person.personcompanies.new
 
     workers = @person.personcompanies.map { |pc| pc.company }
-    @companies = Company.where(organization: current_user.organization).reject { |p| workers.include?(p) }
+    @companies = Company.where(organization: current_member.organization).reject { |p| workers.include?(p) }
   end
 
   # POST /people
   def create
     @person = Person.new(person_params)
-    @person.organization = current_user.organization
-    @person.user = current_user
+    @person.organization = current_member.organization
+    @person.member = current_member
 
     if !url?(params[:person][:linkedin_link])
       flash[:alert] = "Not a valid URL"
@@ -82,24 +82,24 @@ class PeopleController < ApplicationController
     end
 
     def set_people
-      @people = Person.where(organization: current_user.organization)
-                      .where("is_private = ? OR user_id = ?", false, current_user.id)
+      @people = Person.where(organization: current_member.organization)
+                      .where("is_private = ? OR member_id = ?", false, current_member.id)
     end
 
     def check_organization!
-      redirect_to request.referrer || root_path, alert: "Access Denied" unless current_user.organization_id == @person.organization_id
+      redirect_to request.referrer || root_path, alert: "Access Denied" unless current_member.organization_id == @person.organization_id
     end
 
     def check_author!
-      redirect_to request.referrer || root_path, alert: "Access Denied" unless @person.is_private == false || @person.user == current_user
+      redirect_to request.referrer || root_path, alert: "Access Denied" unless @person.is_private == false || @person.member == current_member
     end
 
     def check_leader!
-      redirect_to request.referrer || root_path, alert: "Access Denied" unless @person.user == current_user || (@person.is_private == false && current_user.isLeader)
+      redirect_to request.referrer || root_path, alert: "Access Denied" unless @person.member == current_member || (@person.is_private == false && current_member.isLeader)
     end
 
     def check_owner!
-      redirect_to request.referrer || root_path, alert: "Access Denied. You cannot change is private flag." unless params[:person][:is_private] == @person.is_private || @person.user == current_user
+      redirect_to request.referrer || root_path, alert: "Access Denied. You cannot change is private flag." unless params[:person][:is_private] == @person.is_private || @person.member == current_member
     end
 
     def url?(string)

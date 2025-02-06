@@ -16,7 +16,7 @@ class LeadnotesTest < ApplicationSystemTestCase
 
     fill_in "Lead", with: @leadnote.lead_id
     fill_in "Note", with: @leadnote.note
-    fill_in "User", with: @leadnote.user_id
+    fill_in "User", with: @leadnote.member_id
     click_on "Create Leadnote"
 
     assert_text "Leadnote was successfully created"
@@ -29,7 +29,7 @@ class LeadnotesTest < ApplicationSystemTestCase
 
     fill_in "Lead", with: @leadnote.lead_id
     fill_in "Note", with: @leadnote.note
-    fill_in "User", with: @leadnote.user_id
+    fill_in "User", with: @leadnote.member_id
     click_on "Update Leadnote"
 
     assert_text "Leadnote was successfully updated"

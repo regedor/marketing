@@ -4,23 +4,23 @@
 #
 #  id         :bigint           not null, primary key
 #  note       :text
-#  user_id    :bigint           not null
 #  company_id :bigint           not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  member_id  :bigint           not null
 #
 # Indexes
 #
 #  index_companynotes_on_company_id  (company_id)
-#  index_companynotes_on_user_id     (user_id)
+#  index_companynotes_on_member_id   (member_id)
 #
 # Foreign Keys
 #
 #  fk_rails_...  (company_id => companies.id)
-#  fk_rails_...  (user_id => users.id)
+#  fk_rails_...  (member_id => members.id)
 #
 class Companynote < ApplicationRecord
-  belongs_to :user
+  belongs_to :member
   belongs_to :company
 
   validates :note, presence: true

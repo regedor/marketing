@@ -27,10 +27,10 @@ class PerspectivesController < BaseController
       redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Perspective was successfully created."
       send_notification("created", 0)
 
-      LogEntry.create_log("Perspective has been created by #{current_user.email}. [#{perspective_params}]")
+      LogEntry.create_log("Perspective has been created by #{current_member.email}. [#{perspective_params}]")
     else
       redirect_to calendar_post_path(@calendar, @post), alert: "Error creating Perspective."
-      LogEntry.create_log("#{current_user.email} attempted to create perspective but failed (unprocessable_entity). [#{perspective_params}]")
+      LogEntry.create_log("#{current_member.email} attempted to create perspective but failed (unprocessable_entity). [#{perspective_params}]")
     end
   end
 
@@ -39,13 +39,13 @@ class PerspectivesController < BaseController
     if @perspective.socialplatform.nil?
       redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), alert: "Perspective cannot be deleted."
 
-      LogEntry.create_log("#{current_user.email} attempted to delete perspective #{@perspective.id} but failed.")
+      LogEntry.create_log("#{current_member.email} attempted to delete perspective #{@perspective.id} but failed.")
     else
       @perspective.destroy
       redirect_to calendar_post_path(@calendar, @post), notice: "Perspective was successfully destroyed."
       send_notification("destroyed", 2)
 
-      LogEntry.create_log("Perspective #{@perspective.id} has been destroyed by #{current_user.email}.")
+      LogEntry.create_log("Perspective #{@perspective.id} has been destroyed by #{current_member.email}.")
     end
   end
 
@@ -55,7 +55,7 @@ class PerspectivesController < BaseController
     redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Perspective status updated."
     send_notification("changed status", 3)
 
-    LogEntry.create_log("Perspective status has been updated by #{current_user.email}. [#{perspective_params_status}]")
+    LogEntry.create_log("Perspective status has been updated by #{current_member.email}. [#{perspective_params_status}]")
   end
 
   # PATCH /calendars/:calendar_id/posts/:post_id/perspectives/:id/update_status_post
@@ -64,14 +64,14 @@ class PerspectivesController < BaseController
     redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Post status updated."
     send_notification_post("changed status", 3)
 
-    LogEntry.create_log("Post status has been updated by #{current_user.email}. [#{post_params_status}]")
+    LogEntry.create_log("Post status has been updated by #{current_member.email}. [#{post_params_status}]")
   end
 
   # PATCH /calendars/:calendar_id/posts/:post_id/perspectives/:id/update_copy
   def update_copy
     @perspective.update(perspective_params_copy)
     send_notification("updated", 1)
-    LogEntry.create_log("Perspective copy has been updated by #{current_user.email}. [#{perspective_params_copy}]")
+    LogEntry.create_log("Perspective copy has been updated by #{current_member.email}. [#{perspective_params_copy}]")
   end
 
   private
@@ -90,7 +90,7 @@ class PerspectivesController < BaseController
 
     def check_organization!
       return if current_organization.slug == "medgical" && @calendar.organization.slug == "regedor-creations"
-      redirect_to root_path, alert: "Access Denied" unless current_user.organization_id == @calendar.organization.id
+      redirect_to root_path, alert: "Access Denied" unless current_member.organization_id == @calendar.organization.id
     end
 
     def perspective_params_status
@@ -107,14 +107,14 @@ class PerspectivesController < BaseController
 
     def send_notification(action, action_type)
       if @perspective.socialplatform.nil?
-        Notification.create(description: "The perspective #{@perspective.id},the default perspective, has been #{action} by #{current_user.email}.  <#{calendar_post_url(@calendar, @post)}|Link>", type_notification: action_type, organization: current_user.organization, title: "Post #{@perspective.post.title}, Default perspective Notification")
+        Notification.create(description: "The perspective #{@perspective.id},the default perspective, has been #{action} by #{current_member.email}.  <#{calendar_post_url(@calendar, @post)}|Link>", type_notification: action_type, organization: current_member.organization, title: "Post #{@perspective.post.title}, Default perspective Notification")
       else
-        Notification.create(description: "The perspective #{@perspective.id}, for the social media `#{@perspective.socialplatform.name}`, has been #{action} by #{current_user.email}. <#{calendar_post_perspective_url(@calendar, @post, @perspective)}|Link>", type_notification: action_type, organization: current_user.organization, title: "Post #{@perspective.post.title}, #{@perspective.socialplatform.name} perspective Notification")
+        Notification.create(description: "The perspective #{@perspective.id}, for the social media `#{@perspective.socialplatform.name}`, has been #{action} by #{current_member.email}. <#{calendar_post_perspective_url(@calendar, @post, @perspective)}|Link>", type_notification: action_type, organization: current_member.organization, title: "Post #{@perspective.post.title}, #{@perspective.socialplatform.name} perspective Notification")
       end
     end
 
 
     def send_notification_post(action, action_type)
-      Notification.create(description: "The post #{@post.id}, with title `#{@post.title}`, has been #{action} by #{current_user.email}. <#{calendar_post_url(@calendar, @post)}|Link>.", type_notification: action_type, organization: current_user.organization, title: "Post #{@post.title} Notification")
+      Notification.create(description: "The post #{@post.id}, with title `#{@post.title}`, has been #{action} by #{current_member.email}. <#{calendar_post_url(@calendar, @post)}|Link>.", type_notification: action_type, organization: current_member.organization, title: "Post #{@post.title} Notification")
     end
 end

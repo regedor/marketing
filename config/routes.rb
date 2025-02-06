@@ -96,6 +96,8 @@ Rails.application.routes.draw do
 
   namespace :dashboard do
     resources :users, only: [ :new, :create, :edit, :update, :destroy ]
+    get "organizations", to: "users#organizations", as: :organizations
+    post "change_organization/:organization_id", to: "users#change_organization", as: :change_organization
   end
 
   resources :organizations, only: [ :update ]

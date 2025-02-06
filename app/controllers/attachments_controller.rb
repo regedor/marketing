@@ -32,10 +32,10 @@ class AttachmentsController < BaseController # rubocop:disable Metrics/ClassLeng
         if attachment.save
           attachment.generate_preview
           attachments << attachment
-          LogEntry.create_log("Attachment has been created by #{current_user.email}. [#{attachment.filename}]")
+          LogEntry.create_log("Attachment has been created by #{current_member.email}. [#{attachment.filename}]")
         else
           error_messages = attachment.errors.full_messages.join(", ")
-          LogEntry.create_log("#{current_user.email} attempted to create an attachment but failed (error: #{error_messages}).")
+          LogEntry.create_log("#{current_member.email} attempted to create an attachment but failed (error: #{error_messages}).")
         end
       end
     else
@@ -49,10 +49,10 @@ class AttachmentsController < BaseController # rubocop:disable Metrics/ClassLeng
 
       if attachment.save
         attachments << attachment
-        LogEntry.create_log("Cloud attachment created by #{current_user.email}.")
+        LogEntry.create_log("Cloud attachment created by #{current_member.email}.")
       else
         error_messages = attachment.errors.full_messages.join(", ")
-        LogEntry.create_log("#{current_user.email} attempted to create cloud attachment but failed (error: #{error_messages}).")
+        LogEntry.create_log("#{current_member.email} attempted to create cloud attachment but failed (error: #{error_messages}).")
       end
     end
 
@@ -82,11 +82,11 @@ class AttachmentsController < BaseController # rubocop:disable Metrics/ClassLeng
     if @attachment.update(data)
       redirect_to calendar_post_perspective_path(@calendar, @post, @perspective, anchor: dom_id(@attachment)),
         notice: "Attachment was successfully updated."
-      LogEntry.create_log("Attachment has been updated by #{current_user.email}. [#{attachment_params}]")
+      LogEntry.create_log("Attachment has been updated by #{current_member.email}. [#{attachment_params}]")
     else
       render :edit, status: :unprocessable_entity
 
-      LogEntry.create_log("#{current_user.email} attempted to update attachment but failed (unprocessable_entity). " \
+      LogEntry.create_log("#{current_member.email} attempted to update attachment but failed (unprocessable_entity). " \
                           "[#{attachment_params}]")
     end
   end
@@ -96,7 +96,7 @@ class AttachmentsController < BaseController # rubocop:disable Metrics/ClassLeng
     @attachment.destroy
     redirect_to calendar_post_perspective_path(@calendar, @post, @perspective, anchor: "attachments_info"),
       notice: "Attachment was successfully destroyed."
-    LogEntry.create_log("Attachment #{@attachment.filename} has been destroyed by #{current_user.email}.")
+    LogEntry.create_log("Attachment #{@attachment.filename} has been destroyed by #{current_member.email}.")
   end
 
   # GET /calendars/:calendar_id/posts/:post_id/perspectives/:perspective_id/attachments/:id/download
@@ -115,7 +115,7 @@ class AttachmentsController < BaseController # rubocop:disable Metrics/ClassLeng
     @attachment.update(attachment_params_status)
     redirect_to calendar_post_perspective_path(@calendar, @post, @perspective, anchor: dom_id(@attachment)),
       notice: "Attachment status updated."
-    LogEntry.create_log("Attachment #{@attachment.id} status has been updated by #{current_user.email}. " \
+    LogEntry.create_log("Attachment #{@attachment.id} status has been updated by #{current_member.email}. " \
                         "[#{attachment_params_status}]")
   end
 
@@ -126,7 +126,7 @@ class AttachmentsController < BaseController # rubocop:disable Metrics/ClassLeng
     @attachmentcounter.rejected = false
     save_counter(@attachmentcounter)
 
-    LogEntry.create_log("Attachment #{@attachment.id} has been liked by #{current_user.email}.")
+    LogEntry.create_log("Attachment #{@attachment.id} has been liked by #{current_member.email}.")
   end
 
   # PATCH /calendars/:calendar_id/posts/:post_id/perspectives/:perspective_id/attachments/:id/dislike
@@ -136,7 +136,7 @@ class AttachmentsController < BaseController # rubocop:disable Metrics/ClassLeng
     @attachmentcounter.rejected = !@attachmentcounter.rejected
     save_counter(@attachmentcounter)
 
-    LogEntry.create_log("Attachment #{@attachment.id} has been disliked by #{current_user.email}.")
+    LogEntry.create_log("Attachment #{@attachment.id} has been disliked by #{current_member.email}.")
   end
 
   private
@@ -156,12 +156,12 @@ class AttachmentsController < BaseController # rubocop:disable Metrics/ClassLeng
   end
 
   def check_organization!
-    return if current_organization.slug == "medgical" && @post.user.organization.slug == "regedor-creations"
-    redirect_to root_path, alert: "Access Denied" unless current_user.organization_id == @calendar.organization.id
+    # return if current_organization.slug == "medgical" && @post.member.organization.slug == "regedor-creations"
+    redirect_to root_path, alert: "Access Denied" unless current_member&.organization_id == @calendar.organization.id
   end
 
   def find_or_initialize_attachmentcounter
-    Attachmentcounter.find_or_initialize_by(attachment: @attachment, user: current_user)
+    Attachmentcounter.find_or_initialize_by(attachment: @attachment, member: current_member)
   end
 
   def save_counter(attachmentcounter)

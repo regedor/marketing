@@ -32,17 +32,17 @@ class PostsController < BaseController
   # POST /calendars/:calendar_id/posts
   def create
     @post = @calendar.posts.new(post_params)
-    @post.user = current_user
+    @post.member = current_member
 
     if @post.save
       redirect_to calendar_post_path(@calendar, @post), notice: "Post was successfully created."
       send_notification("created", 0)
 
-      LogEntry.create_log("Post has been created by #{current_user.email}. [#{post_params}]")
+      LogEntry.create_log("Post has been created by #{current_member.email}. [#{post_params}]")
     else
       render :new, status: :unprocessable_entity
 
-      LogEntry.create_log("#{current_user.email} attempted to create post but failed (unprocessable_entity). [#{post_params}]")
+      LogEntry.create_log("#{current_member.email} attempted to create post but failed (unprocessable_entity). [#{post_params}]")
     end
   end
 
@@ -56,11 +56,11 @@ class PostsController < BaseController
       redirect_to calendar_post_path(@calendar, @post), notice: "Post was successfully updated."
       send_notification("updated", 1)
 
-      LogEntry.create_log("Post has been updated by #{current_user.email}. [#{post_params}]")
+      LogEntry.create_log("Post has been updated by #{current_member.email}. [#{post_params}]")
     else
       render :edit, status: :unprocessable_entity
 
-      LogEntry.create_log("#{current_user.email} attempted to update post but failed (unprocessable_entity). [#{post_params}]")
+      LogEntry.create_log("#{current_member.email} attempted to update post but failed (unprocessable_entity). [#{post_params}]")
     end
   end
 
@@ -70,21 +70,21 @@ class PostsController < BaseController
     redirect_to calendars_path(), notice: "Post was successfully deleted."
     send_notification("destroyed", 2)
 
-    LogEntry.create_log("Post #{@post.title} has been destroyed by #{current_user.email}.")
+    LogEntry.create_log("Post #{@post.title} has been destroyed by #{current_member.email}.")
   end
 
   # PATCH /calendars/:calendar_id/posts/:id/update_design_idea
   def update_design_idea
     @post.update(perspective_params_design_idea)
     send_notification("updated", 1)
-    LogEntry.create_log("Post design idea has been updated to 'Pendging Review'' by #{current_user.email}. [#{perspective_params_design_idea}]")
+    LogEntry.create_log("Post design idea has been updated to 'Pendging Review'' by #{current_member.email}. [#{perspective_params_design_idea}]")
   end
 
   def update_categories
     @post.update(categories: params[:post][:categories])
     head :ok
     send_notification("updated", 1)
-    LogEntry.create_log("Post categories have been updated by #{current_user.email}. [#{params[:post][:categories]}]")
+    LogEntry.create_log("Post categories have been updated by #{current_member.email}. [#{params[:post][:categories]}]")
   end
 
   # PATCH /calendars/:calendar_id/posts/:id/update_day
@@ -94,7 +94,7 @@ class PostsController < BaseController
       @post.publish_date = DateTime.new(new_date.year, new_date.month, new_date.day, @post.publish_date.hour, @post.publish_date.min, @post.publish_date.sec)
       if @post.save
         send_notification("updated", 1)
-        LogEntry.create_log("Publish date for post ID #{@post.id} has been updated to #{new_date} by #{current_user.email}.")
+        LogEntry.create_log("Publish date for post ID #{@post.id} has been updated to #{new_date} by #{current_member.email}.")
 
         render json: { success: true, new_publish_date: @post.publish_date.to_date, message: "Publish date updated to #{new_date}." }, status: :ok
       else
@@ -112,7 +112,7 @@ class PostsController < BaseController
       @post.publish_date = DateTime.new(new_date.year, new_date.month, new_date.day, new_date.hour, new_date.min, @post.publish_date.sec)
       if @post.save
         send_notification("updated", 1)
-        LogEntry.create_log("Publish datetime for post ID #{@post.id} has been updated to #{new_date} by #{current_user.email}.")
+        LogEntry.create_log("Publish datetime for post ID #{@post.id} has been updated to #{new_date} by #{current_member.email}.")
 
         render json: { success: true, new_publish_date: @post.publish_date, message: "Publish date updated to #{new_date}." }, status: :ok
       else
@@ -176,7 +176,7 @@ class PostsController < BaseController
           calendar: @post.calendar.name,
           calendar_id: @post.calendar.id,
           post_id: @post.id,
-          author:  @post.user.email,
+          author:  @post.member.email,
           status: @post.status,
           design_idea: @post.design_idea,
           socialplatforms: all_social_platforms,
@@ -215,12 +215,12 @@ class PostsController < BaseController
 
     def check_organization!
       return if current_organization.slug == "medgical" && @calendar.organization.slug == "regedor-creations"
-      redirect_to root_path, alert: "Access Denied" unless current_user.organization_id == @calendar.organization.id
+      redirect_to root_path, alert: "Access Denied" unless current_member.organization_id == @calendar.organization.id
     end
 
     def check_author!
-      return if current_organization.slug == "medgical" && @post.user.organization.slug == "regedor-creations"
-      redirect_to root_path, alert: "Access Denied" unless current_user == @post.user || current_user.isLeader
+      return if current_organization.slug == "medgical" && @post.member.organization.slug == "regedor-creations"
+      redirect_to root_path, alert: "Access Denied" unless current_member == @post.member || current_member.isLeader
     end
 
     def sanitize_categories
@@ -234,10 +234,10 @@ class PostsController < BaseController
     end
 
     def send_notification(action, action_type)
-      Notification.create(description: "The post #{@post.id}, with title `#{@post.title}`, has been #{action} by #{current_user.email}. <#{calendar_post_url(@calendar, @post)}|Link>.", type_notification: action_type, organization: current_user.organization, title: "Post #{@post.title} Notification")
+      Notification.create(description: "The post #{@post.id}, with title `#{@post.title}`, has been #{action} by #{current_member.email}. <#{calendar_post_url(@calendar, @post)}|Link>.", type_notification: action_type, organization: current_member.organization, title: "Post #{@post.title} Notification")
     end
 
     def check_leader!
-      check_author! unless current_user.isLeader
+      check_author! unless current_member.isLeader
     end
 end

@@ -1,4 +1,4 @@
-class PersoncompaniesController < ApplicationController
+class PersoncompaniesController < BaseController
   before_action :authenticate_user!
   before_action :set_person, only: [ :destroy_by_person, :destroy_by_company, :create_by_person, :update_is_working_by_company, :update_is_working_by_person, :update_is_my_contact_by_person, :update_is_my_contact_by_company ]
   before_action :set_company, only: [ :destroy_by_company, :destroy_by_person, :create_by_company, :update_is_working_by_company, :update_is_working_by_person, :update_is_my_contact_by_person, :update_is_my_contact_by_company ]
@@ -102,13 +102,13 @@ class PersoncompaniesController < ApplicationController
     end
 
     def check_person_contact_1!
-      redirect_to request.referrer || root_path, alert: "Access Denied" unless @person.is_private == false || @person.user == current_user
+      redirect_to request.referrer || root_path, alert: "Access Denied" unless @person.is_private == false || @person.member == current_member
     end
 
     def check_person_contact_2!
       if Person.where(id: params[:personcompany][:person_id]).any?
         person = Person.find(params[:personcompany][:person_id])
-        redirect_to request.referrer || root_path, alert: "Access Denied" unless person.is_private == false || person.user == current_user
+        redirect_to request.referrer || root_path, alert: "Access Denied" unless person.is_private == false || person.member == current_member
       end
     end
 end

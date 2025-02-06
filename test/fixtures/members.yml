@@ -1,0 +1,44 @@
+# == Schema Information
+#
+# Table name: members
+#
+#  id              :bigint           not null, primary key
+#  user_id         :bigint           not null
+#  organization_id :bigint           not null
+#  isLeader        :boolean          default(FALSE), not null
+#  email           :string
+#  first_name      :string
+#  last_name       :string
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#
+# Indexes
+#
+#  index_members_on_organization_id  (organization_id)
+#  index_members_on_user_id          (user_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (organization_id => organizations.id)
+#  fk_rails_...  (user_id => users.id)
+#
+member_one:
+  first_name: Member one first name
+  last_name: Member one last name
+  user: user_one
+  isLeader: false
+  organization: organization_one
+
+member_two:
+  first_name: Member two first name
+  last_name: Member two last name
+  user: user_two
+  isLeader: true
+  organization: organization_one
+
+member_three:
+  first_name: Member three first name
+  last_name: Member three last name
+  user: user_three
+  isLeader: true
+  organization: organization_two

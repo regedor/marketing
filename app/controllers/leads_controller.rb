@@ -7,14 +7,14 @@ class LeadsController < ApplicationController
 
   # GET /leads/
   def show
-    lead_notes = @lead.leadnotes.map { |ln| { id: ln.id, note: ln.note, type: "lead", author: ln.user.email, to: @lead.name, datetime: ln.created_at, link: pipeline_lead_path(@pipeline, @lead) } }
+    lead_notes = @lead.leadnotes.map { |ln| { id: ln.id, note: ln.note, type: "lead", author: ln.member.email, to: @lead.name, datetime: ln.created_at, link: pipeline_lead_path(@pipeline, @lead) } }
     if @pipeline.to_people
-      person_notes =  @lead.person.personnotes.map { |pn| { id: pn.id, note: pn.note, type: "person", to: pn.person.name, author: pn.user.email,  datetime: pn.created_at, link: person_path(pn.person) } }
+      person_notes =  @lead.person.personnotes.map { |pn| { id: pn.id, note: pn.note, type: "person", to: pn.person.name, author: pn.member.email,  datetime: pn.created_at, link: person_path(pn.person) } }
       @notes = (lead_notes + person_notes)
     else
       company = @lead.company
-      company_notes = company.companynotes.map { |cn| { id: cn.id, note: cn.note, type: "company", author: cn.user.email, to: company.name, datetime: cn.created_at, link: company_path(company) } }
-      person_company_notes =  company.personcompanies.select { |pc| pc.person.is_private == false || pc.person.user == current_user }.map { |pc| pc.person.personnotes }.flatten.map { |pn| { id: pn.id, note: pn.note, type: "person", to: pn.person.name, author: pn.user.email,  datetime: pn.created_at, link: person_path(pn.person) } }
+      company_notes = company.companynotes.map { |cn| { id: cn.id, note: cn.note, type: "company", author: cn.member.email, to: company.name, datetime: cn.created_at, link: company_path(company) } }
+      person_company_notes =  company.personcompanies.select { |pc| pc.person.is_private == false || pc.person.member == current_member }.map { |pc| pc.person.personnotes }.flatten.map { |pn| { id: pn.id, note: pn.note, type: "person", to: pn.person.name, author: pn.member.email,  datetime: pn.created_at, link: person_path(pn.person) } }
       @notes = (lead_notes + company_notes + person_company_notes)
     end
     @notes = @notes.sort { |a, b| b[:datetime] <=> a[:datetime] }
@@ -105,12 +105,12 @@ class LeadsController < ApplicationController
     end
 
     def check_organization!
-      redirect_to request.referrer || root_path, alert: "Access Denied" unless current_user.organization_id == @pipeline.organization_id
+      redirect_to request.referrer || root_path, alert: "Access Denied" unless current_member.organization_id == @pipeline.organization_id
     end
 
     def set_companies_people
-      @companies = Company.where(organization: current_user.organization)
-      @people = Person.where(organization: current_user.organization).where("is_private = ? OR user_id = ?", false, current_user.id)
+      @companies = Company.where(organization: current_member.organization)
+      @people = Person.where(organization: current_member.organization).where("is_private = ? OR member_id = ?", false, current_member.id)
     end
 
     def check_company_people(page)

@@ -12,26 +12,35 @@
 #  updated_at             :datetime         not null
 #  organization_id        :integer
 #  isLeader               :boolean          default(FALSE), not null
+#  member_id              :bigint
 #
 # Indexes
 #
 #  index_users_on_email                 (email) UNIQUE
+#  index_users_on_member_id             (member_id)
 #  index_users_on_reset_password_token  (reset_password_token) UNIQUE
+#
+# Foreign Keys
+#
+#  fk_rails_...  (member_id => members.id)
 #
 user_one:
   email: user@example.com
   encrypted_password: <%= Devise::Encryptor.digest(User, 'password') %>
   organization: organization_one
   isLeader: false
+  member: member_one
 
 user_two:
   email: leader@example.com
   encrypted_password: <%= Devise::Encryptor.digest(User, 'password') %>
   organization: organization_one
   isLeader: true
+  member: member_two
 
 user_three:
   email: otherorg_leader@example.com
   encrypted_password: <%= Devise::Encryptor.digest(User, 'password') %>
   organization: organization_two
   isLeader: true
+  member: member_three

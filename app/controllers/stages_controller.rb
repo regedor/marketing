@@ -1,4 +1,4 @@
-class StagesController < ApplicationController
+class StagesController < BaseController
   before_action :authenticate_user!
   before_action :set_pipeline
   before_action :set_last_stages
@@ -15,7 +15,7 @@ class StagesController < ApplicationController
       if @last_stage
         @last_stage.update(is_final: false)
       end
-      redirect_to pipeline_path(@pipeline), notice: "Stage was successfully created."
+      redirect_to edit_pipeline_path(@pipeline), notice: "Stage was successfully created."
     else
       error_messages = @stage.errors.full_messages.join(", ")
       redirect_back(fallback_location: pipeline_path(@pipeline), alert: "Failed to create Stage: #{error_messages}")
@@ -29,7 +29,7 @@ class StagesController < ApplicationController
   # PATCH /pipeline/:pipeline_id/stage/:stage_id
   def update
     if @stage.update(stage_params)
-      redirect_to pipeline_path(@pipeline), notice: "Stage was successfully updated."
+      redirect_to edit_pipeline_path(@pipeline), notice: "Stage was successfully updated."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -49,7 +49,7 @@ class StagesController < ApplicationController
       swap_is_final(@last_stage, @stage)
     end
     if @stage.update(index_stage_params)
-      redirect_to pipeline_path(@pipeline), notice: "Stage was successfully updated."
+      redirect_to edit_pipeline_path(@pipeline), notice: "Stage was successfully updated."
     else
       redirect_to pipeline_path(@pipeline), alert: "Error"
     end
@@ -88,7 +88,7 @@ class StagesController < ApplicationController
     end
 
     def check_organization!
-      redirect_to request.referrer || root_path, alert: "Access Denied" unless current_user.organization_id == @pipeline.organization_id
+      redirect_to request.referrer || root_path, alert: "Access Denied" unless current_organization&.id == @pipeline.organization_id
     end
 
     def set_last_stages

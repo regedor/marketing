@@ -3,6 +3,7 @@ class PersonnotesControllerTest < ActionDispatch::IntegrationTest
 
   setup do
     @user = users(:user_one)
+    @member = members(:member_one)
     @person = people(:person_one)
     @note = personnotes(:person_one_note_one)
     sign_in @user
@@ -48,7 +49,7 @@ class PersonnotesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should destroy personnote as leader" do
-    @user.update(isLeader: true)
+    @member.update(isLeader: true)
     assert_difference("Personnote.count", -1) do
       delete person_personnote_path(@person, @note)
     end
@@ -57,7 +58,7 @@ class PersonnotesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should not allow access from different organization" do
-    @user.update(organization: organizations(:organization_two))
+    @member.update(organization: organizations(:organization_two))
     get edit_person_personnote_path(@person, @note)
     assert_redirected_to root_path
     assert_equal "Access Denied", flash[:alert]

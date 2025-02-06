@@ -8,7 +8,7 @@
       <% if comment.id.present? %>
         <div id="<%= dom_id(comment) %>" class="comment border border-gray-300 rounded-lg p-2 bg-gray-50 shadow-sm hover:shadow-md transition-shadow duration-200">
           <div class="flex justify-between items-center mb-1">
-            <p class="text-sm font-medium text-gray-500"><%= comment.user.email %></p>
+            <p class="text-sm font-medium text-gray-500"><%= comment.member.email %></p>
             <p class="text-xs text-gray-500"><%= time_ago_in_words(comment.created_at) %> ago</p>
           </div>
           <div class="text-black leading-relaxed ">

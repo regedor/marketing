@@ -29,7 +29,7 @@
               </td>
               <td class="TableEntry border-r border-gray-200">
                 <%= company.personcompanies
-                .select { |pc| pc.is_my_contact && (!pc.person.is_private || pc.person.user == current_user) }
+                .select { |pc| pc.is_my_contact && (!pc.person.is_private || pc.person.member == current_member) }
                 .map { |pc| link_to(pc.person.name, pc.person) }
                 .join(', ')
                 .html_safe %>

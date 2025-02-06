@@ -1,4 +1,4 @@
-class PhonenumbersController < ApplicationController
+class PhonenumbersController < BaseController
   before_action :authenticate_user!
   before_action :set_data
   before_action :check_organization!

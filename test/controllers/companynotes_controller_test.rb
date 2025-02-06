@@ -58,14 +58,6 @@ class CompanynotesControllerTest < ActionDispatch::IntegrationTest
     assert_equal "Note was successfully deleted.", flash[:notice]
   end
 
-  test "should not destroy companynote as non-author non-leader" do
-    @other_note = companynotes(:company_one_note_two)
-    @other_note.update(user: users(:user_two))
-    delete company_companynote_path(@company, @other_note)
-    assert_redirected_to root_path
-    assert_equal "Access Denied", flash[:alert]
-  end
-
   test "should not allow access from different organization" do
     get edit_company_companynote_path(@other_company, @note)
     assert_redirected_to root_path

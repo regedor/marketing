@@ -58,7 +58,7 @@
           </tr>
         </thead>
         <tbody class="bg-white divide-y divide-gray-200">
-          <% @company.personcompanies.select { |pc| pc.person.present? && (pc.person.is_private == false || pc.person.user == current_user) }.each do |pc| %>
+          <% @company.personcompanies.select { |pc| pc.person.present? && (pc.person.is_private == false || pc.person.member == current_member) }.each do |pc| %>
             <tr class="hover:bg-gray-100">
               <td class="TableEntry border-r border-gray-200">
                 <strong><%= link_to pc.person.name, person_path(pc.person) %></strong>
