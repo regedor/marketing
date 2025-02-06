@@ -1,4 +1,4 @@
-class PersonlinksController < ApplicationController
+class PersonlinksController < BaseController
   before_action :authenticate_user!
   before_action :set_person
   before_action :check_organization!
@@ -36,7 +36,7 @@ class PersonlinksController < ApplicationController
   private
 
     def check_organization!
-      redirect_to request.referrer || root_path, alert: "Access Denied" unless current_user.organization_id == @person.organization.id
+      redirect_to request.referrer || root_path, alert: "Access Denied" unless current_member&.organization_id == @person.organization.id
     end
 
     def set_person

@@ -1,4 +1,4 @@
-class CompanylinksController < ApplicationController
+class CompanylinksController < BaseController
   before_action :authenticate_user!
   before_action :set_company
   before_action :check_organization!
@@ -36,7 +36,7 @@ class CompanylinksController < ApplicationController
   private
 
     def check_organization!
-      redirect_to request.referrer || root_path, alert: "Access Denied" unless current_user.organization_id == @company.organization.id
+      redirect_to request.referrer || root_path, alert: "Access Denied" unless current_member&.organization_id == @company.organization.id
     end
 
     def set_company

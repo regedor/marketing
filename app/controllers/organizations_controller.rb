@@ -1,4 +1,4 @@
-class OrganizationsController < ApplicationController
+class OrganizationsController < BaseController
   before_action :authenticate_user!
   before_action :authorize_leader!
   before_action :set_organization, only: [ :update ]

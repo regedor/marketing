@@ -1,4 +1,4 @@
-class LeadcontentsController < ApplicationController
+class LeadcontentsController < BaseController
   before_action :authenticate_user!
   before_action :set_data
   before_action :check_organization!
@@ -33,6 +33,6 @@ class LeadcontentsController < ApplicationController
     end
 
     def check_organization!
-      redirect_to request.referrer || root_path, alert: "Access Denied" unless current_user.organization_id == @pipeline.organization_id
+      redirect_to request.referrer || root_path, alert: "Access Denied" unless current_member.organization_id == @pipeline.organization_id
     end
 end

@@ -1,4 +1,4 @@
-class PipelinesController < ApplicationController
+class PipelinesController < BaseController
   before_action :authenticate_user!
   before_action :set_pipelines
   before_action :set_pipeline, only: %i[ show edit update destroy ]
@@ -6,8 +6,7 @@ class PipelinesController < ApplicationController
   before_action :check_leader!, only: %i[ new create edit update destroy ]
 
   # GET /pipeline/:pipeline_id
-  def show
-  end
+  def show; end
 
   # GET /pipelines/new
   def new
@@ -22,7 +21,7 @@ class PipelinesController < ApplicationController
   # POST /pipelines
   def create
     @pipeline = Pipeline.new(pipeline_params)
-    @pipeline.organization = current_user.organization
+    @pipeline.organization = current_member.organization
 
     if @pipeline.save
       redirect_to pipeline_path(@pipeline), notice: "Pipeline was successfully created."
@@ -72,15 +71,15 @@ class PipelinesController < ApplicationController
     end
 
     def set_pipelines
-      @pipelines = Pipeline.where(organization: current_user.organization)
+      @pipelines = Pipeline.where(organization: current_member.organization)
     end
 
     def check_organization!
-      redirect_to request.referrer || root_path, alert: "Access Denied" unless current_user.organization_id == @pipeline.organization_id
+      redirect_to request.referrer || root_path, alert: "Access Denied" unless current_member&.organization_id == @pipeline.organization_id
     end
 
     def check_leader!
-      redirect_to request.referrer || root_path, alert: "Access Denied" unless current_user.isLeader
+      redirect_to request.referrer || root_path, alert: "Access Denied" unless current_member&.isLeader
     end
 
     def set_form_params

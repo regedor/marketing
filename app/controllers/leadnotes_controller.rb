@@ -9,7 +9,7 @@ class LeadnotesController < ApplicationController
   # POST /pipeline/:pipeline_id/leads/:lead_id/leadnotes
   def create
     @note = @lead.leadnotes.new(leadnote_params)
-    @note.user_id = current_user.id
+    @note.member_id = current_member.id
 
     if @note.save
       redirect_back(fallback_location: pipeline_lead_path(@pipeline, @lead), notice: "Note was successfully created.")
@@ -53,14 +53,14 @@ class LeadnotesController < ApplicationController
     end
 
     def check_organization!
-      redirect_to request.referrer || root_path, alert: "Access Denied" unless current_user.organization_id == @pipeline.organization.id
+      redirect_to request.referrer || root_path, alert: "Access Denied" unless current_member.organization_id == @pipeline.organization.id
     end
 
     def check_author!
-      redirect_to request.referrer || root_path, alert: "Access Denied" unless current_user == @note.user
+      redirect_to request.referrer || root_path, alert: "Access Denied" unless current_member == @note.member
     end
 
     def check_leader!
-      check_author! unless @current_user.isLeader
+      check_author! unless @current_member.isLeader
     end
 end

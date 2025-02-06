@@ -1,4 +1,4 @@
-class EmailsController < ApplicationController
+class EmailsController < BaseController
   before_action :authenticate_user!
   before_action :set_data
   before_action :check_organization!
@@ -34,7 +34,7 @@ class EmailsController < ApplicationController
 
   private
     def check_organization!
-      redirect_to request.referrer || root_path, alert: "Access Denied" unless current_user.organization_id == @person.organization.id
+      redirect_to request.referrer || root_path, alert: "Access Denied" unless current_member.organization_id == @person.organization.id
     end
 
     def email_params

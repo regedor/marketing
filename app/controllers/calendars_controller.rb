@@ -8,7 +8,7 @@ class CalendarsController < BaseController
   def index
     @start_date = params[:start_date] ? Date.parse(params[:start_date]) : Date.today
     pcids = params[:calendar_ids].present? ? params[:calendar_ids].map { |id| id.to_i } : []
-    selected_calendar_ids = pcids.empty? ? @calendars.map { |c| c.id } : @calendars.select { |c| pcids.include?(c.id) }.map { |c| c.id }
+    selected_calendar_ids = pcids.empty? ? @calendars.map(&:id) : @calendars.select { |c| pcids.include?(c.id) }.map { |c| c.id }
 
     @only_1 = selected_calendar_ids.length == 1 ? selected_calendar_ids.first : nil
 
@@ -83,13 +83,13 @@ class CalendarsController < BaseController
   private
 
   def set_calendars
-    @calendars = Calendar.where(organization: current_organization).to_a
+    @calendars = Calendar.where(organization: current_organization).to_a.compact_blank
 
-    if current_organization.slug == "medgical"
-      regedor = Organization.find_by(slug: "regedor-creations")
-      medgical_calendar = Calendar.find_by(name: "Medgical", organization_id: regedor.id)
-      @calendars << medgical_calendar
-    end
+    # if current_organization.slug == "medgical"
+    #   regedor = Organization.find_by(slug: "regedor-creations")
+    #   medgical_calendar = Calendar.find_by(name: "Medgical", organization_id: regedor.id)
+    #   @calendars << medgical_calendar
+    # end
   end
 
   def set_calendar

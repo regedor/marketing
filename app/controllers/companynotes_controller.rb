@@ -1,4 +1,4 @@
-class CompanynotesController < ApplicationController
+class CompanynotesController < BaseController
   before_action :authenticate_user!
   before_action :set_data
   before_action :check_organization!
@@ -9,7 +9,7 @@ class CompanynotesController < ApplicationController
   # POST /company/:company_id/companynotes
   def create
     @note = @company.companynotes.new(companynote_params)
-    @note.user_id = current_user.id
+    @note.member_id = current_member.id
 
     if @note.save
       redirect_back(fallback_location: company_path(@company), notice: "Note was successfully created.")
@@ -52,14 +52,14 @@ class CompanynotesController < ApplicationController
     end
 
     def check_organization!
-      redirect_to request.referrer || root_path, alert: "Access Denied" unless current_user.organization_id == @company.organization.id
+      redirect_to request.referrer || root_path, alert: "Access Denied" unless current_member.organization_id == @company.organization.id
     end
 
     def check_author!
-      redirect_to request.referrer || root_path, alert: "Access Denied" unless current_user == @note.user
+      redirect_to request.referrer || root_path, alert: "Access Denied" unless current_member == @note.member
     end
 
     def check_leader!
-      check_author! unless @current_user.isLeader
+      check_author! unless @current_member.isLeader
     end
 end
