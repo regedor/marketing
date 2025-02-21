@@ -64,7 +64,7 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
     assert_difference("Post.count", -1) do
       delete calendar_post_url(@post.calendar_id, @post.id)
     end
-    assert_redirected_to calendars_path
+    assert_redirected_to calendars_path(start_date: @post.publish_date)
   end
 
   test "should update design idea" do

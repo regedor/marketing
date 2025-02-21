@@ -67,8 +67,8 @@ class PostsController < BaseController
   # DELETE /calendars/:calendar_id/posts/:id
   def destroy
     @post.destroy
-    redirect_to calendars_path(), notice: "Post was successfully deleted."
     send_notification("destroyed", 2)
+    redirect_to calendars_path(start_date: @post.publish_date), notice: "Post was successfully deleted."
 
     LogEntry.create_log("Post #{@post.title} has been destroyed by #{current_user.email}.")
   end
