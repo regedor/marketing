@@ -36,7 +36,6 @@ class PostsController < BaseController
 
     if @post.save
       redirect_to calendar_post_path(@calendar, @post), notice: "Post was successfully created."
-      send_notification("created", 0)
 
       LogEntry.create_log("Post has been created by #{current_user.email}. [#{post_params}]")
     else
@@ -54,7 +53,6 @@ class PostsController < BaseController
   def update
     if @post.update(post_params)
       redirect_to calendar_post_path(@calendar, @post), notice: "Post was successfully updated."
-      send_notification("updated", 1)
 
       LogEntry.create_log("Post has been updated by #{current_user.email}. [#{post_params}]")
     else
@@ -67,7 +65,6 @@ class PostsController < BaseController
   # DELETE /calendars/:calendar_id/posts/:id
   def destroy
     @post.destroy
-    send_notification("destroyed", 2)
     redirect_to calendars_path(start_date: @post.publish_date), notice: "Post was successfully deleted."
 
     LogEntry.create_log("Post #{@post.title} has been destroyed by #{current_user.email}.")
@@ -76,14 +73,12 @@ class PostsController < BaseController
   # PATCH /calendars/:calendar_id/posts/:id/update_design_idea
   def update_design_idea
     @post.update(perspective_params_design_idea)
-    send_notification("updated", 1)
     LogEntry.create_log("Post design idea has been updated to 'Pendging Review'' by #{current_user.email}. [#{perspective_params_design_idea}]")
   end
 
   def update_categories
     @post.update(categories: params[:post][:categories])
     head :ok
-    send_notification("updated", 1)
     LogEntry.create_log("Post categories have been updated by #{current_user.email}. [#{params[:post][:categories]}]")
   end
 
@@ -93,7 +88,6 @@ class PostsController < BaseController
       new_date = Date.parse(params[:date])
       @post.publish_date = DateTime.new(new_date.year, new_date.month, new_date.day, @post.publish_date.hour, @post.publish_date.min, @post.publish_date.sec)
       if @post.save
-        send_notification("updated", 1)
         LogEntry.create_log("Publish date for post ID #{@post.id} has been updated to #{new_date} by #{current_user.email}.")
 
         render json: { success: true, new_publish_date: @post.publish_date.to_date, message: "Publish date updated to #{new_date}." }, status: :ok
@@ -111,7 +105,6 @@ class PostsController < BaseController
       new_date = DateTime.parse(params[:datetime])
       @post.publish_date = DateTime.new(new_date.year, new_date.month, new_date.day, new_date.hour, new_date.min, @post.publish_date.sec)
       if @post.save
-        send_notification("updated", 1)
         LogEntry.create_log("Publish datetime for post ID #{@post.id} has been updated to #{new_date} by #{current_user.email}.")
 
         render json: { success: true, new_publish_date: @post.publish_date, message: "Publish date updated to #{new_date}." }, status: :ok
@@ -233,9 +226,9 @@ class PostsController < BaseController
       params.require(:post).permit(:design_idea)
     end
 
-    def send_notification(action, action_type)
-      Notification.create(description: "The post #{@post.id}, with title `#{@post.title}`, has been #{action} by #{current_user.email}. <#{calendar_post_url(@calendar, @post)}|Link>.", type_notification: action_type, organization: current_user.organization, title: "Post #{@post.title} Notification")
-    end
+    # def send_notification(action, action_type)
+    #   Notification.create(description: "The post #{@post.id}, with title `#{@post.title}`, has been #{action} by #{current_user.email}. <#{calendar_post_url(@calendar, @post)}|Link>.", type_notification: action_type, organization: current_user.organization, title: "Post #{@post.title} Notification")
+    # end
 
     def check_leader!
       check_author! unless current_user.isLeader

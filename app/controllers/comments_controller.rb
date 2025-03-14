@@ -13,9 +13,13 @@ class CommentsController < BaseController
     @comment.user_id = current_user.id
 
     if @comment.save
+      title = "> New comment on post `#{@post.publish_date.strftime("%Y-%m-%d, %H:%M")}`"
+      notification_message = "#{@comment.user.email}, (#{@comment.updated_at.strftime('%Y-%m-%d | %H:%M')}): #{@comment.content}"
+      Notification.create!(title: title, description: notification_message,  organization: current_organization)
+
       redirect_to calendar_post_path(@calendar, @post, anchor: dom_id(@comment)), notice: "Comment was successfully created."
 
-      LogEntry.create_log("Comment has been created by #{current_user.email}. [#{comment_params}]")
+      LogEntry.create_log("Comment has been created by #{current_user.email} (#{}). [#{comment_params}]")
     else
       error_messages = @comment.errors.full_messages.join(", ")
       redirect_to calendar_post_path(@calendar, @post, anchor: "comments_info"), alert: "Failed to create comment: #{error_messages}"

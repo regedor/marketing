@@ -81,4 +81,3 @@ gem "rubyzip"
 gem "sassc-rails"
 gem "slack-ruby-client"
 gem "tailwindcss-rails"
-gem "whenever", require: false

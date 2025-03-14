@@ -25,7 +25,6 @@ class PerspectivesController < BaseController
 
     if @perspective.save
       redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Perspective was successfully created."
-      send_notification("created", 0)
 
       LogEntry.create_log("Perspective has been created by #{current_user.email}. [#{perspective_params}]")
     else
@@ -43,7 +42,6 @@ class PerspectivesController < BaseController
     else
       @perspective.destroy
       redirect_to calendar_post_path(@calendar, @post), notice: "Perspective was successfully destroyed."
-      send_notification("destroyed", 2)
 
       LogEntry.create_log("Perspective #{@perspective.id} has been destroyed by #{current_user.email}.")
     end
@@ -53,7 +51,6 @@ class PerspectivesController < BaseController
   def update_status
     @perspective.update(perspective_params_status)
     redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Perspective status updated."
-    send_notification("changed status", 3)
 
     LogEntry.create_log("Perspective status has been updated by #{current_user.email}. [#{perspective_params_status}]")
   end
@@ -62,7 +59,6 @@ class PerspectivesController < BaseController
   def update_status_post
     @post.update(post_params_status)
     redirect_to calendar_post_perspective_path(@calendar, @post, @perspective), notice: "Post status updated."
-    send_notification_post("changed status", 3)
 
     LogEntry.create_log("Post status has been updated by #{current_user.email}. [#{post_params_status}]")
   end
@@ -70,7 +66,6 @@ class PerspectivesController < BaseController
   # PATCH /calendars/:calendar_id/posts/:post_id/perspectives/:id/update_copy
   def update_copy
     @perspective.update(perspective_params_copy)
-    send_notification("updated", 1)
     LogEntry.create_log("Perspective copy has been updated by #{current_user.email}. [#{perspective_params_copy}]")
   end
 
@@ -105,16 +100,16 @@ class PerspectivesController < BaseController
       params.require(:perspective).permit(:copy)
     end
 
-    def send_notification(action, action_type)
-      if @perspective.socialplatform.nil?
-        Notification.create(description: "The perspective #{@perspective.id},the default perspective, has been #{action} by #{current_user.email}.  <#{calendar_post_url(@calendar, @post)}|Link>", type_notification: action_type, organization: current_user.organization, title: "Post #{@perspective.post.title}, Default perspective Notification")
-      else
-        Notification.create(description: "The perspective #{@perspective.id}, for the social media `#{@perspective.socialplatform.name}`, has been #{action} by #{current_user.email}. <#{calendar_post_perspective_url(@calendar, @post, @perspective)}|Link>", type_notification: action_type, organization: current_user.organization, title: "Post #{@perspective.post.title}, #{@perspective.socialplatform.name} perspective Notification")
-      end
-    end
+  # def send_notification(action, action_type)
+  #   if @perspective.socialplatform.nil?
+  #     Notification.create(description: "The perspective #{@perspective.id},the default perspective, has been #{action} by #{current_user.email}.  <#{calendar_post_url(@calendar, @post)}|Link>", type_notification: action_type, organization: current_user.organization, title: "Post #{@perspective.post.title}, Default perspective Notification")
+  #   else
+  #     Notification.create(description: "The perspective #{@perspective.id}, for the social media `#{@perspective.socialplatform.name}`, has been #{action} by #{current_user.email}. <#{calendar_post_perspective_url(@calendar, @post, @perspective)}|Link>", type_notification: action_type, organization: current_user.organization, title: "Post #{@perspective.post.title}, #{@perspective.socialplatform.name} perspective Notification")
+  #   end
+  # end
 
 
-    def send_notification_post(action, action_type)
-      Notification.create(description: "The post #{@post.id}, with title `#{@post.title}`, has been #{action} by #{current_user.email}. <#{calendar_post_url(@calendar, @post)}|Link>.", type_notification: action_type, organization: current_user.organization, title: "Post #{@post.title} Notification")
-    end
+  # def send_notification_post(action, action_type)
+  #   Notification.create(description: "The post #{@post.id}, with title `#{@post.title}`, has been #{action} by #{current_user.email}. <#{calendar_post_url(@calendar, @post)}|Link>.", type_notification: action_type, organization: current_user.organization, title: "Post #{@post.title} Notification")
+  # end
 end

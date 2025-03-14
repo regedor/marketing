@@ -4,7 +4,7 @@
 
 
 organization = Organization.find_or_create_by!(name: "Wellbeing Warrior", slack_workspace_token: ENV['BOT_TOKEN'],
-  slack_channel: ENV['BOT_CHANNEL'])
+  slack_channel: ENV['BOT_CHANNEL'], slug: "wellbeing-warrior")
 
 emails = %w[miguel.regedor@regedor.com luisa.vieira@regedor.com hugo.marinho@regedor.com diogo.araujo@regedor.com
   tiago.freitas@regedor.com nicoleta.domenti@regedor.com]

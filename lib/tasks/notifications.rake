@@ -1,26 +1,20 @@
 namespace :notifications do
   desc "Send Slack Notifications"
   task send_notifications: :environment do
-    # {
-    #   "org1":[notifications]
-    #   "org2":[notifications]
-    # }
-    # {
-    #   "org1":[
-    #     ["title1","type1"]:[notifications],
-    #     ["title1","type2"]:[notifications],
-    #     ["title2","type1"]:[notifications],
-    #   ]
-    #   "org2":[notifications]
-    # }
-    Notification.where(sent: false).group_by(&:organization).map { |org_key, orgnotifications| { org_key: org_key, notifications: orgnotifications.group_by { |n| [ n.title, n.type_notification ] } } }.each do |org_notifications|
-      messages = {
-        organization: org_notifications[:org_key],
-        descriptions: org_notifications[:notifications].map { |key, ttn| "- #{ttn[0].description}" }
-      }
-      if SlackNotifier.post_message(messages[:organization], "Notification for Organization #{messages[:organization].name}", messages[:descriptions].join("\n"))
-        Notification.where(organization: messages[:organization]).update(sent: true)
-      end
+    Notification.where(sent: false).group_by(&:organization).each do |organization, notifications|
+      grouped_notifications = notifications.group_by(&:title).compact_blank
+      message_body = grouped_notifications.map do |title, group|
+        "*#{title}*\n" + group.map { |n| "- #{n.description}" }.join("\n")
+      end.join("\n\n")
+
+      next if message_body.blank?
+
+      sent = SlackNotifier.post_message(organization, "Notifications for #{organization.name}", message_body)
+
+      notifications.each { |n| n.update(sent: sent) }
+      sleep 1
+    rescue => e
+      Rails.logger.error "Failed to send notifications for #{organization.name}: #{e.message}"
     end
   end
 end

@@ -30,8 +30,20 @@ class Organization < ApplicationRecord
 
   validates :name, :slug, presence: true
 
+  before_save :refresh_valid_slack_bot_token!, if: :slack_workspace_token_changed?
+
   def self.recent(limit)
       order(created_at: :desc).limit(limit)
+  end
+
+  def refresh_valid_slack_bot_token!
+    return false if slack_workspace_token.blank?
+
+    valid_response = Slack::Web::Client.new(token: slack_workspace_token).auth_test&.dig("ok")
+    valid_response
+  rescue StandardError
+    self.slack_workspace_token = nil
+    nil
   end
 
   def self.ransackable_attributes(auth_object = nil)
