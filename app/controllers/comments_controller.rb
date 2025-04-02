@@ -15,7 +15,9 @@ class CommentsController < BaseController
     if @comment.save
       title = "> New comment on post `#{@post.publish_date.strftime("%Y-%m-%d, %H:%M")}`"
       notification_message = "#{@comment.user.email}, (#{@comment.updated_at.strftime('%Y-%m-%d | %H:%M')}): #{@comment.content}"
-      Notification.create!(title: title, description: notification_message,  organization: current_organization)
+
+      # @todo: when multitenancy is implemented, this should be scoped to the current organization
+      Notification.create!(title: title, description: notification_message,  organization: @post.calendar.organization)
 
       redirect_to calendar_post_path(@calendar, @post, anchor: dom_id(@comment)), notice: "Comment was successfully created."
 
@@ -56,6 +58,7 @@ class CommentsController < BaseController
   private
     def set_data
       @calendar = Calendar.find(params[:calendar_id])
+
       @post = Post.find(params[:post_id])
     end
 
