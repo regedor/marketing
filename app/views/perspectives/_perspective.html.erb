@@ -78,10 +78,13 @@
       <label class="GenericFormLabel flex">
         Copy: <p id="savedCopy" class="ml-auto"></p>
       </label>
-      <div class="TextArea bg-white border-none overflow-hidden h-60 p-4 rounded-md flex-grow relative">
+      <div class="TextArea bg-white border-none p-4 rounded-md flex-grow relative" style="min-height: 15rem;">
         <textarea 
           id="copy" 
-          class="border-none outline-none focus:outline-none focus:ring-0 focus:border-none w-full h-full p-2 resize-none"
+          class="border-none outline-none focus:outline-none focus:ring-0 focus:border-none w-full p-2 resize-none"
+          data-controller="auto-resize"
+          data-action="input->auto-resize#resize"
+          data-auto-resize-min-height-value="240"
           placeholder="Enter your text here..."
         ><%= "\n" + perspective.copy %></textarea>
         <div class="absolute top-2 right-2 flex items-center">
